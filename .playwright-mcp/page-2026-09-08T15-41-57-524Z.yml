@@ -1,0 +1,37 @@
+- application [ref=e2]:
+  - generic:
+    - text: ⟶ ⟶ ⟶ → ←
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - paragraph [ref=e6]: La respuesta llega después
+        - heading "Una Promise representa un resultado que todavía no está disponible" [level=2] [ref=e7]
+      - generic [ref=e8]:
+        - article [ref=e9]:
+          - generic [ref=e10]: "01"
+          - strong [ref=e11]: Iniciar
+          - code [ref=e13]: fetch(url)
+        - generic [ref=e14]: devuelve →
+        - article [ref=e15]:
+          - generic [ref=e16]: "02"
+          - strong [ref=e17]: Esperar
+          - code [ref=e19]: Promise<Response>
+        - generic [ref=e20]: cuando resuelve →
+        - article [ref=e21]:
+          - generic [ref=e22]: "03"
+          - strong [ref=e23]: Comprobar
+          - code [ref=e25]: response.ok
+        - generic [ref=e26]: después →
+        - article [ref=e27]:
+          - generic [ref=e28]: "04"
+          - strong [ref=e29]: Leer
+          - code [ref=e31]: response.json()
+      - paragraph [ref=e32]:
+        - code [ref=e33]: await
+        - text: pausa la continuación de esa función; no congela toda la página.
+      - generic [aria-hidden] [ref=e35]: "10"
+    - text: → → → ⟶ ⟶ ⟶ ⟶ →
+  - complementary:
+    - button "previous slide" [ref=e39] [cursor=pointer]
+    - button "next slide" [ref=e41] [cursor=pointer]
+  - text: Speaker notes
+  - generic [ref=e45]: La respuesta llega después. Una Promise representa un resultado que todavía no está disponible. 01 Iniciar fetch(url) devuelve 02 Esperar Promise<Response> cuando resuelve 03 Comprobar response.ok después 04 Leer response.json(). await pausa la continuación de esa función; no congela toda la página.

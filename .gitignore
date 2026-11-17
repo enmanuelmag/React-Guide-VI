@@ -1,0 +1,20 @@
+/AGENTS.md
+/.env
+/memories
+.superpowers/
+
+presentation-framework/approved/node_modules/
+presentation-framework/approved/gallery/artifacts/
+course/*/presentation/artifacts/
+.vite/
+__pycache__/
+
+graphify-out/
+
+# Entregas y registros privados del docente.
+/Student Projects/
+/workshops/
+/tmp/
+
+# Artefactos regenerables de presentaciones complementarias.
+course/*/presentation-conceptual/artifacts/
