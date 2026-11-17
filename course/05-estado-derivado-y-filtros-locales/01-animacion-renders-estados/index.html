@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#223b8f" />
+    <title>Renders y estados · Sesión 05</title>
+  </head>
+  <body>
+    <main id="stage" data-composition-id="renders-estados" data-start="0" data-duration="22" data-width="1920" data-height="1180">
+      <div class="paper">
+        <header class="masthead">
+          <div><p class="eyebrow">MEDIALOG / SESIÓN 05 / ANIMACIÓN 01</p><h1>Una acción. Un nuevo render.</h1></div>
+          <button id="help" class="quiet" aria-expanded="false">Guía de uso <span>?</span></button>
+        </header>
+          <article class="code-panel">
+            <header class="panel-header"><span>01 / CÓDIGO</span><span id="code-label"></span></header>
+            <div class="code-body"><div class="code-scroll" tabindex="0" aria-label="Archivo completo visible sin desplazamiento"><pre id="code" aria-label="Código de ejemplo"></pre></div><div id="sweep" aria-hidden="true"></div></div>
+            <footer class="code-footer"><span class="legend-dot blue"></span> Línea activa <span class="legend-dot amber"></span> Actualización pendiente <span class="legend-dot green"></span> Cambio aplicado</footer>
+          </article>
+        <section class="step-heading" aria-live="polite" aria-atomic="true">
+          <div class="step-index" id="step-index"></div>
+          <div><p class="eyebrow" id="phase"></p><h2 id="title"></h2></div>
+          <p id="explanation"></p>
+        </section>
+          <article class="browser-panel">
+            <header class="panel-header"><span>02 / VISTA DE LA APP</span><span id="render-badge"></span></header>
+            <div class="halo-legend" aria-label="Origen del cambio visual"><span><i class="user-dot" aria-hidden="true"></i>Usuario · evento</span><span><i class="react-dot" aria-hidden="true"></i>React · commit</span></div>
+            <div class="app-preview" id="app-preview">
+              <p class="eyebrow">TU CATÁLOGO</p><h3>¿Qué vemos hoy?</h3>
+              <label class="input-label" for="query-input">Buscar por título</label>
+              <div class="input-wrap"><input id="query-input" value="" readonly aria-describedby="input-hint" /><button id="type-demo" title="Reproducir el evento de texto">Escribir Dune ↵</button></div>
+              <p id="input-hint">Controles de demostración: avanzan al evento preparado.</p>
+              <label class="toggle-row"><input id="only-series" type="checkbox" /><span>Solo series</span><span class="toggle-hint">Al activar, limpiar la búsqueda</span></label>
+              <div class="echo" id="echo"><span>Texto sincronizado</span><strong id="echo-value"></strong></div>
+              <div class="echo" id="mode"><span>Filtro confirmado</span><strong id="view-series"></strong></div>
+            </div>
+            <div id="empty-preview"><span>○</span><p>La aplicación aún no se muestra.</p><small>Primero React calcula el JSX.</small></div>
+          </article>
+        <section class="engine" aria-label="Estado y actualizaciones">
+          <div class="state-area"><p class="eyebrow" id="state-label">VALORES DEL RENDER</p><div class="states"><div><code>query</code><strong id="state-query"></strong></div><div><code>onlySeries</code><strong id="state-series"></strong></div></div></div>
+          <div class="queue-area"><p class="eyebrow">ACTUALIZACIONES PENDIENTES <span id="queue-count"></span></p><div id="queue"></div></div>
+          <div class="engine-note" id="engine-note"></div>
+        </section>
+        <section class="console-panel" aria-label="Consola de la demostración"><header><span>03 / CONSOLA</span><span>LOG = console.log · FLUJO = anotación didáctica</span></header><div id="console" role="log" aria-live="off"></div></section>
+        <nav class="timeline" aria-label="Línea de tiempo"><div class="chapter-tabs" id="chapters"></div><div id="milestones"></div></nav>
+        <footer class="controls"><div class="navigation"><button id="previous" aria-label="Paso anterior">← Anterior</button><button id="play">▶ Reproducir</button><button id="next" class="primary" aria-label="Paso siguiente">Siguiente →</button></div><div class="extras"><button id="restart" class="quiet">↺ Inicio</button><label>Ritmo <select id="speed"><option value="4.5">Pausado</option><option value="2.5" selected>Normal</option><option value="1.4">Ágil</option></select></label><button id="fullscreen" class="quiet">⛶ Pantalla completa</button><span>← → pasos · Espacio pausa</span></div></footer>
+        <aside id="help-panel" hidden>
+          <h2>Explorar el flujo</h2><p>Usa ← y → o pulsa un hito. Inicio y Fin saltan al primer y último paso. Espacio activa o pausa la reproducción; Escape cierra esta ayuda.</p>
+          <p>Azul señala ejecución, ámbar señala cambios pendientes y verde señala valores aplicados. Cada paso se puede recuperar exactamente, incluida la consola.</p>
+          <p>Es una simulación didáctica, no un inspector de React. La pausa alarga eventos que en la app real son síncronos. El barrido representa calcular el JSX; el commit aplica al DOM solo los cambios necesarios.</p>
+          <p>Una cola común simplifica el dibujo: React administra las actualizaciones de cada estado. StrictMode puede llamar otra vez al componente en desarrollo; aquí seguimos una pasada conceptual.</p>
+          <button id="close-help" class="primary">Volver a la demostración</button>
+        </aside>
+      </div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

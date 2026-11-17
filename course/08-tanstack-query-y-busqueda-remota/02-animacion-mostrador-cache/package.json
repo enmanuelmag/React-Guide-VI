@@ -1,0 +1,26 @@
+{
+  "name": "02-animacion-mostrador-cache",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.17.0",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "test": "node --test src/__tests__/story.test.js",
+    "test:browser": "node src/__tests__/browser.mjs"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-sans": "5.3.0",
+    "@fontsource/sora": "5.3.0",
+    "gsap": "3.14.2"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0",
+    "vite": "8.2.2"
+  },
+  "engines": {
+    "node": ">=22.22.0"
+  }
+}
+

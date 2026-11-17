@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Router y navegación — MediaLog</title></head>
+<body>
+<main id="stage" data-width="1920" data-height="1180">
+  <header class="masthead"><div><p class="eyebrow">MEDIALOG / SESIÓN 09 / ANIMACIÓN 01</p><h1>Una dirección. Una página.</h1></div><button id="help">Guía de uso ?</button></header>
+  <section class="code-panel" aria-label="Código del proyecto">
+    <header class="code-header"><label for="file">Archivo</label><select id="file"></select></header>
+    <div class="code-body" tabindex="0" aria-label="Código con desplazamiento"><pre id="code"></pre></div>
+    <footer class="code-footer"><span>● Línea del paso</span><span id="file-note">Código del checkpoint 09</span></footer>
+  </section>
+  <div class="demo">
+    <section class="step-heading" aria-live="polite" aria-atomic="true"><span id="step-number"></span><h2 id="title"></h2><p id="explanation"></p></section>
+    <section class="browser" aria-label="Navegador simulado">
+      <div class="tabs"><span class="dots">● ● ●</span><span class="tab">◉ MediaLog <span>×</span></span><small>SIMULACIÓN</small></div>
+      <div class="address-row"><button id="back" aria-label="Atrás en el historial simulado">←</button><button id="forward" aria-label="Adelante en el historial simulado">→</button><span class="host">localhost</span><code id="address"></code></div>
+      <div class="app-header" id="app-header"><strong>MediaLog</strong><span>Explora películas y series</span></div>
+      <div class="outlet" id="outlet"></div>
+      <div class="browser-foot"><span><i class="user-dot"></i>Acción</span><span><i class="react-dot"></i>UI</span><span id="browser-note">Detalle: 0 peticiones</span></div>
+      <div id="cursor" aria-hidden="true"><svg width="30" height="36" viewBox="0 0 30 36"><path d="M3 2 L3 27 L10 21 L16 33 L22 30 L16 18 L26 17 Z" fill="#7550bc" stroke="white" stroke-width="2"/></svg><span>clic</span></div>
+    </section>
+    <section class="engine" aria-label="Cómo se resuelve la navegación"><div id="flow"></div><div class="engine-detail"><strong id="detail-label"></strong><code id="detail-value"></code></div><div class="history"><span>Historial</span><div id="history"></div></div></section>
+    <nav class="timeline" aria-label="Hitos"><div id="chapters"></div><div id="milestones"></div></nav>
+    <footer class="controls"><div class="navigation"><button id="previous">← Anterior</button><button id="play">▶ Reproducir</button><button id="next" class="primary">Siguiente →</button></div><div class="extras"><label>Recorrido <select id="scenario"><option value="main">Ver detalle</option><option value="invalid">Tipo inválido</option><option value="unknown">Ruta desconocida</option><option value="missing">Falta un segmento</option><option value="redirect">Entrada inicial</option><option value="direct">Enlace directo</option><option value="link-back">Volver con Link</option></select></label><label>Ritmo <select id="speed"><option value="5000">Pausado</option><option value="3000" selected>Normal</option><option value="1500">Ágil</option></select></label><button id="restart">↺</button><button id="fullscreen">⛶</button></div></footer>
+  </div>
+  <dialog id="help-panel"><h2>Guía de uso</h2><p>← → avanza o retrocede. Home y End van al inicio y al cierre. Espacio reproduce o pausa.</p><p>El código permite scroll y cambio de archivo. El siguiente hito recupera el archivo del recorrido. Command/Ctrl + permite ampliar.</p><p>El cursor violeta representa la acción preparada. «Ver detalle» y Atrás/Adelante conducen a esos hitos; no son un navegador libre.</p><p>Simulador: congela el flujo para explicarlo. No ejecuta Router ni consulta la API.</p><form method="dialog"><button>Cerrar</button></form></dialog>
+</main><script type="module" src="/src/main.js"></script>
+</body></html>

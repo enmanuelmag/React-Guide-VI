@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Una analogía paso a paso de consultas, caché y frescura con un mostrador de información de películas."><title>El mostrador de consultas · MediaLog · Sesión 08</title></head>
+<body>
+<main id="stage" data-composition-id="mostrador-cache">
+  <header class="masthead">
+    <div><p class="eyebrow">MEDIALOG / SESIÓN 08 / ANIMACIÓN 02</p><h1>El mostrador de consultas.</h1></div>
+    <button id="help" class="quiet" aria-label="Abrir guía de uso">Guía de uso <span aria-hidden="true">?</span></button>
+  </header>
+
+  <section class="step-heading" aria-live="polite" aria-atomic="true">
+    <span id="step-number"></span>
+    <div><p id="chapter-name" class="eyebrow"></p><h2 id="step-title"></h2></div>
+    <p id="description"></p>
+  </section>
+
+  <section class="illustration" aria-label="Mostrador, archivador local y archivo central">
+    <div class="scene-tools">
+      <span id="request-label" class="request-label"></span>
+      <span id="clock-label" class="clock-label"></span>
+      <span class="counter">Peticiones al servidor <b id="request-count">0</b></span>
+    </div>
+    <svg id="scene" viewBox="0 0 1640 570" role="img" aria-labelledby="scene-title scene-description">
+      <title id="scene-title">El mostrador de información de MediaLog</title>
+      <desc id="scene-description">Una persona consulta al encargado del mostrador. Las respuestas se conservan en un archivador local. Si faltan o necesitan revisión, se solicita información al archivo central.</desc>
+      <defs>
+        <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#223b8f" stroke-width="1.6"/></marker>
+        <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#2f6f5e" stroke-width="1.6"/></marker>
+      </defs>
+
+      <path d="M45 491 H1595" stroke="#cbd4e4" stroke-width="2"/>
+      <g class="place-label"><text x="130" y="50">Tú</text><text x="475" y="50">Mostrador</text><text x="885" y="50">Archivador</text><text x="1400" y="50">Archivo central</text></g>
+      <g class="place-subtitle"><text x="130" y="83">La persona que consulta</text><text x="475" y="83">Query Client · coordina</text><text x="885" y="83">Caché · guarda respuestas</text><text x="1400" y="83">Servidor · tiene los datos</text></g>
+
+      <!-- Figuras de usuario sin rasgos: cabeza circular y hombros redondeados. -->
+      <g id="visitor">
+        <ellipse cx="132" cy="484" rx="77" ry="8" fill="#e7ecf8"/>
+        <path d="M111 391 V466 Q111 478 99 478 H91 M150 391 V466 Q150 478 162 478 H170" fill="none" stroke="#746087" stroke-width="22" stroke-linecap="round"/>
+        <path d="M79 390 V340 C79 311 102 291 132 291 C162 291 185 311 185 340 V390 Z" fill="#e8e1f4" stroke="#746087" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M177 327 Q201 351 218 337 L245 317" fill="none" stroke="#746087" stroke-width="15" stroke-linecap="round"/>
+        <path d="M86 329 L78 366" fill="none" stroke="#746087" stroke-width="15" stroke-linecap="round"/>
+        <circle cx="132" cy="246" r="33" fill="#e8e1f4" stroke="#746087" stroke-width="4"/>
+      </g>
+
+      <!-- Una hoja de consulta, no un panel de código. -->
+      <g id="ticket">
+        <rect x="50" y="114" width="239" height="80" rx="6" fill="#fff" stroke="#8f74b7" stroke-width="3"/>
+        <path d="M67 131 H90 M67 145 H81" stroke="#8f74b7" stroke-width="3"/>
+        <text id="ticket-title" x="110" y="145" class="ticket-text">Sin consulta</text>
+        <text id="ticket-type" x="110" y="174" class="small-text">Título + tipo</text>
+      </g>
+
+      <path id="local-route" d="M259 315 H353" class="route" marker-end="url(#arrow-blue)"/>
+      <g id="clerk">
+        <path d="M421 392 V356 C421 326 445 307 475 307 C505 307 529 326 529 356 V392 Z" fill="#dce5f8" stroke="#223b8f" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="475" cy="262" r="31" fill="#dce5f8" stroke="#223b8f" stroke-width="4"/>
+        <path id="clerk-arm" d="M514 334 Q550 373 572 352 L598 328" fill="none" stroke="#223b8f" stroke-width="14" stroke-linecap="round"/>
+        <path d="M433 341 L413 379" stroke="#223b8f" stroke-width="14" stroke-linecap="round"/>
+        <path d="M363 389 H597 V491 H363 Z" fill="#e7ecf8" stroke="#223b8f" stroke-width="3"/>
+        <path d="M349 379 H612 V400 H349 Z" fill="#cbd8f1" stroke="#223b8f" stroke-width="3"/>
+        <rect x="404" y="427" width="151" height="36" rx="3" fill="#fbfcff"/>
+        <text x="480" y="453" text-anchor="middle" class="desk-label">INFORMACIÓN</text>
+      </g>
+
+      <path id="cache-route" d="M614 338 H716" class="route" marker-end="url(#arrow-blue)"/>
+      <text x="663" y="307" class="route-label" text-anchor="middle">revisar</text>
+
+      <g id="cabinet">
+        <path d="M730 175 L748 157 H1049 V481 H730 Z" fill="#d7e0ef" stroke="#38445f" stroke-width="3"/>
+        <path d="M730 175 H1031 L1049 157" fill="none" stroke="#38445f" stroke-width="3"/>
+        <rect x="733" y="480" width="22" height="12" fill="#38445f"/>
+        <rect x="1010" y="480" width="22" height="12" fill="#38445f"/>
+        <rect x="745" y="190" width="270" height="271" rx="3" fill="#f8faff" stroke="#9caec8" stroke-width="2"/>
+        <path d="M746 325 H1014" stroke="#cbd4e4" stroke-width="2"/>
+        <g id="empty-cabinet">
+          <text x="880" y="301" class="empty-cabinet-title">Vacío</text>
+          <text x="880" y="352" class="empty-cabinet-note">Sin respuestas guardadas</text>
+        </g>
+
+        <g id="movie-drawer" class="drawer cache-entry" data-cache-entry="movie" hidden>
+          <path d="M757 218 L772 198 H990 L1003 218 Z" fill="#e2e9f5" stroke="#647795" stroke-width="2"/>
+          <rect class="drawer-front" x="757" y="218" width="246" height="96" rx="4"/>
+          <rect x="775" y="231" width="210" height="68" rx="3" fill="#fbfcff" stroke="#cbd4e4" stroke-width="1.5"/>
+          <text x="880" y="258" class="drawer-title">Dune · películas</text>
+          <text id="movie-state" x="880" y="286" class="drawer-state">Sin respuesta</text>
+        </g>
+
+        <g id="series-drawer" class="drawer cache-entry" data-cache-entry="series" hidden>
+          <path d="M757 360 L772 340 H990 L1003 360 Z" fill="#e2e9f5" stroke="#647795" stroke-width="2"/>
+          <rect class="drawer-front" x="757" y="360" width="246" height="96" rx="4"/>
+          <rect x="775" y="373" width="210" height="68" rx="3" fill="#fbfcff" stroke="#cbd4e4" stroke-width="1.5"/>
+          <text x="880" y="400" class="drawer-title">Dune · series</text>
+          <text id="series-state" x="880" y="428" class="drawer-state">Sin respuesta</text>
+        </g>
+      </g>
+
+      <!-- Archivo central: permanece estable, aunque retiremos una copia local. -->
+      <g id="server">
+        <path d="M1260 214 L1404 126 L1547 214 Z" fill="#dce5f8" stroke="#223b8f" stroke-width="3"/>
+        <path d="M1272 215 H1534 V481 H1272 Z" fill="#f0f3f9" stroke="#223b8f" stroke-width="3"/>
+        <rect x="1292" y="237" width="222" height="62" fill="#e7ecf8" stroke="#cbd4e4" stroke-width="2"/>
+        <text x="1403" y="277" class="building-label" text-anchor="middle">CATÁLOGO</text>
+        <path d="M1298 317 H1358 V395 H1298 Z M1373 317 H1433 V395 H1373 Z M1448 317 H1508 V395 H1448 Z" fill="#d7e0ef" stroke="#8d9fbc" stroke-width="2"/>
+        <path d="M1308 330 V382 M1322 328 V383 M1340 336 V383 M1385 328 V384 M1400 339 V384 M1418 328 V384 M1458 331 V382 M1473 328 V383 M1490 337 V383" stroke="#8d9fbc" stroke-width="5"/>
+        <rect x="1361" y="420" width="85" height="61" fill="#cbd8f1" stroke="#223b8f" stroke-width="3"/>
+        <circle cx="1429" cy="453" r="4" fill="#223b8f"/>
+      </g>
+
+      <g id="network-routes">
+        <path id="request-route" d="M1056 258 H1246" class="route" marker-end="url(#arrow-blue)"/>
+        <text x="1151" y="227" class="route-label" text-anchor="middle">pedir datos</text>
+        <path id="response-route" d="M1246 389 H1056" class="route response-route" marker-end="url(#arrow-green)"/>
+        <text x="1151" y="426" class="route-label" text-anchor="middle">respuesta</text>
+      </g>
+      <g id="packet" aria-hidden="true">
+        <rect width="47" height="32" rx="3" fill="#fbfcff" stroke="#223b8f" stroke-width="3"/>
+        <path d="M2 3 L23 18 L45 3" fill="none" stroke="#223b8f" stroke-width="2"/>
+      </g>
+      <g id="moving-file" aria-hidden="true">
+        <rect width="76" height="54" rx="3" fill="#fff8e7" stroke="#8a6100" stroke-width="3"/>
+        <path d="M12 16 H62 M12 27 H53 M12 38 H43" stroke="#8a6100" stroke-width="3"/>
+      </g>
+
+      <g id="focus-ring" aria-hidden="true"><rect x="-5" y="-5" width="1" height="1" fill="none"/></g>
+      <g class="drawing-caption"><text x="475" y="533">Coordina las consultas</text><text x="885" y="533">Cada etiqueta conserva su copia</text><text x="1400" y="533">La fuente de la información</text></g>
+    </svg>
+  </section>
+
+  <section class="outcome">
+    <article id="person-view" aria-label="Lo que ve la persona">
+      <p class="eyebrow">LO QUE VES</p>
+      <div id="visible-results"></div>
+      <span id="fetch-label"></span>
+    </article>
+    <article class="lesson" aria-live="polite"><p id="takeaway"></p><small id="detail"></small></article>
+  </section>
+
+  <nav class="timeline" aria-label="Línea de tiempo de la analogía">
+    <div id="chapters" class="chapters"></div>
+    <div id="milestones"></div>
+  </nav>
+  <footer class="controls">
+    <div class="main-controls"><button id="previous">← Anterior</button><button id="play">▶ Reproducir</button><button id="next" class="primary">Siguiente →</button></div>
+    <div class="options"><button id="restart" class="quiet">↺ Inicio</button><label>Ritmo <select id="speed"><option value="5">Normal</option><option value="8">Pausado</option><option value="3">Ágil</option></select></label><label class="extra-option"><input type="checkbox" id="include-extra"> Extra: retirar por desuso</label><button id="fullscreen" class="quiet">⛶ Ampliar</button></div>
+  </footer>
+  <p class="simulation-note">Simulación didáctica · datos preparados · el tiempo avanza por pasos, sin peticiones reales.</p>
+</main>
+<dialog id="help-dialog"><button id="close-help" class="quiet close-help" aria-label="Cerrar guía">✕</button><h2>Una escena. Un paso a la vez.</h2><p>← y → retroceden y avanzan. Inicio y Fin saltan a los extremos. Espacio reproduce o pausa.</p><p>Puedes pulsar una fase o un hito. Volver atrás restaura exactamente sus fichas, contador y resultados.</p><p><strong>Violeta:</strong> acción de la persona. <strong>Ámbar:</strong> revisar la caché. <strong>Verde:</strong> datos mostrados o renovados.</p><p>staleTime: cuándo una respuesta necesita revisión. El extra gcTime explica cuándo retirar una consulta inactiva.</p><p>El ejemplo supone consultas habilitadas y actualización al volver a montarlas. No representa persistencia permanente ni una base de datos.</p></dialog>
+<script type="module" src="/src/main.js"></script>
+</body></html>
+

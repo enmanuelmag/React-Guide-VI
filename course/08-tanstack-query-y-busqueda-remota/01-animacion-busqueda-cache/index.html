@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Búsqueda y caché · MediaLog · Sesión 08</title></head>
+<body><main id="stage" data-width="1920" data-height="1180"><div class="paper">
+<header class="masthead"><div><p class="eyebrow">MEDIALOG / SESIÓN 08 / ANIMACIÓN 01</p><h1>Una búsqueda. Una identidad. Una respuesta.</h1></div><span class="simulation">SIMULACIÓN DIDÁCTICA</span></header>
+<article class="code-panel"><header class="panel-header"><span>CÓDIGO</span><span>SearchDemo.jsx · completo</span></header><div class="code-body"><pre id="code"></pre><div id="sweep" aria-hidden="true"></div></div><footer class="code-footer"><i class="legend-dot blue"></i>Línea del paso <i class="legend-dot green"></i>React · commit</footer></article>
+<div class="demo-column">
+<section class="step-heading" aria-live="polite" aria-atomic="true"><div class="step-index" id="step-index"></div><div><p class="eyebrow" id="phase"></p><h2 id="title"></h2></div><p id="explanation"></p></section>
+<section class="cache-panel" aria-label="Query Client y caché simulados"><header class="panel-header"><span>CACHÉ · QUERY CLIENT</span><span>staleTime: 5 min</span></header>
+<div id="query-key" class="query-key"></div>
+<div class="drawers"><div id="movie-drawer"><b>Dune / movie</b><span id="movie-cache"></span></div><div id="series-drawer"><b>Dune / series</b><span id="series-cache"></span></div></div>
+<div class="query-state"><span>query.status <strong id="query-status"></strong></span><span>query.fetchStatus <strong id="fetch-status"></strong></span><span>enabled <strong id="enabled"></strong></span></div><p id="cache-note" class="cache-note"></p></section>
+<div class="browser-window" aria-label="Ventana de navegador simulada con inspector">
+<div class="browser-chrome"><div class="browser-tabs"><span class="window-dots" aria-hidden="true">● ● ●</span><span class="browser-tab">◉ MediaLog · búsqueda <span aria-hidden="true">×</span></span><span aria-hidden="true">+</span><span class="browser-caption">NAVEGADOR SIMULADO</span></div><div class="address-row"><span class="browser-arrows" aria-hidden="true">← → ↻</span><span class="address">▣ localhost / search-demo</span><span aria-hidden="true">⋮</span></div></div>
+<section class="browser-panel"><span id="app-badge" class="browser-status"></span>
+<div class="halo-legend"><span><i class="user-dot"></i>Usuario · evento</span><span><i class="react-dot"></i>React · commit</span></div>
+<div class="search-preview"><div class="search-form"><label>Buscar título<input id="draft-input" readonly aria-label="Borrador del título"></label><label>Tipo<select id="type-input" aria-label="Borrador del tipo"><option value="movie">Películas</option><option value="series">Series</option></select></label><button id="search-button" class="primary">Buscar</button></div>
+<div class="search-values"><span>Borrador <strong id="draft-value"></strong></span><span>Enviado <strong id="submitted-value"></strong></span></div>
+<div id="results" class="search-results" role="status"></div>
+<p class="search-note">Recorrido guiado</p></div></section>
+<section class="console-panel" aria-label="Inspector simulado"><header class="devtools-tabs"><span aria-hidden="true">⌖</span><span>Elements</span><strong>Console</strong><span>Network</span><span class="devtools-menu" aria-hidden="true">⋮ ×</span></header><div class="console-toolbar"><span id="network-count"></span><span class="console-filter">POST /api/v2/media/search</span><span>FLUJO = simulador</span></div><div id="console" aria-live="off"></div><div class="console-prompt" aria-hidden="true">› <span>▏</span></div></section></div>
+<nav class="timeline" aria-label="Línea de tiempo"><div class="chapter-tabs" id="chapters"></div><div id="milestones"></div></nav>
+<footer class="controls"><div class="navigation"><button id="previous">← Anterior</button><button id="play">▶ Reproducir</button><button id="next" class="primary">Siguiente →</button></div><div class="extras"><label>Respuesta <select id="scenario"><option value="success">Resultados</option><option value="empty">Vacía</option><option value="error">Error y recuperación</option></select></label><label>Ritmo <select id="speed"><option value="4.5">Pausado</option><option value="2.5" selected>Normal</option><option value="1.4">Ágil</option></select></label><button id="restart">↺ Inicio</button><button id="fullscreen">⛶ Ampliar</button></div></footer>
+</div></div></main><script type="module" src="/src/main.js"></script></body></html>
