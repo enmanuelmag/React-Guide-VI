@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lectura previa de Sesión 18 para React Guide VI">
+    <title>Lectura previa · Sesión 18 · Build, publicación y configuración pública</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Lectura previa</p>
+        <h1>Lectura previa · Sesión 18 · Build, publicación y configuración pública</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Lectura previa · Sesión 18 · Build, publicación y configuración pública</h1>
+<ul><li><strong>Duración estimada:</strong> 20 minutos</li><li><strong>Fuentes:</strong> Cloudflare Pages y Vite, documentación oficial</li><li><strong>Fecha de verificación:</strong> 7 de septiembre de 2026</li></ul>
+<h2>Propósito</h2>
+<p>Llegar a clase con un mapa simple del despliegue:</p>
+<pre><code class="language-text">repositorio
+  → build remoto
+  → carpeta dist
+  → URL pages.dev
+  → React Router en el navegador</code></pre>
+<p>También debes reconocer que una variable <code>VITE_*</code> forma parte de la aplicación cliente. Su value no queda oculto por configurarlo en el dashboard del proveedor.</p>
+<p>La lectura no te pide crear un proyecto Cloudflare, conectar tu repositorio o copiar variables. Esas acciones se realizarán con guía durante la sesión.</p>
+<h2>Conocimientos previos</h2>
+<p>Recupera antes de leer:</p>
+<ul><li><code>pnpm build</code> y <code>pnpm preview</code>;</li><li><code>dist</code> como salida de Vite;</li><li><code>import.meta.env</code>;</li><li><code>BrowserRouter</code>, rutas y parámetros;</li><li>diferencia entre frontend, Firebase y API docente;</li><li><code>.env.example</code> como inventario: URL pública de la API y nombres de Firebase sin values propios.</li></ul>
+<h2>Fuente 1 · Publicar React en Cloudflare Pages</h2>
+<p>Lee en Cloudflare:</p>
+<ul><li><strong>Título principal:</strong> <a href="https://developers.cloudflare.com/pages/framework-guides/deploy-a-react-site/" target="_blank" rel="noreferrer">React · Cloudflare Pages</a></li><li><strong>Título complementario:</strong> <a href="https://developers.cloudflare.com/pages/configuration/serving-pages/" target="_blank" rel="noreferrer">Serving Pages</a></li><li><strong>Organización:</strong> Cloudflare</li><li><strong>URL principal:</strong> <code>https://developers.cloudflare.com/pages/framework-guides/deploy-a-react-site/</code></li><li><strong>URL complementaria:</strong> <code>https://developers.cloudflare.com/pages/configuration/serving-pages/</code></li><li><strong>Versión:</strong> servicio Cloudflare Pages y documentación vigentes al verificar.</li><li><strong>Fecha de verificación:</strong> 7 de septiembre de 2026</li></ul>
+<p><strong>Tiempo sugerido:</strong> 14 minutos.</p>
+<p>En la guía de React, lee únicamente:</p>
+<ul><li><code>Before you continue</code>;</li><li><code>Deploy via the Cloudflare dashboard</code>;</li><li>la nota <code>SPA rendering</code>.</li></ul>
+<p>En <code>Serving Pages</code>, lee únicamente:</p>
+<ul><li><code>Not Found behavior</code>;</li><li><code>Single-page application (SPA) rendering</code>.</li></ul>
+<p>La documentación muestra <code>npm run build</code>. El curso conserva pnpm, por lo que usará <code>pnpm build</code>. La salida de Vite sigue siendo <code>dist</code>.</p>
+<p>Concéntrate en estas relaciones:</p>
+<pre><code class="language-text">rama conectada
+  → Pages instala dependencias
+  → ejecuta el build
+  → publica dist
+  → asigna una URL</code></pre>
+<p>Cloudflare Pages trata la salida como SPA cuando no encuentra un <code>404.html</code> superior. Así puede entregar la entrada raíz para una URL anidada y permitir que React Router decida qué página renderizar.</p>
+<p>No estudies C3, Direct Upload, Wrangler, Pages Functions, custom domains o preview branches.</p>
+<h2>Fuente 2 · Variables que llegan al cliente</h2>
+<p>Lee en Vite:</p>
+<ul><li><strong>Título:</strong> <a href="https://vite.dev/guide/env-and-mode.html" target="_blank" rel="noreferrer">Env Variables and Modes</a></li><li><strong>Organización:</strong> Vite</li><li><strong>URL:</strong> <code>https://vite.dev/guide/env-and-mode.html</code></li><li><strong>Versión:</strong> Vite <code>8.2.2</code>, fijada por el proyecto; Context7 confirmó el contrato en la documentación versionada disponible de Vite 8.</li><li><strong>Fecha de verificación:</strong> 7 de septiembre de 2026</li></ul>
+<p><strong>Tiempo sugerido:</strong> 6 minutos.</p>
+<p>Lee únicamente:</p>
+<ul><li><code>Env Variables</code>;</li><li>la advertencia sobre variables <code>VITE_*</code> y datos sensibles;</li><li>el párrafo que explica que los values se reemplazan durante el build.</li></ul>
+<p>Observa:</p>
+<pre><code class="language-ts">const apiUrl = import.meta.env.VITE_API_URL</code></pre>
+<p>El prefijo permite usar el value en el código cliente. Vite lo incorpora al bundle que descarga el navegador. No coloques allí contraseñas, tokens de ID, tokens de Cloudflare, cuentas de servicio o claves privadas.</p>
+<p>La configuración web de Firebase usada por el curso identifica el proyecto y puede vivir en el cliente. Una cuenta de servicio de Firebase pertenece al servidor y nunca usa el prefijo <code>VITE_</code>.</p>
+<h2>Vocabulario previo</h2>
+<ul><li><strong>Build:</strong> transformación del código fuente en archivos distribuibles.</li><li><strong>Artefacto:</strong> archivo producido por el build.</li><li><strong>Deploy:</strong> publicación de artefactos en un entorno accesible.</li><li><strong>Build remoto:</strong> build ejecutado en la infraestructura del proveedor.</li><li><strong>Variable pública:</strong> configuración incorporada al código cliente.</li><li><strong>Secreto:</strong> credencial que no puede enviarse al navegador.</li><li><strong>Fallback SPA:</strong> entrega de la entrada de la aplicación para una ruta que interpretará el router cliente.</li><li><strong>Origen:</strong> esquema y host, con puerto cuando corresponde, desde los cuales el navegador realiza requests.</li></ul></main>
+      <footer>Material de preparación · Sesión 18</footer>
+    </article>
+  </body>
+</html>

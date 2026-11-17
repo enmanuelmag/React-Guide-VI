@@ -1,0 +1,21 @@
+.deploy-concepts .concept-frame { display:grid; grid-template: 44px 150px minmax(0,1fr) 80px / 1fr; gap:16px; }
+.deploy-concepts .concept-frame:not(:has(.journey)) { grid-template-rows: 0 170px minmax(0,1fr) 80px; }
+.deploy-concepts .concept-frame:not(:has(.journey)) .slide-heading { grid-row:2; }
+.deploy-concepts .journey { grid-row:1; }
+.deploy-concepts .slide-heading { grid-row:2; }
+.deploy-concepts .visual-stage { grid-row:3; }
+.deploy-concepts .takeaway { grid-row:4; }
+.deploy-concepts .reveal .slide-title { max-width: none; font-size:58px; line-height:1.12; }
+.deploy-concepts h1.slide-title { max-width:1250px; font-size:72px; }
+.deploy-concepts .slide-label { font-size:22px; }
+.deploy-concepts .journey { display:flex; align-items:center; gap:26px; color:#58657e; font-size:24px; border-bottom:1px solid #cbd4e4; padding-bottom:12px; }
+.deploy-concepts .journey span { padding:0 12px; }
+.deploy-concepts .journey .active { background:#e7ecf8; color:#223b8f; font-weight:600; }
+.deploy-concepts .journey .done { color:#223b8f; }
+.deploy-concepts .journey b { color:#58657e; font-weight:400; }
+.deploy-concepts .visual-stage { display:flex; align-items:center; min-height:0; }
+.deploy-concepts .diagram { display:block; width:100%; height:auto; max-height:100%; overflow:visible; font-family:var(--font-body); }
+.deploy-concepts .takeaway { margin:0; padding-top:18px; border-top:2px solid #cbd4e4; font-size:28px; color:#38445f; line-height:1.35; align-self:start; }
+
+/* All diagrams use the fixed 1920 x 1080 canvas, including the cover. */
+html.reveal-print .deploy-concepts .pdf-page { height:1079px !important; }

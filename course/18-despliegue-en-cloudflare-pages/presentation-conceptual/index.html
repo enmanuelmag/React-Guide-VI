@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>De mi computadora a la web | MediaLog</title><meta name="description" content="Presentación visual de despliegue SPA: pipeline, build, artefactos, hosting, CDN y navegador."><link rel="stylesheet" href="./session.css"></head>
+<body class="deploy-concepts"><div class="reveal"><div class="slides"><section data-slide-id="deploy-01" data-geometry="G02" data-semantic="S02">
+<div class="slide-frame concept-frame">
+
+<header class="slide-heading"><p class="slide-label">MediaLog / Despliegue web</p><h1 class="slide-title">De mi computadora al navegador de otra persona.</h1></header>
+<div class="visual-stage"><svg class="diagram" viewBox="0 0 1680 610" role="img" aria-label="De mi computadora al navegador de otra persona."><defs><marker id="arrow-0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs><g transform="translate(218.0,170) scale(4.333333333333333)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z" />
+  <path d="M20.054 15.987H3.946" />
+</g><text x="270" y="321" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Mi proyecto</text><text x="270" y="364" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">React + Vite</text><path d="M420 225 L700 225" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-0)" /><text x="560.0" y="205.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">publicar</text><g transform="translate(788.0,170) scale(4.333333333333333)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="10" />
+  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+  <path d="M2 12h20" />
+</g><text x="840" y="321" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Internet</text><text x="840" y="364" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Archivos disponibles</text><path d="M990 225 L1270 225" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-0)" /><text x="1130.0" y="205.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">visitar</text><g transform="translate(1368.0,170) scale(4.333333333333333)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" />
+</g><text x="1420" y="321" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Su navegador</text><text x="1420" y="364" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">MediaLog funciona aquí</text></svg></div>
+<p class="takeaway">Despliegue web: SPA, build y CDN. Una explicación visual con MediaLog.</p>
+<aside class="notes">Presentación complementaria conceptual, no sustituto del procedimiento de la sesión 18. Presentar de forma continua. Duración orientativa 15–20 minutos, pendiente de ensayo. No hay un despliegue real detrás de estos diagramas.</aside>
+</div></section>
+<section data-slide-id="deploy-02" data-geometry="G12" data-semantic="S31">
+<div class="slide-frame concept-frame">
+<nav class="journey" aria-label="Recorrido"><span class="active">Mapa</span><b aria-hidden="true">→</b><span class="">Construir</span><b aria-hidden="true">→</b><span class="">Distribuir</span><b aria-hidden="true">→</b><span class="">Abrir</span><b aria-hidden="true">→</b><span class="">Actualizar</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog / Despliegue web</p><h2 class="slide-title">Publicar y visitar son dos recorridos distintos.</h2></header>
+<div class="visual-stage"><svg class="diagram" viewBox="0 0 1680 610" role="img" aria-label="Publicar y visitar son dos recorridos distintos."><defs><marker id="arrow-1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs><rect x="0" y="15" width="1680" height="260" rx="8" fill="#f0f3f9" stroke="#cbd4e4" stroke-width="2"/><text x="28" y="60" text-anchor="start" fill="#223b8f" font-size="25" font-weight="600">PUBLICAR UNA VERSIÓN</text><g transform="translate(148.0,100) scale(2.6666666666666665)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z" />
+  <path d="M20.054 15.987H3.946" />
+</g><text x="180" y="211" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Programador</text><path d="M290 137 L460 137" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-1)" /><text x="375.0" y="117.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">sube código</text><g transform="translate(528.0,100) scale(2.6666666666666665)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M15 6a9 9 0 0 0-9 9V3" />
+  <circle cx="18" cy="6" r="3" />
+  <circle cx="6" cy="18" r="3" />
+</g><text x="560" y="211" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Repositorio</text><path d="M680 137 L900 137" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-1)" /><text x="790.0" y="117.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">activa el proceso</text><g transform="translate(978.0,100) scale(2.6666666666666665)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="8" height="8" x="3" y="3" rx="2" />
+  <path d="M7 11v4a2 2 0 0 0 2 2h4" />
+  <rect width="8" height="8" x="13" y="13" rx="2" />
+</g><text x="1010" y="211" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Pipeline</text><path d="M1140 137 L1370 137" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-1)" /><text x="1255.0" y="117.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">publica</text><g transform="translate(1448.0,100) scale(2.6666666666666665)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+  <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+  <line x1="6" x2="6.01" y1="6" y2="6" />
+  <line x1="6" x2="6.01" y1="18" y2="18" />
+</g><text x="1480" y="211" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Hosting</text><rect x="0" y="310" width="1680" height="260" rx="8" fill="#f0f3f9" stroke="#cbd4e4" stroke-width="2"/><text x="28" y="355" text-anchor="start" fill="#223b8f" font-size="25" font-weight="600">VISITAR LA WEB</text><g transform="translate(148.0,390) scale(2.6666666666666665)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="8" r="5" />
+  <path d="M20 21a8 8 0 0 0-16 0" />
+</g><text x="180" y="501" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Persona</text><path d="M290 425 L460 425" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-1)" /><text x="375.0" y="405.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">abre la URL</text><g transform="translate(528.0,390) scale(2.6666666666666665)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" />
+</g><text x="560" y="501" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Navegador</text><path d="M680 425 L900 425" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-1)" /><text x="790.0" y="405.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">pide archivos</text><g transform="translate(978.0,390) scale(2.6666666666666665)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="10" />
+  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+  <path d="M2 12h20" />
+</g><text x="1010" y="501" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">CDN</text><path d="M1140 425 L1370 425" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-1)" /><text x="1255.0" y="405.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">los entrega</text><g transform="translate(1448.0,390) scale(2.6666666666666665)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" />
+</g><text x="1480" y="501" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">React dibuja</text></svg></div>
+<p class="takeaway">Hosting guarda la web. CDN distribuye archivos. Pipeline automatiza los pasos de publicación.</p>
+<aside class="notes">Leer primero la fila superior y después la inferior. El hosting y la CDN cooperan; no son dos productos que el alumno tenga que contratar por separado. Cloudflare Pages integra ambas responsabilidades. La API se añade al mapa después de entender la entrega del frontend. Pregunta: ¿cada visitante ejecuta nuestro pipeline? No.</aside>
+</div></section>
+<section data-slide-id="deploy-03" data-geometry="G06" data-semantic="S20">
+<div class="slide-frame concept-frame">
+<nav class="journey" aria-label="Recorrido"><span class="done">Mapa</span><b aria-hidden="true">→</b><span class="active">Construir</span><b aria-hidden="true">→</b><span class="">Distribuir</span><b aria-hidden="true">→</b><span class="">Abrir</span><b aria-hidden="true">→</b><span class="">Actualizar</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog / Despliegue web</p><h2 class="slide-title">La “cloud” usa computadoras del proveedor.</h2></header>
+<div class="visual-stage"><svg class="diagram" viewBox="0 0 1680 610" role="img" aria-label="La “cloud” usa computadoras del proveedor."><defs><marker id="arrow-2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs><rect x="0" y="50" width="710" height="470" rx="8" fill="#f0f3f9" stroke="#cbd4e4" stroke-width="2"/><text x="28" y="95" text-anchor="start" fill="#223b8f" font-size="25" font-weight="600">TU COMPUTADORA</text><g transform="translate(303.0,170) scale(4.333333333333333)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z" />
+  <path d="M20.054 15.987H3.946" />
+</g><text x="355" y="321" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">localhost</text><text x="355" y="364" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">La dirección de este equipo</text><rect x="870" y="50" width="810" height="470" rx="8" fill="#f0f3f9" stroke="#cbd4e4" stroke-width="2"/><text x="898" y="95" text-anchor="start" fill="#223b8f" font-size="25" font-weight="600">INFRAESTRUCTURA DEL PROVEEDOR</text><g transform="translate(1160,110) scale(8.75)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+</g><g transform="translate(1000,340) scale(4.375)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+  <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+  <line x1="6" x2="6.01" y1="6" y2="6" />
+  <line x1="6" x2="6.01" y1="18" y2="18" />
+</g><g transform="translate(1220,340) scale(4.375)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+  <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+  <line x1="6" x2="6.01" y1="6" y2="6" />
+  <line x1="6" x2="6.01" y1="18" y2="18" />
+</g><g transform="translate(1440,340) scale(4.375)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+  <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+  <line x1="6" x2="6.01" y1="6" y2="6" />
+  <line x1="6" x2="6.01" y1="18" y2="18" />
+</g><text x="1275" y="490" text-anchor="middle" fill="#111b34" font-size="32" font-weight="400">Servidores conectados a Internet</text><path d="M740 285 L840 285" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-2)" /><text x="790.0" y="265.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">publicar</text></svg></div>
+<p class="takeaway">Hosting: servicio que conserva y entrega los archivos de tu web mediante una URL pública.</p>
+<aside class="notes">La nube no es un lugar mágico: es infraestructura física administrada por un proveedor. localhost siempre se refiere al equipo que hace la petición. Compartir localhost no comparte tu computadora. Después del despliegue, apagar tu portátil no apaga los archivos alojados. No afirmar que todo hosting es una sola máquina ni que la nube solo sirve archivos.</aside>
+</div></section>
+<section data-slide-id="deploy-04" data-geometry="G13" data-semantic="S34">
+<div class="slide-frame concept-frame">
+<nav class="journey" aria-label="Recorrido"><span class="done">Mapa</span><b aria-hidden="true">→</b><span class="active">Construir</span><b aria-hidden="true">→</b><span class="">Distribuir</span><b aria-hidden="true">→</b><span class="">Abrir</span><b aria-hidden="true">→</b><span class="">Actualizar</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog / Despliegue web</p><h2 class="slide-title">El pipeline ejecuta una receta automática.</h2></header>
+<div class="visual-stage"><svg class="diagram" viewBox="0 0 1680 610" role="img" aria-label="El pipeline ejecuta una receta automática."><defs><marker id="arrow-3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs><rect x="80.0" y="36" width="300" height="55" rx="5" fill="#e7ecf8"/><text x="230" y="70" text-anchor="middle" fill="#223b8f" font-size="28" font-weight="600">Cambio en Git</text><path d="M405 55 L600 55" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-3)" /><text x="502.5" y="35.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">dispara</text><rect x="650.0" y="36" width="660" height="55" rx="5" fill="#e7ecf8"/><text x="980" y="70" text-anchor="middle" fill="#223b8f" font-size="28" font-weight="600">Máquina temporal del proveedor</text><g transform="translate(107.0,210) scale(3.5833333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M15 6a9 9 0 0 0-9 9V3" />
+  <circle cx="18" cy="6" r="3" />
+  <circle cx="6" cy="18" r="3" />
+</g><text x="150" y="343" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">1. Obtener</text><text x="150" y="386" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">La revisión del código</text><path d="M260 250 L345 250" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-3)" /><g transform="translate(437.0,210) scale(3.5833333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M12 15V3" />
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+  <path d="m7 10 5 5 5-5" />
+</g><text x="480" y="343" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">2. Instalar</text><text x="480" y="386" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Dependencias</text><path d="M590 250 L675 250" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-3)" /><g transform="translate(767.0,210) scale(3.5833333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+  <path d="m9 12 2 2 4-4" />
+</g><text x="810" y="343" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">3. Comprobar</text><text x="810" y="386" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Si lo configuramos</text><path d="M920 250 L1005 250" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-3)" /><g transform="translate(1097.0,210) scale(3.5833333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
+  <circle cx="12" cy="12" r="3" />
+</g><text x="1140" y="343" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">4. Construir</text><text x="1140" y="386" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">pnpm build</text><path d="M1250 250 L1335 250" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-3)" /><g transform="translate(1427.0,210) scale(3.5833333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
+  <path d="M12 22V12" />
+  <polyline points="3.29 7 12 12 20.71 7" />
+  <path d="m7.5 4.27 9 5.15" />
+</g><text x="1470" y="343" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">5. Publicar</text><text x="1470" y="386" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Salida: dist</text><text x="840" y="525" text-anchor="middle" fill="#a43d4a" font-size="34" font-weight="400">Si un paso requerido falla, esta versión no se publica.</text></svg></div>
+<p class="takeaway">Pipeline = pasos automáticos en un orden definido. Pages puede ejecutarlos al recibir cambios de Git.</p>
+<aside class="notes">La integración Git de Pages es el ejemplo, no asumimos GitHub Actions ni un YAML obligatorio. Instala, ejecuta el comando de build y publica la salida configurada. Los tests solo corren si el comando o pipeline los incluye; no aparecen por arte de magia. Si falla el nuevo despliegue, un despliegue anterior exitoso puede seguir disponible. Fuente: https://developers.cloudflare.com/pages/configuration/git-integration/</aside>
+</div></section>
+<section data-slide-id="deploy-05" data-geometry="G10" data-semantic="S27">
+<div class="slide-frame concept-frame">
+<nav class="journey" aria-label="Recorrido"><span class="done">Mapa</span><b aria-hidden="true">→</b><span class="active">Construir</span><b aria-hidden="true">→</b><span class="">Distribuir</span><b aria-hidden="true">→</b><span class="">Abrir</span><b aria-hidden="true">→</b><span class="">Actualizar</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog / Despliegue web</p><h2 class="slide-title">El build prepara archivos para el navegador.</h2></header>
+<div class="visual-stage"><svg class="diagram" viewBox="0 0 1680 610" role="img" aria-label="El build prepara archivos para el navegador."><defs><marker id="arrow-4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs><rect x="0" y="65" width="500" height="440" rx="8" fill="#f0f3f9" stroke="#cbd4e4" stroke-width="2"/><text x="28" y="110" text-anchor="start" fill="#223b8f" font-size="25" font-weight="600">ENTRADA: EL PROYECTO</text><g transform="translate(195,140) scale(4.166666666666667)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
+</g><text x="250" y="310" text-anchor="middle" fill="#111b34" font-size="34" font-weight="400">Componentes .tsx</text><text x="250" y="370" text-anchor="middle" fill="#111b34" font-size="34" font-weight="400">Estilos + imágenes</text><text x="250" y="430" text-anchor="middle" fill="#111b34" font-size="34" font-weight="400">Dependencias</text><path d="M530 270 L680 270" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-4)" /><g transform="translate(777.5,180) scale(5.208333333333333)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
+  <circle cx="12" cy="12" r="3" />
+</g><text x="840" y="352" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Build</text><text x="840" y="395" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Transforma y empaqueta</text><path d="M1000 270 L1150 270" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-4)" /><rect x="1180" y="65" width="500" height="440" rx="8" fill="#f0f3f9" stroke="#cbd4e4" stroke-width="2"/><text x="1208" y="110" text-anchor="start" fill="#223b8f" font-size="25" font-weight="600">SALIDA: dist/</text><g transform="translate(1380,140) scale(4.166666666666667)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
+  <path d="M12 22V12" />
+  <polyline points="3.29 7 12 12 20.71 7" />
+  <path d="m7.5 4.27 9 5.15" />
+</g><text x="1430" y="310" text-anchor="middle" fill="#111b34" font-size="34" font-weight="400">index.html</text><text x="1430" y="370" text-anchor="middle" fill="#111b34" font-size="34" font-weight="400">assets/app-a1.js</text><text x="1430" y="430" text-anchor="middle" fill="#111b34" font-size="34" font-weight="400">CSS + imágenes</text></svg></div>
+<p class="takeaway">Artefactos = archivos producidos por el build. Publicamos el contenido de dist/.</p>
+<aside class="notes">Vite transforma y empaqueta el código para producción. El nombre app-a1.js es ilustrativo: los nombres reales dependen del build. TypeScript y JSX se transforman, no los compila el visitante. pnpm build ejecuta el script del proyecto; los chequeos de tipos dependen de ese script. pnpm preview solo permite inspeccionar localmente dist, no es hosting de producción. Fuente: https://vite.dev/guide/static-deploy.html</aside>
+</div></section>
+<section data-slide-id="deploy-06" data-geometry="G17" data-semantic="S32">
+<div class="slide-frame concept-frame">
+<nav class="journey" aria-label="Recorrido"><span class="done">Mapa</span><b aria-hidden="true">→</b><span class="done">Construir</span><b aria-hidden="true">→</b><span class="active">Distribuir</span><b aria-hidden="true">→</b><span class="">Abrir</span><b aria-hidden="true">→</b><span class="">Actualizar</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog / Despliegue web</p><h2 class="slide-title">Una CDN acerca copias de los archivos.</h2></header>
+<div class="visual-stage"><svg class="diagram" viewBox="0 0 1680 610" role="img" aria-label="Una CDN acerca copias de los archivos."><defs><marker id="arrow-5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs><rect x="430" y="25" width="820" height="545" rx="8" fill="#f0f3f9" stroke="#cbd4e4" stroke-width="2"/><text x="458" y="70" text-anchor="start" fill="#223b8f" font-size="25" font-weight="600">CDN: RED DE DISTRIBUCIÓN DE CONTENIDO</text><g transform="translate(132.5,210) scale(3.9583333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+  <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+  <line x1="6" x2="6.01" y1="6" y2="6" />
+  <line x1="6" x2="6.01" y1="18" y2="18" />
+</g><text x="180" y="352" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Hosting</text><text x="180" y="395" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Archivos publicados</text><path d="M300 250 L510 250" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-5)" /><text x="405.0" y="230.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">entrega archivos</text><g transform="translate(730,180) scale(8.75)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="10" />
+  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+  <path d="M2 12h20" />
+</g><g transform="translate(577.0,100) scale(2.75)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+  <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+  <line x1="6" x2="6.01" y1="6" y2="6" />
+  <line x1="6" x2="6.01" y1="18" y2="18" />
+</g><text x="610" y="213" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Nodo A</text><g transform="translate(1047.0,100) scale(2.75)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+  <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+  <line x1="6" x2="6.01" y1="6" y2="6" />
+  <line x1="6" x2="6.01" y1="18" y2="18" />
+</g><text x="1080" y="213" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Nodo B</text><g transform="translate(1047.0,365) scale(2.75)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+  <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+  <line x1="6" x2="6.01" y1="6" y2="6" />
+  <line x1="6" x2="6.01" y1="18" y2="18" />
+</g><text x="1080" y="478" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Nodo C</text><path d="M770 235 L660 175" fill="none" stroke="#58657e" stroke-width="3" marker-end="url(#arrow-5)" stroke-dasharray='9 8'/><path d="M930 235 L1045 175" fill="none" stroke="#58657e" stroke-width="3" marker-end="url(#arrow-5)" stroke-dasharray='9 8'/><path d="M930 290 L1045 385" fill="none" stroke="#58657e" stroke-width="3" marker-end="url(#arrow-5)" stroke-dasharray='9 8'/><g transform="translate(1447.5,205) scale(3.9583333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" />
+</g><text x="1495" y="347" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Visitante</text><text x="1495" y="390" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Recibe los archivos</text><path d="M1170 250 L1380 250" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-5)" /><text x="1275.0" y="230.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">desde un nodo</text></svg></div>
+<p class="takeaway">La red dirige la petición a un nodo adecuado. Hosting + CDN vienen integrados en Cloudflare Pages.</p>
+<aside class="notes">CDN significa Content Delivery Network. Un nodo es un punto de esa red. Dibujo conceptual, no geografía ni topología real de Cloudflare. Suele reducir distancia y carga del origen, sin garantizar que siempre use el nodo físicamente más cercano. Hosting conserva contenido; la CDN puede guardar copias reutilizables. No significa que cada despliegue copie de inmediato todos los archivos a todos los nodos. Fuentes: https://www.cloudflare.com/learning/cdn/what-is-a-cdn/ y https://www.cloudflare.com/learning/cdn/glossary/edge-server/</aside>
+</div></section>
+<section data-slide-id="deploy-07" data-geometry="G06" data-semantic="S33">
+<div class="slide-frame concept-frame">
+<nav class="journey" aria-label="Recorrido"><span class="done">Mapa</span><b aria-hidden="true">→</b><span class="done">Construir</span><b aria-hidden="true">→</b><span class="active">Distribuir</span><b aria-hidden="true">→</b><span class="">Abrir</span><b aria-hidden="true">→</b><span class="">Actualizar</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog / Despliegue web</p><h2 class="slide-title">La CDN reutiliza una copia cuando puede.</h2></header>
+<div class="visual-stage"><svg class="diagram" viewBox="0 0 1680 610" role="img" aria-label="La CDN reutiliza una copia cuando puede."><defs><marker id="arrow-6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs><rect x="0" y="25" width="1680" height="255" rx="8" fill="#f0f3f9" stroke="#cbd4e4" stroke-width="2"/><text x="28" y="70" text-anchor="start" fill="#223b8f" font-size="25" font-weight="600">SIN COPIA UTILIZABLE EN ESTE NODO</text><g transform="translate(139.0,100) scale(2.5833333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" />
+</g><text x="170" y="209" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Navegador</text><path d="M290 135 L650 135" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-6)" /><text x="470.0" y="115.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">1. pide app-a1.js</text><g transform="translate(809.0,100) scale(2.5833333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+  <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+  <line x1="6" x2="6.01" y1="6" y2="6" />
+  <line x1="6" x2="6.01" y1="18" y2="18" />
+</g><text x="840" y="209" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Nodo CDN</text><path d="M1000 125 L1380 125" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-6)" /><text x="1190.0" y="105.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">2. pide al origen</text><g transform="translate(1479.0,100) scale(2.5833333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
+  <path d="M12 22V12" />
+  <polyline points="3.29 7 12 12 20.71 7" />
+  <path d="m7.5 4.27 9 5.15" />
+</g><text x="1510" y="209" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Origen</text><path d="M1380 210 L1000 210" fill="none" stroke="#2f6f5e" stroke-width="3" marker-end="url(#arrow-6)" /><text x="1190.0" y="190.0" text-anchor="middle" fill="#2f6f5e" font-size="25" font-weight="400">3. archivo</text><path d="M650 210 L290 210" fill="none" stroke="#2f6f5e" stroke-width="3" marker-end="url(#arrow-6)" /><text x="470.0" y="190.0" text-anchor="middle" fill="#2f6f5e" font-size="25" font-weight="400">4. entrega y conserva</text><rect x="0" y="320" width="1680" height="255" rx="8" fill="#f0f3f9" stroke="#cbd4e4" stroke-width="2"/><text x="28" y="365" text-anchor="start" fill="#223b8f" font-size="25" font-weight="600">CON COPIA REUTILIZABLE</text><g transform="translate(139.0,395) scale(2.5833333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" />
+</g><text x="170" y="504" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Navegador</text><path d="M290 420 L650 420" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-6)" /><text x="470.0" y="400.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">1. pide app-a1.js</text><g transform="translate(809.0,395) scale(2.5833333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+  <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+  <line x1="6" x2="6.01" y1="6" y2="6" />
+  <line x1="6" x2="6.01" y1="18" y2="18" />
+</g><text x="840" y="504" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Nodo CDN</text><path d="M650 510 L290 510" fill="none" stroke="#2f6f5e" stroke-width="3" marker-end="url(#arrow-6)" /><text x="470.0" y="490.0" text-anchor="middle" fill="#2f6f5e" font-size="25" font-weight="400">2. entrega la copia</text><g transform="translate(1465,390) scale(3.3333333333333335)" fill="none" stroke="#58657e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
+  <path d="M12 22V12" />
+  <polyline points="3.29 7 12 12 20.71 7" />
+  <path d="m7.5 4.27 9 5.15" />
+</g><text x="1510" y="530" text-anchor="middle" fill="#58657e" font-size="26" font-weight="400">Sin consultar el origen</text></svg></div>
+<p class="takeaway">Caché = copia temporal para reutilizar. Si falta o necesita validarse, puede consultarse al origen.</p>
+<aside class="notes">En la fila superior el nodo obtiene el archivo, lo devuelve al navegador y puede conservarlo según las reglas de caché. Esta es una explicación general, no el detalle interno exacto de Pages. Caducar no significa borrar inmediatamente: puede requerirse revalidación. Distinguir esta caché de archivos de TanStack Query, que conserva respuestas para la app, y de la caché HTTP del propio navegador. Fuente: https://www.cloudflare.com/learning/cdn/performance/</aside>
+</div></section>
+<section data-slide-id="deploy-08" data-geometry="G10" data-semantic="S33">
+<div class="slide-frame concept-frame">
+<nav class="journey" aria-label="Recorrido"><span class="done">Mapa</span><b aria-hidden="true">→</b><span class="done">Construir</span><b aria-hidden="true">→</b><span class="done">Distribuir</span><b aria-hidden="true">→</b><span class="active">Abrir</span><b aria-hidden="true">→</b><span class="">Actualizar</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog / Despliegue web</p><h2 class="slide-title">La URL permite encontrar y pedir la web.</h2></header>
+<div class="visual-stage"><svg class="diagram" viewBox="0 0 1680 610" role="img" aria-label="La URL permite encontrar y pedir la web."><defs><marker id="arrow-7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs><rect x="415.0" y="41" width="850" height="55" rx="5" fill="#e7ecf8"/><text x="840" y="75" text-anchor="middle" fill="#223b8f" font-size="28" font-weight="600">https://mi-medialog.pages.dev</text><g transform="translate(130.0,220) scale(4.166666666666667)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="8" r="5" />
+  <path d="M20 21a8 8 0 0 0-16 0" />
+</g><text x="180" y="367" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Persona</text><text x="180" y="410" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Abre la dirección</text><path d="M290 270 L450 270" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-7)" /><g transform="translate(510.0,220) scale(4.166666666666667)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" />
+</g><text x="560" y="367" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Navegador</text><text x="560" y="410" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Inicia la visita</text><path d="M680 270 L900 270" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-7)" /><text x="790.0" y="250.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">DNS: encontrar</text><g transform="translate(960.0,220) scale(4.166666666666667)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="m21 21-4.34-4.34" />
+  <circle cx="11" cy="11" r="8" />
+</g><text x="1010" y="367" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Dirección de red</text><text x="1010" y="410" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Para ese dominio</text><path d="M1140 270 L1350 270" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-7)" /><text x="1245.0" y="250.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">HTTPS: pedir</text><g transform="translate(1430.0,220) scale(4.166666666666667)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="10" />
+  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+  <path d="M2 12h20" />
+</g><text x="1480" y="367" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">CDN</text><text x="1480" y="410" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Devuelve archivos</text></svg></div>
+<p class="takeaway">DNS relaciona el nombre con una dirección de red. HTTPS protege la comunicación.</p>
+<aside class="notes">URL ilustrativa, no un despliegue creado. Primero el navegador resuelve el dominio, posiblemente usando una caché; después establece la conexión segura y envía la petición HTTP. No presentar DNS como algo que entrega HTML ni como el sistema que elige componentes React. Simplificamos los intermediarios y la negociación TLS. El hosting/CDN atiende la petición, no el repositorio Git.</aside>
+</div></section>
+<section data-slide-id="deploy-09" data-geometry="G12" data-semantic="S32">
+<div class="slide-frame concept-frame">
+<nav class="journey" aria-label="Recorrido"><span class="done">Mapa</span><b aria-hidden="true">→</b><span class="done">Construir</span><b aria-hidden="true">→</b><span class="done">Distribuir</span><b aria-hidden="true">→</b><span class="active">Abrir</span><b aria-hidden="true">→</b><span class="">Actualizar</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog / Despliegue web</p><h2 class="slide-title">En CSR, React dibuja dentro del navegador.</h2></header>
+<div class="visual-stage"><svg class="diagram" viewBox="0 0 1680 610" role="img" aria-label="En CSR, React dibuja dentro del navegador."><defs><marker id="arrow-8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs><g transform="translate(115.0,220) scale(4.583333333333333)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="10" />
+  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+  <path d="M2 12h20" />
+</g><text x="170" y="377" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">CDN</text><text x="170" y="420" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Entrega archivos</text><path d="M300 270 L550 270" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-8)" /><text x="425.0" y="250.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">HTML + CSS + JS</text><rect x="590" y="55" width="1090" height="470" rx="8" fill="#f0f3f9" stroke="#cbd4e4" stroke-width="2"/><text x="618" y="100" text-anchor="start" fill="#223b8f" font-size="25" font-weight="600">NAVEGADOR DE LA PERSONA</text><g transform="translate(727.5,190) scale(3.5416666666666665)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+  <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+  <path d="M10 12.5 8 15l2 2.5" />
+  <path d="m14 12.5 2 2.5-2 2.5" />
+</g><text x="770" y="322" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">1. Lee HTML</text><text x="770" y="365" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Encuentra los recursos</text><path d="M880 230 L970 230" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-8)" /><g transform="translate(1047.5,190) scale(3.5416666666666665)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
+  <circle cx="12" cy="12" r="3" />
+</g><text x="1090" y="322" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">2. Ejecuta JS</text><text x="1090" y="365" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">React calcula la UI</text><path d="M1210 230 L1300 230" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-8)" /><g transform="translate(1417.5,190) scale(3.5416666666666665)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" />
+</g><text x="1460" y="322" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">3. Muestra</text><text x="1460" y="365" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">MediaLog</text></svg></div>
+<p class="takeaway">CSR = renderizado del lado del cliente: el JavaScript de la app construye la interfaz en el navegador.</p>
+<aside class="notes">En nuestra SPA sin SSR, index.html aporta la entrada y referencias a recursos; no contiene toda la interfaz React ya renderizada. El navegador pide recursos, procesa CSS y ejecuta JavaScript; React monta los componentes. No afirmar que HTML está completamente vacío ni que todo JavaScript necesariamente llega en una única descarga. El build ocurre antes; el render ocurre en cada navegador.</aside>
+</div></section>
+<section data-slide-id="deploy-10" data-geometry="G13" data-semantic="S34">
+<div class="slide-frame concept-frame">
+<nav class="journey" aria-label="Recorrido"><span class="done">Mapa</span><b aria-hidden="true">→</b><span class="done">Construir</span><b aria-hidden="true">→</b><span class="done">Distribuir</span><b aria-hidden="true">→</b><span class="done">Abrir</span><b aria-hidden="true">→</b><span class="active">Actualizar</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog / Despliegue web</p><h2 class="slide-title">Cambiar el código requiere publicar otra versión.</h2></header>
+<div class="visual-stage"><svg class="diagram" viewBox="0 0 1680 610" role="img" aria-label="Cambiar el código requiere publicar otra versión."><defs><marker id="arrow-9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs><rect x="0" y="40" width="1680" height="260" rx="8" fill="#f0f3f9" stroke="#cbd4e4" stroke-width="2"/><text x="28" y="85" text-anchor="start" fill="#223b8f" font-size="25" font-weight="600">NUEVA PUBLICACIÓN</text><g transform="translate(147.5,115) scale(2.7083333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M15 6a9 9 0 0 0-9 9V3" />
+  <circle cx="18" cy="6" r="3" />
+  <circle cx="6" cy="18" r="3" />
+</g><text x="180" y="227" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Código B</text><path d="M290 150 L460 150" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-9)" /><g transform="translate(537.5,115) scale(2.7083333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
+  <circle cx="12" cy="12" r="3" />
+</g><text x="570" y="227" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Build B</text><path d="M690 150 L910 150" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-9)" /><g transform="translate(987.5,115) scale(2.7083333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
+  <path d="M12 22V12" />
+  <polyline points="3.29 7 12 12 20.71 7" />
+  <path d="m7.5 4.27 9 5.15" />
+</g><text x="1020" y="227" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">app-b2.js</text><path d="M1140 150 L1370 150" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-9)" /><g transform="translate(1457.5,115) scale(2.7083333333333335)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <circle cx="12" cy="12" r="10" />
+  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+  <path d="M2 12h20" />
+</g><text x="1490" y="227" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Versión B</text><g transform="translate(385.0,370) scale(3.75)" fill="none" stroke="#58657e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" />
+</g><text x="430" y="507" text-anchor="middle" fill="#58657e" font-size="36" font-weight="600">Pestaña ya abierta</text><text x="430" y="550" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Puede seguir ejecutando A</text><path d="M670 420 L1000 420" fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#arrow-9)" /><text x="835.0" y="400.0" text-anchor="middle" fill="#223b8f" font-size="25" font-weight="400">recarga / nueva carga</text><g transform="translate(1215.0,370) scale(3.75)" fill="none" stroke="#223b8f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect width="20" height="14" x="2" y="3" rx="2" />
+  <line x1="8" x2="16" y1="21" y2="21" />
+  <line x1="12" x2="12" y1="17" y2="21" />
+</g><text x="1260" y="507" text-anchor="middle" fill="#223b8f" font-size="36" font-weight="600">Nueva carga</text><text x="1260" y="550" text-anchor="middle" fill="#58657e" font-size="28" font-weight="400">Obtiene la versión vigente</text></svg></div>
+<p class="takeaway">Los nombres versionados ayudan a distinguir archivos nuevos de copias anteriores.</p>
+<aside class="notes">app-a1.js y app-b2.js ilustran hashes de contenido. Un despliegue no reescribe el JavaScript que ya está ejecutándose en pestañas abiertas. La obtención de la versión vigente depende de reglas de caché correctas y revalidación del HTML; no prometer propagación instantánea ni un temporizador universal. Esta app no introduce un service worker. Pages gestiona publicación y caché de sus assets; no pedir purgas manuales como paso obligatorio.</aside>
+</div></section></div></div><script type="module" src="/src/framework/deck.js"></script></body></html>

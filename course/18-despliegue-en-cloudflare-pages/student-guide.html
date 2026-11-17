@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 18 para React Guide VI">
+    <title>Guía estudiantil · Sesión 18 · Despliegue en Cloudflare Pages</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 18 · Despliegue en Cloudflare Pages</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 18 · Despliegue en Cloudflare Pages</h1>
+<blockquote>Paquete textual aprobado. Trabaja sobre el seed indicado por el docente cuando esté disponible.</blockquote>
+<ul><li><strong>Fecha:</strong> jueves 12 de noviembre de 2026</li><li><strong>Semana:</strong> 8</li><li><strong>Modalidad:</strong> virtual</li><li><strong>Duración:</strong> 90 minutos</li><li><strong>Lectura previa:</strong> <strong>pre-class-reading.md</strong></li><li><strong>Seed propuesto:</strong> <code>s08-c18-cloudflare-pages-seed</code></li></ul>
+<h2>Objetivo</h2>
+<p>Publicar la SPA existente mediante la integración Git de Cloudflare Pages y demostrar, con evidencias separadas, que el build remoto, las rutas, Firebase y la API funcionan desde una URL externa.</p>
+<p>No crearás otro proyecto React ni añadirás una feature. Desplegarás el checkpoint completo de la sesión 16.</p>
+<h2>Punto de partida</h2>
+<p>Antes de configurar Cloudflare, confirma:</p>
+<ul><li>acceso a tu cuenta Cloudflare;</li><li>acceso al repositorio GitHub o GitLab;</li><li>rama de producción <code>main</code>;</li><li>worktree limpio y revisión local identificable;</li><li>origen <code>https://&lt;proyecto&gt;.pages.dev</code> registrado según la logística docente;</li><li>checkpoint 16 completo;</li><li><code>.env.example</code> con la URL pública de la API y sin values propios de Firebase;</li><li>ningún token o archivo privado dentro del repositorio.</li></ul>
+<p>Si falta un permiso externo, informa el error exacto. No copies credenciales al chat, a una captura o al repositorio.</p>
+<h2>Mapa de la sesión</h2>
+<pre><code class="language-text">release candidate local
+  → audit de configuración
+  → repo conectado
+  → build remoto
+  → dist publicado
+  → rutas recargables
+  → Firebase + API + CORS
+  → evidencia registrada</code></pre>
+<h2>Paso 1 · Comprueba el release candidate</h2>
+<p>Ejecuta:</p>
+<pre><code class="language-bash">git status --short
+git rev-parse HEAD
+pnpm test
+pnpm build
+pnpm preview</code></pre>
+<p>Con preview abierto:</p>
+<ol><li>abre <code>/search</code>;</li><li>abre un detalle público real;</li><li>recarga esa ruta;</li><li>abre <code>/app/library</code> sin sesión;</li><li>detén preview después de registrar el resultado.</li></ol>
+<p><code>git status --short</code> debe quedar vacío. Conserva el hash de <code>HEAD</code>: test y build respaldan esa revisión, no cambios locales que Pages todavía no puede recibir. Si hay cambios sin registrar, detente y usa el checkpoint indicado por el docente; esta sesión no enseña commit o push.</p>
+<p><code>pnpm build</code> produce <code>dist</code>. <code>pnpm preview</code> sirve esa carpeta de forma local para inspección. Ninguno publica el sitio en Cloudflare.</p>
+<p>No añadas <code>dist</code> al repositorio.</p>
+<h2>Paso 2 · Inventaría la configuración sin mostrar values</h2>
+<p>Tu <code>.env.example</code> debe conservar la URL pública de la API y dejar vacíos los values específicos de Firebase:</p>
+<pre><code class="language-dotenv">VITE_API_URL=https://bootcamp-medialog.cardor.dev
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=</code></pre>
+<p>Estos values llegan al bundle del navegador durante el build. No coloques en variables <code>VITE_*</code>:</p>
+<ul><li>contraseñas;</li><li>Firebase ID tokens;</li><li>tokens de Cloudflare;</li><li>claves privadas;</li><li>cuentas de servicio.</li></ul>
+<p>Consulta tus values desde el lugar privado definido en la sesión 12. No los dictes ni compartas la pantalla completa mientras estén visibles.</p>
+<h2>Trabajo con agente · Paso 3 · Ejecuta el audit asistido</h2>
+<p>Antes de conectar el proveedor, entrega al agente este encargo sin ampliarlo:</p>
+<pre><code class="language-text">Punto de entrada verificable:
+- El proyecto es una SPA React construida con Vite.
+- package.json debe declarar pnpm@11.17.0 y scripts test, build y preview.
+- pnpm-lock.yaml es el único lockfile permitido.
+- .env.example debe fijar `VITE_API_URL=https://bootcamp-medialog.cardor.dev` y enumerar seis variables `VITE_FIREBASE_*` sin values reales.
+- Las rutas públicas y privadas ya existen.
+
+Objetivo único:
+Audita sin editar fuente o configuración si el repositorio está preparado para un build estático en Cloudflare Pages. Devuelve confirmado, gaps y aspectos no comprobados.
+
+Fuente del comportamiento esperado:
+- Production branch: main.
+- Build command: pnpm build.
+- Output directory: dist.
+- Runtime remoto: Node 22.22.0 y pnpm 11.17.0.
+- La SPA no necesita 404.html, _redirects, Wrangler, Pages Functions o Workers en el caso base.
+- La revisión probada debe quedar identificada para compararla después con la revisión publicada por Pages.
+
+Archivos que puedes leer:
+- package.json
+- pnpm-lock.yaml
+- .env.example
+- vite.config.ts
+- .gitignore
+- src/App.tsx y los módulos de rutas importados por ese archivo
+
+Cambios permitidos:
+- Ningún cambio de fuente o configuración. pnpm test y pnpm build pueden crear cachés o artefactos ignorados; repórtalos por separado y no los presentes como cambios del producto.
+
+Cambios y acciones prohibidas:
+- No leas .env, .env.local o archivos que contengan values reales.
+- No muestres credenciales, tokens o configuración privada.
+- No instales dependencias.
+- No ejecutes login, deploy, Wrangler, Cloudflare, Git push, commit, checkout o reset.
+- No corrijas errores ni modifiques tests para obtener verde.
+
+Criterios observables:
+- Identifica packageManager, scripts, lockfile, output esperado y nombres de variables.
+- Enumera una ruta raíz, una pública anidada y una privada para comprobación posterior.
+- Señala cualquier 404.html, _redirects o configuración Cloudflare inesperada.
+- Registra el hash de HEAD y exige un estado Git limpio antes de atribuir test y build a esa revisión.
+- Separa hechos leídos, resultados ejecutados y aspectos que requieren navegador o proveedor.
+
+Ejecuta estos comandos en orden:
+1. git status --short
+2. git rev-parse HEAD
+3. pnpm pkg get packageManager
+4. pnpm test
+5. pnpm build
+6. git diff --check
+7. git status --short
+
+Condición de parada:
+Si el primer git status no está vacío, si un comando falla o si el estado final contiene cambios nuevos, detente después de registrar el primer dato útil. No lo corrijas. Si falta un archivo esperado, repórtalo como gap sin inventar su contenido.
+
+Formato de lectura posterior:
+Resume archivos leídos, hash de HEAD, estados Git inicial y final, cadena de build, rutas elegidas, decisiones confirmadas, artefactos ignorados, supuestos y límites. Termina con tres secciones: Confirmado, Gaps y No comprobado.</code></pre>
+<p>Abre cada archivo citado por el informe. Confirma que el agente no cambió nada y revisa:</p>
+<pre><code class="language-bash">git diff --check
+git status --short</code></pre>
+<p>El audit no demuestra Cloudflare, Firebase, CORS, API o navegador.</p>
+<h2>Paso 4 · Conecta el repositorio</h2>
+<p>En el dashboard de Cloudflare:</p>
+<ol><li>entra a <code>Workers &amp; Pages</code>;</li><li>selecciona la creación o configuración de una aplicación Pages desde un repositorio Git;</li><li>autoriza únicamente el repositorio del curso;</li><li>confirma la rama <code>main</code>;</li><li>comprueba que el proyecto seleccionado contiene el checkpoint actual.</li></ol>
+<p>No ejecutes C3. C3 crearía una aplicación nueva. Tampoco instales Wrangler.</p>
+<h2>Paso 5 · Configura el build remoto</h2>
+<p>Registra:</p>
+<pre><code class="language-text">Build command: pnpm build
+Build output directory: dist
+NODE_VERSION: 22.22.0
+PNPM_VERSION: 11.17.0</code></pre>
+<p>Después agrega los siete nombres <code>VITE_*</code> con tus values de producción.</p>
+<p>Comprueba cada nombre. Un typo puede permitir que el build termine y producir una aplicación que falla al ejecutar.</p>
+<p>Cambiar una variable <code>VITE_*</code> exige otro despliegue porque Vite la sustituye durante el build.</p>
+<h2>Paso 6 · Lee el despliegue</h2>
+<p>Inicia el despliegue y localiza:</p>
+<ul><li>rama y revisión;</li><li>coincidencia entre la revisión publicada y el <code>HEAD</code> probado localmente;</li><li>instalación con pnpm;</li><li>ejecución de <code>pnpm build</code>;</li><li>finalización del build;</li><li>publicación de <code>dist</code>;</li><li>URL y deployment id.</li></ul>
+<p>Si falla, conserva el primer error útil. Clasifícalo antes de cambiar algo:</p>
+<div class="table-wrap"><table><thead><tr><th>Capa</th><th>Ejemplos</th></tr></thead><tbody><tr><td>Instalación</td><td>lockfile, pnpm o dependencia</td></tr><tr><td>Runtime</td><td>versión de Node o pnpm</td></tr><tr><td>Configuración</td><td>nombre de variable ausente</td></tr><tr><td>Build</td><td>TypeScript, Vite o import</td></tr><tr><td>Salida</td><td>directorio distinto de <code>dist</code></td></tr></tbody></table></div>
+<p>Cambia una sola configuración relacionada con el error y vuelve a desplegar. No elimines tests, types o dependencias para obtener verde.</p>
+<h2>Paso 7 · Comprueba la URL externa</h2>
+<p>Usa una ventana privada o un navegador que no dependa de tu servidor local.</p>
+<h3>Hosting y Router</h3>
+<ul><li>Abre la raíz <code>https://&lt;proyecto&gt;.pages.dev</code>.</li><li>Abre <code>/search</code> directamente.</li><li>Abre una URL real <code>/media/:mediaType/:externalId</code>.</li><li>Recarga esa URL.</li></ul>
+<p>El caso base no añade <code>_redirects</code> o <code>404.html</code>. Sin un <code>404.html</code> superior, Cloudflare Pages aplica su comportamiento SPA y entrega la entrada para que React Router interprete la ruta.</p>
+<h3>Guardia y Firebase</h3>
+<ul><li>Abre <code>/app/library</code> sin sesión.</li><li>Confirma la redirección a Login.</li><li>Inicia sesión.</li><li>Comprueba que la biblioteca abre.</li></ul>
+<h3>API y CORS</h3>
+<p>En Network, selecciona un request hacia <code>VITE_API_URL</code> y registra:</p>
+<ul><li>URL y método;</li><li>status;</li><li>resultado visible;</li><li>si el navegador permitió leer el response.</li></ul>
+<p>No copies el header <code>Authorization</code> ni captures el token.</p>
+<p>Si la SPA abre pero el navegador informa CORS, registra el origen exacto <code>https://&lt;proyecto&gt;.pages.dev</code> y entrégalo al docente. No cambies React, Firebase o el cliente HTTP para esconder el bloqueo.</p>
+<h2>Paso 8 · Clasifica antes de corregir</h2>
+<div class="table-wrap"><table><thead><tr><th>Síntoma</th><th>Revisa primero</th></tr></thead><tbody><tr><td>Pages no instala</td><td>Node, pnpm, lockfile y primera línea útil del log</td></tr><tr><td>Local pasa y remoto falla</td><td>Diferencias de runtime o variables</td></tr><tr><td>Raíz responde 404</td><td>Directorio de salida</td></tr><tr><td>Raíz abre y ruta recargada falla</td><td>Request del documento, <code>404.html</code> y proyecto correcto</td></tr><tr><td>Pantalla queda vacía</td><td>Console y carga de bundles</td></tr><tr><td>Firebase rechaza</td><td>Código de error y variables Firebase</td></tr><tr><td>API funciona local y falla publicada</td><td><code>VITE_API_URL</code>, origin y CORS</td></tr><tr><td>API responde 401</td><td>Sesión y autorización, no CORS</td></tr></tbody></table></div>
+<p>No describas todo fallo de red como CORS. Network distingue un response HTTP de un response que el navegador no permite leer.</p>
+<h2>Evidencia de entrega</h2>
+<p>Completa sin incluir credenciales:</p>
+<pre><code class="language-text">Rama de producción:
+Revisión local comprobada:
+Revisión publicada:
+URL de Pages:
+Deployment id:
+Test local:
+Build local:
+Build remoto:
+Ruta pública recargada:
+Guardia privada:
+Login:
+API y CORS:
+Gap conocido:</code></pre>
+<p>Conserva esta ficha: es el punto de entrada de la sesión 19 para identificar tu producto y preparar su defensa técnica.</p>
+<p>La evidencia queda completa cuando puedes explicar:</p>
+<ul><li>qué revisión se publicó;</li><li>qué comando produjo <code>dist</code>;</li><li>qué versiones usó Pages;</li><li>por qué <code>VITE_*</code> es público;</li><li>cómo comprobaste una ruta anidada;</li><li>qué demuestran Console, Network y el build log;</li><li>qué dependencia externa sigue pendiente, si existe.</li></ul>
+<h2>Frontera de la evidencia</h2>
+<ul><li>Test y build local no prueban Cloudflare.</li><li>Build remoto no prueba navegador.</li><li>Raíz visible no prueba React Router, Firebase o API.</li><li>Login no prueba la biblioteca privada.</li><li>Un request API no prueba la regresión completa.</li><li>Un informe del agente no prueba ningún servicio externo.</li></ul>
+<h2>Fuera de alcance</h2>
+<ul><li>C3, Wrangler, Pages Functions, Workers, KV o D1.</li><li>Direct Upload como procedimiento base.</li><li>Custom domains, DNS, analytics o reglas de caché.</li><li>SSR, SSG o cambios de arquitectura.</li><li>Modificaciones del backend.</li><li>Reparación de features anteriores.</li><li>Preparación de la presentación final.</li></ul></main>
+      <footer>Material de trabajo en clase · Sesión 18</footer>
+    </article>
+  </body>
+</html>
