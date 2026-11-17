@@ -1,0 +1,245 @@
+[
+  {
+    "source": "Projects/01-definicion-funcional.md",
+    "source_sha256": "9c94eb5df22cf0beaec42258fe79637cb0f646159782ef740650184dd94f7853",
+    "pdf": "output/pdf/01-definicion-funcional.pdf",
+    "pdf_sha256": "0282b4f71bf7dc0049d9447718b24270a5c3a47c079b5e5e01688ede28ee82f1",
+    "pages": 11,
+    "markers": [
+      "F1-INICIO",
+      "F1-AHK-PREFLIGHT",
+      "F1-DESCUBRIMIENTO",
+      "F1-APROBACION",
+      "F1-SINTESIS",
+      "F1-DEFENSA"
+    ],
+    "extraction": {
+      "pypdf": {
+        "F1-INICIO": true,
+        "F1-AHK-PREFLIGHT": true,
+        "F1-DESCUBRIMIENTO": true,
+        "F1-APROBACION": true,
+        "F1-SINTESIS": true,
+        "F1-DEFENSA": true
+      },
+      "poppler": {
+        "F1-INICIO": true,
+        "F1-AHK-PREFLIGHT": true,
+        "F1-DESCUBRIMIENTO": true,
+        "F1-APROBACION": true,
+        "F1-SINTESIS": true,
+        "F1-DEFENSA": true
+      },
+      "poppler_layout": {
+        "F1-INICIO": true,
+        "F1-AHK-PREFLIGHT": true,
+        "F1-DESCUBRIMIENTO": true,
+        "F1-APROBACION": true,
+        "F1-SINTESIS": true,
+        "F1-DEFENSA": true
+      },
+      "pdfplumber": {
+        "F1-INICIO": true,
+        "F1-AHK-PREFLIGHT": true,
+        "F1-DESCUBRIMIENTO": true,
+        "F1-APROBACION": true,
+        "F1-SINTESIS": true,
+        "F1-DEFENSA": true
+      }
+    },
+    "all_source_words_preserved": true,
+    "invisible_checkpoint_layout_height": 0,
+    "visual": {
+      "all_pages_pixel_identical_to_control": true,
+      "pages_compared": 11
+    },
+    "partial_selection": {
+      "method": "PDFKit PDFPage.selection(for: rect).string; no UI clipboard claim",
+      "cases_passed": 77,
+      "prompts": [
+        "F1-PROMPT-1",
+        "F1-PROMPT-2",
+        "F1-PROMPT-3"
+      ],
+      "scopes": [
+        "prompt segments on each page",
+        "all consecutive three-line windows"
+      ],
+      "all_reminders_preserved": true,
+      "all_first_visible_lines_preserved": true,
+      "full_document_checkpoint_payloads": {
+        "F1-INICIO": true,
+        "F1-AHK-PREFLIGHT": true,
+        "F1-DESCUBRIMIENTO": true,
+        "F1-APROBACION": true,
+        "F1-SINTESIS": true,
+        "F1-DEFENSA": true
+      },
+      "all_source_words_preserved_full_selection": true,
+      "visible_layout_changed": false,
+      "limitations": "No guarantee for isolated words/lines, unrelated body fragments, other viewers or OCR"
+    }
+  },
+  {
+    "source": "Projects/02-procesos-y-reglas.md",
+    "source_sha256": "fd3eb1c952fd2594adc802b9eac62978b515d6e13493009182c0f1bc10689c9a",
+    "pdf": "output/pdf/02-procesos-y-reglas.pdf",
+    "pdf_sha256": "5cfbfa82b3cd66991e3bd70d01e1276453e725e67ea8fbe7580f4e8144f565fa",
+    "pages": 9,
+    "markers": [
+      "F2-INICIO",
+      "F2-AHK-PREFLIGHT",
+      "F2-PROCESOS",
+      "F2-APROBACION",
+      "F2-SINTESIS",
+      "F2-DEFENSA"
+    ],
+    "extraction": {
+      "pypdf": {
+        "F2-INICIO": true,
+        "F2-AHK-PREFLIGHT": true,
+        "F2-PROCESOS": true,
+        "F2-APROBACION": true,
+        "F2-SINTESIS": true,
+        "F2-DEFENSA": true
+      },
+      "poppler": {
+        "F2-INICIO": true,
+        "F2-AHK-PREFLIGHT": true,
+        "F2-PROCESOS": true,
+        "F2-APROBACION": true,
+        "F2-SINTESIS": true,
+        "F2-DEFENSA": true
+      },
+      "poppler_layout": {
+        "F2-INICIO": true,
+        "F2-AHK-PREFLIGHT": true,
+        "F2-PROCESOS": true,
+        "F2-APROBACION": true,
+        "F2-SINTESIS": true,
+        "F2-DEFENSA": true
+      },
+      "pdfplumber": {
+        "F2-INICIO": true,
+        "F2-AHK-PREFLIGHT": true,
+        "F2-PROCESOS": true,
+        "F2-APROBACION": true,
+        "F2-SINTESIS": true,
+        "F2-DEFENSA": true
+      }
+    },
+    "all_source_words_preserved": true,
+    "invisible_checkpoint_layout_height": 0,
+    "visual": {
+      "all_pages_pixel_identical_to_control": true,
+      "pages_compared": 9
+    },
+    "partial_selection": {
+      "method": "PDFKit PDFPage.selection(for: rect).string; no UI clipboard claim",
+      "cases_passed": 76,
+      "prompts": [
+        "F2-PROMPT-1",
+        "F2-PROMPT-2",
+        "F2-PROMPT-3"
+      ],
+      "scopes": [
+        "prompt segments on each page",
+        "all consecutive three-line windows"
+      ],
+      "all_reminders_preserved": true,
+      "all_first_visible_lines_preserved": true,
+      "full_document_checkpoint_payloads": {
+        "F2-INICIO": true,
+        "F2-AHK-PREFLIGHT": true,
+        "F2-PROCESOS": true,
+        "F2-APROBACION": true,
+        "F2-SINTESIS": true,
+        "F2-DEFENSA": true
+      },
+      "all_source_words_preserved_full_selection": true,
+      "visible_layout_changed": false,
+      "limitations": "No guarantee for isolated words/lines, unrelated body fragments, other viewers or OCR"
+    }
+  },
+  {
+    "source": "Projects/03-diseno-tecnico.md",
+    "source_sha256": "c16bf28cd4a926294cf86d4b5ecbab72a55aae3134854545a859d0cbf0cebc84",
+    "pdf": "output/pdf/03-diseno-tecnico.pdf",
+    "pdf_sha256": "ec765397b2a89e5edcca9d37adee98a1e3fc8aa08f150f8048d341bf4dda6ce6",
+    "pages": 11,
+    "markers": [
+      "F3-INICIO",
+      "F3-AHK-PREFLIGHT",
+      "F3-DISENO",
+      "F3-APROBACION",
+      "F3-SINTESIS",
+      "F3-DEFENSA"
+    ],
+    "extraction": {
+      "pypdf": {
+        "F3-INICIO": true,
+        "F3-AHK-PREFLIGHT": true,
+        "F3-DISENO": true,
+        "F3-APROBACION": true,
+        "F3-SINTESIS": true,
+        "F3-DEFENSA": true
+      },
+      "poppler": {
+        "F3-INICIO": true,
+        "F3-AHK-PREFLIGHT": true,
+        "F3-DISENO": true,
+        "F3-APROBACION": true,
+        "F3-SINTESIS": true,
+        "F3-DEFENSA": true
+      },
+      "poppler_layout": {
+        "F3-INICIO": true,
+        "F3-AHK-PREFLIGHT": true,
+        "F3-DISENO": true,
+        "F3-APROBACION": true,
+        "F3-SINTESIS": true,
+        "F3-DEFENSA": true
+      },
+      "pdfplumber": {
+        "F3-INICIO": true,
+        "F3-AHK-PREFLIGHT": true,
+        "F3-DISENO": true,
+        "F3-APROBACION": true,
+        "F3-SINTESIS": true,
+        "F3-DEFENSA": true
+      }
+    },
+    "all_source_words_preserved": true,
+    "invisible_checkpoint_layout_height": 0,
+    "visual": {
+      "all_pages_pixel_identical_to_control": true,
+      "pages_compared": 11
+    },
+    "partial_selection": {
+      "method": "PDFKit PDFPage.selection(for: rect).string; no UI clipboard claim",
+      "cases_passed": 79,
+      "prompts": [
+        "F3-PROMPT-1",
+        "F3-PROMPT-2",
+        "F3-PROMPT-3"
+      ],
+      "scopes": [
+        "prompt segments on each page",
+        "all consecutive three-line windows"
+      ],
+      "all_reminders_preserved": true,
+      "all_first_visible_lines_preserved": true,
+      "full_document_checkpoint_payloads": {
+        "F3-INICIO": true,
+        "F3-AHK-PREFLIGHT": true,
+        "F3-DISENO": true,
+        "F3-APROBACION": true,
+        "F3-SINTESIS": true,
+        "F3-DEFENSA": true
+      },
+      "all_source_words_preserved_full_selection": true,
+      "visible_layout_changed": false,
+      "limitations": "No guarantee for isolated words/lines, unrelated body fragments, other viewers or OCR"
+    }
+  }
+]
