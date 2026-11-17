@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 02 para React Guide VI">
+    <title>Guía estudiantil · Sesión 02 · Props, listas y TypeScript</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 02 · Props, listas y TypeScript</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 02 · Props, listas y TypeScript</h1>
+<ul><li><strong>Modalidad:</strong> virtual</li><li><strong>Duración:</strong> 90 minutos</li><li><strong>Preparación:</strong> <strong>lectura previa</strong></li></ul>
+<h2>Objetivo</h2>
+<p>Convertirás la tarjeta fija de la sesión 01 en un componente que recibe un medio mediante props. Después transformarás un fixture tipado en seis tarjetas con <code>map</code> y una key estable.</p>
+<p>Al terminar podrás explicar este flujo:</p>
+<pre><code class="language-text">fixture → App → map → data prop → MediaCard → JSX</code></pre>
+<h2>Conocimientos previos</h2>
+<ul><li>Checkpoint de la sesión 01.</li><li>Componentes y elementos JSX.</li><li>Objetos y arreglos de JavaScript.</li><li>Funciones con parámetros.</li><li>Lectura previa completada.</li></ul>
+<p>Esta sesión no usa estado, eventos, una API o componentes de colección.</p>
+<h2>Punto de partida</h2>
+<p>Continúa tu copia desde 01 (<code>session-02-start</code> como referencia). Guarda tus cambios antes de consultar otra rama. La clase presenta todos los conceptos primero; después trabajamos en el editor hasta el cierre.</p>
+<p>Abre <code>MediaLog-Bootcamp</code>, instala las dependencias registradas y ejecuta el proyecto:</p>
+<pre><code class="language-bash">pnpm install --frozen-lockfile
+pnpm dev</code></pre>
+<p>Comprueba:</p>
+<ul><li>El navegador muestra el encabezado y una tarjeta.</li><li>React DevTools muestra <code>App</code>, <code>AppHeader</code> y <code>MediaCard</code>.</li><li><code>src/components/media-card.tsx</code> contiene los datos fijos de una película.</li><li><code>MediaCard</code> no recibe props.</li></ul>
+<p>Si el proyecto no llega a este estado, muestra al docente el primer error antes de modificar dependencias o archivos de configuración.</p>
+<h3>Checkpoint 1</h3>
+<p>Puedes señalar dónde viven el título, el tipo, la fecha y la descripción que aparecen en la tarjeta.</p>
+<h2>1. Reconocer el problema</h2>
+<p>Observa qué ocurre si <code>App</code> usa dos veces el componente:</p>
+<pre><code class="language-tsx">&lt;MediaCard /&gt;
+&lt;MediaCard /&gt;</code></pre>
+<p>Ambas tarjetas presentan el mismo contenido porque los datos viven dentro de <code>MediaCard</code>. Retira el segundo uso después de la demostración.</p>
+<p>La transformación de hoy asignará estas responsabilidades:</p>
+<pre><code class="language-text">App        elige cada medio
+MediaCard  recibe un medio y lo presenta</code></pre>
+<h2>2. Definir el contrato del medio</h2>
+<p>Antes de crear el contrato, añade <code>&quot;strictNullChecks&quot;: true,</code> dentro de <code>compilerOptions</code> en <code>tsconfig.app.json</code>, junto a las opciones de linting. El scaffold de 01 no lo activa: esta opción distingue <code>null</code> y <code>undefined</code> de un string. Conserva el resto de opciones. Prueba temporalmente <code>description: undefined</code> en el fixture, lee el error y restaura el valor; el checkpoint debe compilar.</p>
+<p>Crea:</p>
+<pre><code class="language-text">src/types/media-item.ts</code></pre>
+<p>Añade:</p>
+<pre><code class="language-ts">export type MediaType = 'movie' | 'series'
+
+export type MediaItem = {
+  id: number
+  title: string
+  description: string | null
+  mediaType: MediaType
+  releaseDate: string
+  posterUrl: string | null
+}</code></pre>
+<p>Lee el contrato:</p>
+<ul><li><code>id</code> identifica cada objeto del fixture.</li><li><code>title</code> y <code>releaseDate</code> contienen texto.</li><li><code>mediaType</code> admite solo <code>movie</code> o <code>series</code>.</li><li><code>description</code> y <code>posterUrl</code> deben declararse, pero pueden contener <code>null</code>.</li></ul>
+<p>No reemplaces <code>string | null</code> por una prop opcional. El fixture declara la ausencia con <code>null</code>.</p>
+<h3>Comprobación del tipo</h3>
+<p>Escribe temporalmente un valor inválido en un objeto durante la demostración:</p>
+<pre><code class="language-ts">mediaType: 'anime'</code></pre>
+<p>Lee el error del editor y restaura un valor permitido. No uses <code>any</code>, <code>as</code> o <code>!</code> para ocultarlo.</p>
+<h3>Checkpoint 2</h3>
+<p>Puedes explicar por qué <code>movie</code> cumple <code>MediaType</code> y <code>anime</code> no lo cumple.</p>
+<h2>3. Crear el fixture</h2>
+<p>Copia a <code>public/posters/</code> los cinco SVG de prueba entregados por el docente. Las rutas <code>/posters/*.svg</code> se sirven desde esa carpeta. No hace falta dibujar imágenes ni descargar posters.</p>
+<p>Crea:</p>
+<pre><code class="language-text">src/data/media-items.ts</code></pre>
+<p>Importa el tipo:</p>
+<pre><code class="language-ts">import type { MediaItem } from '../types/media-item'</code></pre>
+<p>Declara el arreglo:</p>
+<pre><code class="language-ts">export const mediaItems: MediaItem[] = [
+  {
+    id: 1,
+    title: 'Arrival',
+    description:
+      'Una lingüista intenta comunicarse con visitantes extraterrestres.',
+    mediaType: 'movie',
+    releaseDate: '2016-11-11',
+    posterUrl: '/posters/arrival.svg',
+  },
+  {
+    id: 2,
+    title: 'Severance',
+    description:
+      'Un grupo de empleados separa sus recuerdos laborales y personales.',
+    mediaType: 'series',
+    releaseDate: '2022-02-18',
+    posterUrl: '/posters/severance.svg',
+  },
+  {
+    id: 3,
+    title: 'Aftersun',
+    description:
+      'Una hija reconstruye los recuerdos de unas vacaciones con su padre.',
+    mediaType: 'movie',
+    releaseDate: '2022-10-21',
+    posterUrl: null,
+  },
+  {
+    id: 4,
+    title: 'The Bear',
+    description: null,
+    mediaType: 'series',
+    releaseDate: '2022-06-23',
+    posterUrl: '/posters/the-bear.svg',
+  },
+  {
+    id: 5,
+    title: 'Past Lives',
+    description:
+      'Dos amigos de la infancia se reencuentran años después en Nueva York.',
+    mediaType: 'movie',
+    releaseDate: '2023-06-02',
+    posterUrl: '/posters/past-lives.svg',
+  },
+]</code></pre>
+<p>El arreglo comienza con cinco objetos. Completarás el sexto durante la práctica individual.</p>
+<h3>Checkpoint 3</h3>
+<ul><li>Existen cinco entradas.</li><li>Cada una declara las seis propiedades.</li><li>Aftersun usa <code>posterUrl: null</code>.</li><li>The Bear usa <code>description: null</code>.</li><li>El editor no muestra errores de tipos.</li></ul>
+<h2>4. Convertir MediaCard en un componente configurable</h2>
+<p>Abre:</p>
+<pre><code class="language-text">src/components/media-card.tsx</code></pre>
+<p>Importa el tipo y declara el contrato local de props:</p>
+<pre><code class="language-tsx">import type { MediaItem } from '../types/media-item'
+
+type MediaCardProps = {
+  data: MediaItem
+}</code></pre>
+<p>Cambia la firma del componente:</p>
+<pre><code class="language-tsx">export function MediaCard(props: MediaCardProps) {
+  const { data } = props</code></pre>
+<p>Este es el componente completo antes de resolver los casos nulos. La ruta del poster es texto temporal, no una imagen:</p>
+<pre><code class="language-tsx">import type { MediaItem } from '../types/media-item'
+
+type MediaCardProps = {
+  data: MediaItem
+}
+
+export function MediaCard(props: MediaCardProps) {
+  const { data } = props
+
+  return (
+    &lt;article className=&quot;media-card&quot;&gt;
+      &lt;div className=&quot;media-card__poster&quot;&gt;{data.posterUrl}&lt;/div&gt;
+      &lt;div&gt;
+        &lt;p className=&quot;media-card__meta&quot;&gt;{data.mediaType} · {data.releaseDate}&lt;/p&gt;
+        &lt;h3&gt;{data.title}&lt;/h3&gt;
+        &lt;p&gt;{data.description}&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/article&gt;
+  )
+}</code></pre>
+<p>Conéctalo desde <code>src/App.tsx</code> con este archivo completo:</p>
+<pre><code class="language-tsx">import { AppHeader } from './components/app-header'
+import { MediaCard } from './components/media-card'
+import { mediaItems } from './data/media-items'
+
+function App() {
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+
+      &lt;main className=&quot;page-container&quot;&gt;
+        &lt;h2&gt;Catálogo destacado&lt;/h2&gt;
+
+        &lt;MediaCard data={mediaItems[0]} /&gt;
+      &lt;/main&gt;
+    &lt;/&gt;
+  )
+}
+
+export default App</code></pre>
+<p>Cambia temporalmente <code>[0]</code> por <code>[1]</code>, comprueba Severance y restaura <code>[0]</code>. Sustituye cada dato fijo por la propiedad correspondiente:</p>
+<pre><code class="language-text">Película o Serie  ← data.mediaType
+fecha             ← data.releaseDate
+título            ← data.title
+descripción       ← data.description
+poster            ← data.posterUrl</code></pre>
+<p>El componente no debe conservar <code>Arrival</code>, <code>2016</code> ni otra información de un medio concreto.</p>
+<h3>Checkpoint 4</h3>
+<p><code>MediaCard</code> recibe una prop <code>data</code> y todo el contenido de dominio procede de ese objeto.</p>
+<p>Usamos <code>data</code> porque el nombre <code>MediaCard</code> ya indica qué presenta el componente. El padre puede llamar <code>media</code> a su variable y pasarla como <code>data={media}</code>; dentro de la tarjeta lees <code>data.title</code>, <code>data.posterUrl</code> y las demás propiedades.</p>
+<h2>5. Transformar el fixture en tarjetas</h2>
+<p>Abre <code>src/App.tsx</code> e importa:</p>
+<pre><code class="language-tsx">import { mediaItems } from './data/media-items'</code></pre>
+<p>Reemplaza el uso único de <code>MediaCard</code> por:</p>
+<pre><code class="language-tsx">&lt;div className=&quot;media-list&quot;&gt;
+  {mediaItems.map((media) =&gt; (
+    &lt;MediaCard data={media} /&gt;
+  ))}
+&lt;/div&gt;</code></pre>
+<p>Abre la consola del navegador. React debe advertir que cada elemento de la lista necesita una key única.</p>
+<p>Añade la identidad estable del fixture al elemento que devuelve <code>map</code>:</p>
+<pre><code class="language-tsx">&lt;MediaCard key={media.id} data={media} /&gt;</code></pre>
+<p>Comprueba que el warning desaparezca.</p>
+<p>No uses:</p>
+<pre><code class="language-tsx">key={index}
+key={Math.random()}</code></pre>
+<p>El fixture ya proporciona <code>media.id</code>. React usa <code>key</code>; <code>MediaCard</code> no la recibe dentro de <code>MediaCardProps</code>.</p>
+<p>Añade ahora <code>.media-list</code> del CSS mostrado en el paso 6. App conserva AppHeader y el título; únicamente reemplazas la tarjeta única por el recorrido.</p>
+<h3>Checkpoint 5</h3>
+<ul><li>El navegador muestra cinco tarjetas.</li><li><code>map</code> devuelve un <code>&lt;MediaCard /&gt;</code> por cada objeto.</li><li>La key está en el elemento directo del recorrido.</li><li>La consola no muestra el warning de key.</li></ul>
+<h2>6. Representar los casos del fixture</h2>
+<p>Completa <code>MediaCard</code> con la etiqueta de tipo:</p>
+<pre><code class="language-tsx">const mediaTypeLabel = data.mediaType === 'movie' ? 'Película' : 'Serie'</code></pre>
+<p>Usa esa constante en el metadato:</p>
+<pre><code class="language-tsx">&lt;p className=&quot;media-card__meta&quot;&gt;
+  {mediaTypeLabel} · {data.releaseDate}
+&lt;/p&gt;</code></pre>
+<p>Representa el poster o su ausencia:</p>
+<pre><code class="language-tsx">{data.posterUrl ? (
+  &lt;img
+    className=&quot;media-card__poster-image&quot;
+    src={data.posterUrl}
+    alt={`Poster de ${data.title}`}
+  /&gt;
+) : (
+  &lt;div className=&quot;media-card__poster&quot;&gt;Poster no disponible&lt;/div&gt;
+)}</code></pre>
+<p>Representa la descripción:</p>
+<pre><code class="language-tsx">&lt;p&gt;{data.description ?? 'Sin descripción disponible'}&lt;/p&gt;</code></pre>
+<p>El componente completo queda así:</p>
+<pre><code class="language-tsx">import type { MediaItem } from '../types/media-item'
+
+type MediaCardProps = {
+  data: MediaItem
+}
+
+export function MediaCard(props: MediaCardProps) {
+  const { data } = props
+  const mediaTypeLabel = data.mediaType === 'movie' ? 'Película' : 'Serie'
+
+  return (
+    &lt;article className=&quot;media-card&quot;&gt;
+      {data.posterUrl ? (
+        &lt;img
+          className=&quot;media-card__poster-image&quot;
+          src={data.posterUrl}
+          alt={`Poster de ${data.title}`}
+        /&gt;
+      ) : (
+        &lt;div className=&quot;media-card__poster&quot;&gt;Poster no disponible&lt;/div&gt;
+      )}
+
+      &lt;div&gt;
+        &lt;p className=&quot;media-card__meta&quot;&gt;
+          {mediaTypeLabel} · {data.releaseDate}
+        &lt;/p&gt;
+        &lt;h3&gt;{data.title}&lt;/h3&gt;
+        &lt;p&gt;{data.description ?? 'Sin descripción disponible'}&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/article&gt;
+  )
+}</code></pre>
+<p>Estos son los estilos de la sesión. <code>.media-list</code> ya se añadió en el paso 5: ahora incorpora solo <code>.media-card__poster-image</code>, sin duplicar reglas:</p>
+<pre><code class="language-css">.media-list {
+  display: grid;
+  gap: 24px;
+}
+
+.media-card__poster-image {
+  width: 100%;
+  height: 220px;
+  border-radius: 10px;
+  object-fit: cover;
+}</code></pre>
+<h3>Checkpoint 6</h3>
+<p>Comprueba en el navegador:</p>
+<ul><li>Arrival muestra “Película”.</li><li>Severance muestra “Serie”.</li><li>Aftersun muestra “Poster no disponible”.</li><li>The Bear muestra “Sin descripción disponible”.</li></ul>
+<p>Una URL no nula que no cargue indica un problema de red o del recurso. El fallback de esta sesión responde al valor <code>null</code>.</p>
+<h2>7. Práctica individual</h2>
+<p>Añade esta sexta entrada al final del fixture:</p>
+<pre><code class="language-ts">{
+  id: 6,
+  title: 'Blue Eye Samurai',
+  description:
+    'Una guerrera persigue una venganza en el Japón del periodo Edo.',
+  mediaType: '',
+  releaseDate: '2023-11-03',
+  posterUrl:
+    '/posters/blue-eye-samurai.svg',
+},</code></pre>
+<p>Completa <code>mediaType</code> con el valor permitido que corresponde a una serie. No modifiques <code>MediaCard</code> ni añadas otro <code>&lt;MediaCard /&gt;</code> en <code>App</code>.</p>
+<p>Después:</p>
+<ol><li>Cuenta las tarjetas visibles.</li><li>Cambia temporalmente el tipo por <code>anime</code>.</li><li>Lee el error de TypeScript.</li><li>Restaura el valor válido.</li><li>Comprueba que la sexta tarjeta vuelva a mostrarse sin errores.</li></ol>
+<h3>Checkpoint 7</h3>
+<ul><li>El fixture contiene seis objetos.</li><li>El navegador muestra seis tarjetas.</li><li>La sexta tarjeta apareció al cambiar los datos, sin duplicar la estructura.</li><li>No quedan errores de TypeScript.</li></ul>
+<h2>8. Comprobar el checkpoint final</h2>
+<p>Conserva <code>pnpm dev</code> en una terminal. Abre otra dentro de <code>MediaLog-Bootcamp</code> y ejecuta:</p>
+<pre><code class="language-bash">pnpm build</code></pre>
+<p>Comprueba:</p>
+<ul><li>El comando termina con código de salida 0.</li><li>El navegador muestra seis tarjetas.</li><li>Se ven películas y series.</li><li>Funcionan los dos fallbacks.</li><li>La consola no muestra warnings de key.</li><li>React DevTools muestra seis instancias de <code>MediaCard</code>.</li></ul>
+<p>Explica a otra persona:</p>
+<pre><code class="language-text">mediaItems contiene los datos
+App recorre el arreglo
+map crea una MediaCard por objeto
+data entrega el objeto al componente
+MediaCard convierte sus propiedades en JSX</code></pre>
+<p>Las evidencias tienen límites distintos:</p>
+<ul><li>El editor y <code>pnpm build</code> comprueban el código contra los tipos configurados.</li><li>La consola comprueba los warnings del árbol montado durante desarrollo.</li><li>El navegador comprueba el resultado visual local.</li><li>Ninguna de estas comprobaciones valida una API, un despliegue o producción.</li></ul>
+<h2>Errores frecuentes</h2>
+<h3>TypeScript no encuentra <code>MediaItem</code></h3>
+<p>Comprueba:</p>
+<ul><li>que exista <code>src/types/media-item.ts</code>;</li><li>que el archivo exporte <code>MediaItem</code>;</li><li>que uses <code>import type</code> con la ruta relativa correcta.</li></ul>
+<h3>Un objeto no cumple el tipo</h3>
+<p>Lee el primer error. Comprueba si falta una propiedad, si <code>mediaType</code> contiene un valor no permitido o si escribiste <code>undefined</code> donde el contrato admite <code>null</code>.</p>
+<p>No cambies el tipo a <code>any</code> para ocultar el problema.</p>
+<h3><code>MediaCard</code> sigue mostrando Arrival en todas las tarjetas</h3>
+<p>Busca strings y fechas fijas dentro del componente. El título, descripción, tipo, fecha y poster deben proceder de <code>data</code>.</p>
+<h3>No aparece ninguna tarjeta</h3>
+<p>Comprueba:</p>
+<ul><li>el import de <code>mediaItems</code>;</li><li>que <code>map</code> esté dentro de llaves JSX;</li><li>que la arrow function use paréntesis para devolver <code>&lt;MediaCard /&gt;</code>;</li><li>el primer error de la terminal o consola.</li></ul>
+<h3>Aparece el warning de key</h3>
+<p>La key debe estar aquí:</p>
+<pre><code class="language-tsx">&lt;MediaCard key={media.id} data={media} /&gt;</code></pre>
+<p>No la coloques dentro del JSX que retorna <code>MediaCard</code>.</p>
+<h3>Intentas leer <code>key</code> dentro de MediaCard</h3>
+<p>React consume <code>key</code>; no forma parte de <code>MediaCardProps</code>. El componente puede leer el identificador desde <code>data.id</code> si necesita mostrarlo.</p>
+<h3>El poster nulo deja la página en blanco</h3>
+<p>Comprueba que el condicional cubra ambas ramas y que cada etiqueta cierre. No uses <code>data.posterUrl!</code>.</p>
+<h3>Ves cinco tarjetas</h3>
+<p>Confirma que el sexto objeto está dentro de los corchetes del arreglo y que <code>mediaType</code> usa <code>series</code>.</p>
+<h2>Vocabulario</h2>
+<ul><li><strong>Prop:</strong> dato que un padre entrega a un hijo mediante JSX.</li><li><strong>Contrato de props:</strong> tipo que describe las entradas de un componente.</li><li><strong>Fixture:</strong> datos controlados usados para construir y comprobar la interfaz.</li><li><strong>Alias de tipo:</strong> nombre creado con <code>type</code>.</li><li><strong>Unión literal:</strong> conjunto cerrado de valores permitidos.</li><li><strong><code>null</code>:</strong> ausencia explícita de un valor.</li><li><strong>Arreglo tipado:</strong> colección cuyos elementos cumplen un tipo.</li><li><strong><code>map</code>:</strong> transformación que produce un resultado por cada elemento.</li><li><strong><code>key</code>:</strong> identidad estable que React usa entre elementos hermanos.</li><li><strong>Renderizado condicional:</strong> elección del JSX según un dato.</li><li><strong>Runtime:</strong> momento en que el programa se ejecuta.</li></ul>
+<h2>Evidencia y entrega</h2>
+<p>Entrega en la plataforma institucional:</p>
+<ol><li>Un ZIP de <code>MediaLog-Bootcamp</code> sin <code>node_modules/</code> ni <code>dist/</code>.</li><li><code>package.json</code>, <code>pnpm-lock.yaml</code>, <code>src/</code>, <code>public/</code> y los archivos de configuración dentro del ZIP.</li><li>Un texto breve con:</li></ol>
+<p>   - <code>fixture → App → data prop → MediaCard → JSX</code>;    - el resultado observado al ejecutar <code>pnpm build</code>;    - la confirmación de que la consola no muestra warnings de key.</p>
+<p>No incluyas tokens, contraseñas, variables de entorno ni carpetas de dependencias.</p>
+<h2>Si necesitas continuar después</h2>
+<p>Anota el último checkpoint comprobado, el archivo guardado y el primer paso pendiente. Las ramas son <code>session-02-step-01-typed-fixture</code>, <code>session-02-step-02-card-props</code>, <code>session-02-step-03-keyed-list</code>, <code>session-02-step-04-null-fallbacks</code> y <code>session-02-end</code>. Antes de continuar, ejecuta tu estado y explica qué funciona; consultar una rama no sustituye tu práctica.</p>
+<h2>Punto de partida de la sesión 03</h2>
+<p><code>App</code> todavía contiene el wrapper visual, <code>map</code> y <code>key</code>. <code>MediaCard</code> todavía decide el texto de película o serie dentro de su marcado. La siguiente sesión reorganizará esas responsabilidades y añadirá el caso de una colección vacía sin cambiar el fixture que terminaste hoy.</p></main>
+      <footer>Material de trabajo en clase · Sesión 02</footer>
+    </article>
+  </body>
+</html>

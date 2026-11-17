@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 09 para React Guide VI">
+    <title>Guía estudiantil · Sesión 09 · React Router declarativo</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 09 · React Router declarativo</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 09 · React Router declarativo</h1>
+<h2>Objetivo</h2>
+<p>Construirás navegación pública sobre la búsqueda remota de la sesión 08. Al terminar, una tarjeta producirá una URL de detalle provisional, el árbol compartirá un layout y los parámetros se convertirán en un input válido o <code>null</code>.</p>
+<h2>Una imagen mental antes del código</h2>
+<p>Piensa en una URL como una dirección y en React Router como el mapa que decide qué pantalla abrir. En <code>/media/movie/438631</code>, <code>media</code> es una parte fija y <code>movie</code> y <code>438631</code> son datos de esa dirección. <code>Outlet</code> es el espacio reservado en una estructura compartida donde aparece la página hija.</p>
+<p>La forma de la dirección no valida su significado. <code>/media/anime/438631</code> encaja en el patrón, pero <code>anime</code> no pertenece a <code>MediaType</code>; por eso el adapter devuelve <code>null</code>.</p>
+<h2>Lo que ya debe funcionar</h2>
+<p>Abre el checkpoint completo de la sesión 08 y confirma:</p>
+<ul><li>una búsqueda enviada ejecuta <code>useMediaSearch()</code>;</li><li>la interfaz muestra carga, error, vacío o resultados;</li><li>cada resultado conserva <code>mediaType</code> y <code>externalId</code>;</li><li>no existe modal remoto ni navegación desde la tarjeta;</li><li><code>GetMediaDetailInput</code> existe en <code>src/types/media-api.ts</code>;</li><li><code>pnpm test</code> y <code>pnpm build</code> terminan con código 0.</li></ul>
+<p>Detente si el checkpoint no cumple esas condiciones. No reconstruyas la sesión 08 mientras añades Router.</p>
+<h2>Resultado final</h2>
+<pre><code class="language-text">main.tsx
+└── QueryClientProvider
+    └── MantineProvider
+        └── BrowserRouter
+            └── App
+                └── PublicLayout
+                    ├── AppHeader
+                    └── Outlet
+                        ├── SearchPage
+                        ├── MediaDetailPage
+                        └── NotFoundPage</code></pre>
+<p>Rutas del checkpoint:</p>
+<div class="table-wrap"><table><thead><tr><th>URL</th><th>Página</th></tr></thead><tbody><tr><td><code>/</code></td><td>Redirige a <code>/search</code></td></tr><tr><td><code>/search</code></td><td>Búsqueda remota</td></tr><tr><td><code>/media/:mediaType/:externalId</code></td><td>Detalle provisional</td></tr><tr><td>Cualquier otra</td><td>Página no encontrada</td></tr></tbody></table></div>
+<h2>1. Comprueba el entorno</h2>
+<p>Ejecuta:</p>
+<pre><code class="language-bash">node --version
+pnpm --version
+pnpm test
+pnpm build</code></pre>
+<p>Registra los códigos de salida. La sesión usa Node <code>&gt;=22.22.0</code>, pnpm y React <code>19.2.8</code>.</p>
+<h2>2. Instala React Router</h2>
+<p>Ejecuta la versión fijada:</p>
+<pre><code class="language-bash">pnpm add react-router@8.3.1</code></pre>
+<p>No instales <code>react-router-dom</code>. Este curso importa las APIs desde <code>react-router</code> y usa Declarative Mode.</p>
+<h2>3. Coloca <code>BrowserRouter</code></h2>
+<p>Abre <code>src/main.tsx</code> y añade:</p>
+<pre><code class="language-tsx">import { BrowserRouter } from &quot;react-router&quot;</code></pre>
+<p>Conserva los providers existentes. Envuelve <code>App</code>:</p>
+<pre><code class="language-tsx">&lt;QueryClientProvider client={queryClient}&gt;
+  &lt;MantineProvider&gt;
+    &lt;BrowserRouter&gt;
+      &lt;App /&gt;
+    &lt;/BrowserRouter&gt;
+  &lt;/MantineProvider&gt;
+  &lt;ReactQueryDevtools initialIsOpen={false} /&gt;
+&lt;/QueryClientProvider&gt;</code></pre>
+<p>Comprueba la pantalla antes de continuar. No muevas <code>QueryClient</code> dentro de un componente.</p>
+<p><strong>Checkpoint:</strong> la búsqueda anterior sigue visible bajo <code>BrowserRouter</code>.</p>
+<h2>4. Extrae <code>SearchPage</code></h2>
+<p>Crea:</p>
+<pre><code class="language-text">src/pages/search-page.tsx</code></pre>
+<p>Mueve allí el contenido actual de <code>App</code>:</p>
+<ul><li>imports de React y Mantine de la pantalla;</li><li>estados <code>draftQuery</code>, <code>draftMediaType</code> y <code>submittedSearch</code>;</li><li>llamada a <code>useMediaSearch()</code>;</li><li>adaptación a <code>MediaSearchCardModel[]</code>;</li><li>handler del submit;</li><li>representación de estados remotos;</li><li>JSX del contenedor.</li></ul>
+<p>La función debe llamarse:</p>
+<pre><code class="language-tsx">export function SearchPage() {
+  // contenido que antes vivía en App
+}</code></pre>
+<p>No cambies query keys, fetchers, textos, condiciones ni estados mientras mueves el código.</p>
+<p>Reduce temporalmente <code>src/App.tsx</code>:</p>
+<pre><code class="language-tsx">import { SearchPage } from &quot;./pages/search-page&quot;
+
+export default function App() {
+  return &lt;SearchPage /&gt;
+}</code></pre>
+<p>Prueba una búsqueda válida.</p>
+<p><strong>Checkpoint:</strong> la extracción no cambió el comportamiento de la sesión 08.</p>
+<h2>5. Crea el layout público</h2>
+<p>Crea <code>src/layouts/public-layout.tsx</code>:</p>
+<pre><code class="language-tsx">import { Outlet } from &quot;react-router&quot;
+
+import { AppHeader } from &quot;../components/app-header&quot;
+
+export function PublicLayout() {
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+      &lt;main&gt;
+        &lt;Outlet /&gt;
+      &lt;/main&gt;
+    &lt;/&gt;
+  )
+}</code></pre>
+<p><code>PublicLayout</code> comparte el encabezado. <code>Outlet</code> marca la región donde aparecerá la página hija.</p>
+<p>Completa estas frases:</p>
+<pre><code class="language-text">PublicLayout es responsable de:
+Outlet es responsable de:</code></pre>
+<p>No importes <code>SearchPage</code> dentro del layout. El árbol de rutas elegirá la hija.</p>
+<h2>6. Prepara páginas de ruta</h2>
+<p>Crea <code>src/pages/not-found-page.tsx</code>:</p>
+<pre><code class="language-tsx">import { Anchor, Container, Stack, Text, Title } from &quot;@mantine/core&quot;
+import { Link } from &quot;react-router&quot;
+
+export function NotFoundPage() {
+  return (
+    &lt;Container py=&quot;xl&quot; size=&quot;sm&quot;&gt;
+      &lt;Stack&gt;
+        &lt;Title order={1}&gt;Página no encontrada&lt;/Title&gt;
+        &lt;Text&gt;La URL no coincide con una página pública.&lt;/Text&gt;
+        &lt;Anchor component={Link} to=&quot;/search&quot;&gt;
+          Volver a la búsqueda
+        &lt;/Anchor&gt;
+      &lt;/Stack&gt;
+    &lt;/Container&gt;
+  )
+}</code></pre>
+<p>Crea una primera versión de <code>src/pages/media-detail-page.tsx</code>:</p>
+<pre><code class="language-tsx">export function MediaDetailPage() {
+  return &lt;h1&gt;Detalle provisional&lt;/h1&gt;
+}</code></pre>
+<p>Esta versión permite cerrar el árbol antes de trabajar con parámetros.</p>
+<h2>7. Declara las rutas</h2>
+<p>Reemplaza <code>src/App.tsx</code>:</p>
+<pre><code class="language-tsx">import { Navigate, Route, Routes } from &quot;react-router&quot;
+
+import { PublicLayout } from &quot;./layouts/public-layout&quot;
+import { MediaDetailPage } from &quot;./pages/media-detail-page&quot;
+import { NotFoundPage } from &quot;./pages/not-found-page&quot;
+import { SearchPage } from &quot;./pages/search-page&quot;
+
+export default function App() {
+  return (
+    &lt;Routes&gt;
+      &lt;Route element={&lt;PublicLayout /&gt;}&gt;
+        &lt;Route index element={&lt;Navigate replace to=&quot;/search&quot; /&gt;} /&gt;
+        &lt;Route path=&quot;search&quot; element={&lt;SearchPage /&gt;} /&gt;
+        &lt;Route
+          path=&quot;media/:mediaType/:externalId&quot;
+          element={&lt;MediaDetailPage /&gt;}
+        /&gt;
+        &lt;Route path=&quot;*&quot; element={&lt;NotFoundPage /&gt;} /&gt;
+      &lt;/Route&gt;
+    &lt;/Routes&gt;
+  )
+}</code></pre>
+<p>Visita:</p>
+<pre><code class="language-text">/
+/search
+/media/movie/123
+/media/movie
+/ruta-inexistente</code></pre>
+<p>Registra qué elemento aparece en cada caso.</p>
+<p><code>index</code> representa la hija que coincide con la URL de la ruta padre. <code>replace</code> evita conservar <code>/</code> como una entrada redundante antes de <code>/search</code>.</p>
+<p><strong>Checkpoint:</strong> la URL selecciona búsqueda, detalle provisional o Not found.</p>
+<h2>8. Define el contrato de validación</h2>
+<p><code>useParams()</code> entregará strings posiblemente ausentes. Antes de programar, completa la matriz:</p>
+<div class="table-wrap"><table><thead><tr><th>Parámetros</th><th>Resultado esperado</th></tr></thead><tbody><tr><td><code>{ mediaType: &quot;movie&quot;, externalId: &quot;123&quot; }</code></td><td>Input movie con <code>123</code></td></tr><tr><td><code>{ mediaType: &quot;series&quot;, externalId: &quot;456&quot; }</code></td><td>Input series con <code>456</code></td></tr><tr><td><code>{ mediaType: &quot;anime&quot;, externalId: &quot;123&quot; }</code></td><td><code>null</code></td></tr><tr><td><code>{ mediaType: &quot;movie&quot; }</code></td><td><code>null</code></td></tr><tr><td><code>{ externalId: &quot;123&quot; }</code></td><td><code>null</code></td></tr></tbody></table></div>
+<p>Explica a tu pareja:</p>
+<pre><code class="language-text">No puedo usar &quot;as MediaType&quot; porque...</code></pre>
+<h2>9. Crea el adapter puro</h2>
+<p>Crea <code>src/adapters/media-detail-route-params-to-input.ts</code>:</p>
+<pre><code class="language-ts">import type { GetMediaDetailInput } from &quot;../types/media-api&quot;
+
+export type MediaDetailRouteParams = Readonly&lt;{
+  externalId?: string
+  mediaType?: string
+}&gt;
+
+export function toMediaDetailInput(
+  params: MediaDetailRouteParams,
+): GetMediaDetailInput | null {
+  if (params.mediaType !== &quot;movie&quot; &amp;&amp; params.mediaType !== &quot;series&quot;) {
+    return null
+  }
+
+  if (params.externalId === undefined) {
+    return null
+  }
+
+  return {
+    externalId: params.externalId,
+    mediaType: params.mediaType,
+  }
+}</code></pre>
+<p>El adapter valida en runtime y reutiliza <code>GetMediaDetailInput</code>. No declara otra unión <code>MediaType</code>.</p>
+<h2>10. Lee los parámetros en la página</h2>
+<p>Completa <code>src/pages/media-detail-page.tsx</code>:</p>
+<pre><code class="language-tsx">import { Anchor, Container, Stack, Text, Title } from &quot;@mantine/core&quot;
+import { Link, useParams } from &quot;react-router&quot;
+
+import { toMediaDetailInput } from &quot;../adapters/media-detail-route-params-to-input&quot;
+
+export function MediaDetailPage() {
+  const detailInput = toMediaDetailInput(useParams())
+
+  if (detailInput === null) {
+    return (
+      &lt;Container py=&quot;xl&quot; size=&quot;sm&quot;&gt;
+        &lt;Stack&gt;
+          &lt;Title order={1}&gt;URL de detalle no válida&lt;/Title&gt;
+          &lt;Text&gt;Revisa el tipo y el identificador del medio.&lt;/Text&gt;
+          &lt;Anchor component={Link} to=&quot;/search&quot;&gt;
+            Volver a la búsqueda
+          &lt;/Anchor&gt;
+        &lt;/Stack&gt;
+      &lt;/Container&gt;
+    )
+  }
+
+  return (
+    &lt;Container py=&quot;xl&quot; size=&quot;sm&quot;&gt;
+      &lt;Stack&gt;
+        &lt;Title order={1}&gt;Detalle provisional&lt;/Title&gt;
+        &lt;Text&gt;Tipo: {detailInput.mediaType}&lt;/Text&gt;
+        &lt;Text&gt;Identificador: {detailInput.externalId}&lt;/Text&gt;
+        &lt;Anchor component={Link} to=&quot;/search&quot;&gt;
+          Volver a la búsqueda
+        &lt;/Anchor&gt;
+      &lt;/Stack&gt;
+    &lt;/Container&gt;
+  )
+}</code></pre>
+<p>Prueba:</p>
+<div class="table-wrap"><table><thead><tr><th>URL</th><th>Resultado esperado</th></tr></thead><tbody><tr><td><code>/media/movie/123</code></td><td>Input movie visible</td></tr><tr><td><code>/media/series/456</code></td><td>Input series visible</td></tr><tr><td><code>/media/anime/123</code></td><td>URL de detalle no válida</td></tr><tr><td><code>/media/movie</code></td><td>Página no encontrada</td></tr></tbody></table></div>
+<p>El tercer caso coincide con la ruta, pero falla la validación. El cuarto no coincide porque falta un segmento.</p>
+<p>No llames <code>getMediaDetail()</code> ni crees <code>useMediaDetail()</code>.</p>
+<h2>11. Enlaza los resultados</h2>
+<p>Abre <code>src/components/media-search-results.tsx</code>.</p>
+<p>Añade <code>Button</code> a los imports de Mantine e importa <code>Link</code>:</p>
+<pre><code class="language-tsx">import { Link } from &quot;react-router&quot;</code></pre>
+<p>Dentro de cada tarjeta agrega:</p>
+<pre><code class="language-tsx">&lt;Button
+  component={Link}
+  to={`/media/${item.mediaType}/${item.externalId}`}
+  variant=&quot;light&quot;
+&gt;
+  Ver detalle
+&lt;/Button&gt;</code></pre>
+<p>No añadas estado, <code>onSelect</code>, modal, <code>window.location</code> ni <code>useNavigate</code>.</p>
+<p>Comprueba:</p>
+<ol><li>Ejecuta una búsqueda.</li><li>Abre un resultado con click normal.</li><li>Usa Atrás.</li><li>Usa Adelante.</li><li>Abre <code>Ver detalle</code> en otra pestaña.</li><li>Copia la URL y compara sus valores con el item.</li></ol>
+<p><strong>Checkpoint:</strong> una tarjeta produce una URL de detalle que conserva <code>mediaType + externalId</code>.</p>
+<h2>12. Delega solo los tests</h2>
+<p>Ya definiste y escribiste el comportamiento. Puedes pedir a un agente que redacte el archivo repetitivo de tests.</p>
+<p>Sigue la rutina conocida:</p>
+<ol><li>Consulta documentación con Context7 solo si está disponible y necesitas confirmar Vitest.</li><li>Revisa las skills disponibles y <code>skills-lock.json</code>.</li><li>Usa AutoSkills en <code>--dry-run</code> solo si falta una skill pertinente.</li><li>Limita el archivo con Agent Harness Kit.</li><li>Lee el resultado completo y ejecuta la evidencia.</li></ol>
+<p>Prompt listo para copiar:</p>
+<pre><code class="language-text">Usa la skill ahk-test para crear y ejecutar los tests unitarios del adapter puro toMediaDetailInput.
+
+Matriz acordada:
+- la implementación vive en src/adapters/media-detail-route-params-to-input.ts
+- movie con externalId devuelve el mismo GetMediaDetailInput
+- series con externalId devuelve el mismo GetMediaDetailInput
+- mediaType distinto de movie o series devuelve null
+- externalId ausente devuelve null
+- mediaType ausente devuelve null
+
+Alcance:
+- crear únicamente src/adapters/__tests__/media-detail-route-params-to-input.test.ts
+- no modificar el adapter ni ningún otro archivo
+- no cambiar package.json, scripts, dependencias o configuración
+- no añadir React Testing Library, jsdom, mocks de Router ni tests de componentes
+- no crear helpers o snapshots
+
+Ejecuta pnpm test. Si un import o contrato no coincide, detente antes de escribir. Entrega matriz, archivo modificado, resultado con exit status y frontera de evidencia.</code></pre>
+<p>Revisa el alcance:</p>
+<pre><code class="language-bash">git diff -- src/adapters/__tests__/media-detail-route-params-to-input.test.ts
+git status --short</code></pre>
+<p>Lee cada test y relaciónalo con una fila de la matriz. Después ejecuta:</p>
+<pre><code class="language-bash">pnpm test</code></pre>
+<p>Un archivo generado que no leíste y no ejecutaste no cuenta como evidencia.</p>
+<h3>Fallback manual</h3>
+<p>Si el agente no está disponible, crea el test manualmente con Vitest. Cubre exactamente las cinco filas de la matriz. No añadas DOM, Router simulado o snapshots.</p>
+<h2>13. Ejecuta la comprobación final</h2>
+<p>Ejecuta:</p>
+<pre><code class="language-bash">pnpm test
+pnpm build</code></pre>
+<p>Si el docente inicia preview, visita una URL de detalle y recarga:</p>
+<pre><code class="language-bash">pnpm preview</code></pre>
+<p>Esta comprobación observa el servidor local. No demuestra que un hosting de producción reenvíe una solicitud directa hacia <code>index.html</code>.</p>
+<h2>Evidencia de entrega</h2>
+<p>Entrega en el medio indicado:</p>
+<ul><li>captura o demostración de <code>/search</code> con un resultado;</li><li>captura o demostración de una URL válida de detalle provisional;</li><li>captura o demostración de <code>/media/anime/123</code> rechazada;</li><li>salida de <code>pnpm test</code> con código 0;</li><li>salida de <code>pnpm build</code> con código 0;</li><li>una frase que explique la diferencia entre <code>Outlet</code> y la ruta <code>*</code>.</li></ul>
+<p>No entregues <code>.env.local</code>, tokens, responses completas del backend ni <code>node_modules</code>.</p>
+<h2>Frontera de la evidencia</h2>
+<div class="table-wrap"><table><thead><tr><th>Evidencia</th><th>Demuestra</th><th>No demuestra</th></tr></thead><tbody><tr><td>Test del adapter</td><td>Traducción de cinco combinaciones de params</td><td>Router, DOM o historial</td></tr><tr><td>Navegación manual</td><td>Click, URL e historial observados localmente</td><td>Ausencia de otros errores</td></tr><tr><td><code>pnpm build</code></td><td>TypeScript y generación terminan</td><td>Backend o hosting disponible</td></tr><tr><td>Preview local</td><td>Comportamiento del servidor local</td><td>Fallback de producción</td></tr></tbody></table></div>
+<h2>Errores que debes poder diagnosticar</h2>
+<ul><li>Si aparece el layout pero no la página, revisa <code>Outlet</code>.</li><li>Si <code>/media/movie</code> muestra Not found, revisa el patrón: falta <code>externalId</code>.</li><li>Si <code>/media/anime/123</code> muestra un detalle, revisa el adapter.</li><li>Si el encabezado aparece dos veces, deja <code>AppHeader</code> solo en <code>PublicLayout</code>.</li><li>Si la búsqueda dejó de funcionar, vuelve al checkpoint de extracción anterior al árbol de rutas.</li><li>Si el agente tocó otro archivo, detén la aceptación y revisa el alcance.</li><li>Si una recarga de producción devuelve 404, falta configuración de fallback SPA; no lo resuelvas con un Effect.</li></ul>
+<h2>Vocabulario de salida</h2>
+<ul><li><strong>Router:</strong> relaciona ubicación, historial y elementos.</li><li><strong>Layout route:</strong> comparte estructura con rutas hijas.</li><li><strong><code>Outlet</code>:</strong> región de la ruta padre donde aparece la hija.</li><li><strong>Segmento dinámico:</strong> captura texto desde una posición de la URL.</li><li><strong>Route params:</strong> valores externos leídos desde esos segmentos.</li><li><strong><code>Link</code>:</strong> destino navegable declarado en JSX.</li><li><strong><code>Navigate</code>:</strong> redirección declarativa.</li><li><strong>Wildcard:</strong> coincidencia de respaldo para paths sin otra ruta.</li><li><strong>Deep link:</strong> URL que apunta directamente a una pantalla interna.</li></ul>
+<h2>Checklist final</h2>
+<ul><li>[ ] Instalé <code>react-router@8.3.1</code> con pnpm.</li><li>[ ] <code>BrowserRouter</code> envuelve <code>App</code>.</li><li>[ ] <code>SearchPage</code> conserva la búsqueda remota.</li><li>[ ] <code>PublicLayout</code> contiene un solo <code>AppHeader</code> y <code>Outlet</code>.</li><li>[ ] <code>/</code> redirige con <code>replace</code>.</li><li>[ ] Las tarjetas usan <code>Link</code>.</li><li>[ ] Los params pasan por <code>toMediaDetailInput()</code>.</li><li>[ ] No dupliqué <code>MediaType</code> ni usé assertions.</li><li>[ ] No añadí fetching de detalle.</li><li>[ ] Leí los tests generados.</li><li>[ ] <code>pnpm test</code> terminó en 0.</li><li>[ ] <code>pnpm build</code> terminó en 0.</li></ul>
+<h2>Próxima dependencia</h2>
+<p>La sesión 10 usará el <code>GetMediaDetailInput | null</code> de esta página para construir la query remota, representar sus estados y sincronizar <code>document.title</code> mediante un Effect con cleanup. No adelantes esa implementación.</p>
+<h2>Ruta ejecutable y referencia autosuficiente</h2>
+<p>Esta es la secuencia real de ramas del proyecto progresivo:</p>
+<p><code>session-09-start</code> → <code>session-09-step-01-browser-router</code> → <code>session-09-step-02-search-page</code> → <code>session-09-step-03-public-routes</code> → <code>session-09-step-04-route-params</code> → <code>session-09-end</code></p>
+<p>La rama <code>session-09-end</code> es el checkpoint completo. Cada rama intermedia compila y permite retomar la demostración desde una transformación concreta. Los archivos que no aparecen aquí se conservan sin cambios desde la sesión anterior.</p>
+<p>Ejecuta la instalación de esta sesión exactamente así:</p>
+<pre><code class="language-bash">pnpm add --save-exact react-router@8.3.1</code></pre>
+<p>El lockfile lo genera pnpm. No lo escribas a mano. A continuación están <strong>completos</strong> todos los archivos que el docente o el estudiante debe crear o reemplazar durante la sesión; no hace falta abrir el repositorio de referencia en otra ventana.</p>
+<h3><code>package.json</code> · archivo completo</h3>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;medialog-bootcamp&quot;,
+  &quot;private&quot;: true,
+  &quot;version&quot;: &quot;0.0.0&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;packageManager&quot;: &quot;pnpm@11.17.0&quot;,
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;&gt;=22.22.0&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;dev&quot;: &quot;vite&quot;,
+    &quot;build&quot;: &quot;tsc -b &amp;&amp; vite build&quot;,
+    &quot;lint&quot;: &quot;oxlint&quot;,
+    &quot;test&quot;: &quot;vitest run&quot;,
+    &quot;preview&quot;: &quot;vite preview&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;@mantine/core&quot;: &quot;9.4.1&quot;,
+    &quot;@mantine/hooks&quot;: &quot;9.4.1&quot;,
+    &quot;@tanstack/react-query&quot;: &quot;5.102.8&quot;,
+    &quot;@tanstack/react-query-devtools&quot;: &quot;5.102.8&quot;,
+    &quot;react&quot;: &quot;19.2.8&quot;,
+    &quot;react-dom&quot;: &quot;19.2.8&quot;,
+    &quot;react-router&quot;: &quot;8.3.1&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@types/node&quot;: &quot;^24.13.3&quot;,
+    &quot;@types/react&quot;: &quot;^19.2.18&quot;,
+    &quot;@types/react-dom&quot;: &quot;^19.2.4&quot;,
+    &quot;@vitejs/plugin-react&quot;: &quot;^6.1.0&quot;,
+    &quot;oxlint&quot;: &quot;^1.79.0&quot;,
+    &quot;postcss&quot;: &quot;8.5.26&quot;,
+    &quot;postcss-preset-mantine&quot;: &quot;1.18.0&quot;,
+    &quot;postcss-simple-vars&quot;: &quot;7.0.1&quot;,
+    &quot;typescript&quot;: &quot;6.0.3&quot;,
+    &quot;vite&quot;: &quot;8.2.2&quot;,
+    &quot;vitest&quot;: &quot;4.1.11&quot;
+  }
+}</code></pre>
+<h3><code>src/main.tsx</code> · archivo completo</h3>
+<pre><code class="language-tsx">import { MantineProvider } from '@mantine/core'
+import '@mantine/core/styles.css'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router'
+
+import App from './App'
+import './index.css'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+})
+
+createRoot(document.getElementById('root')!).render(
+  &lt;StrictMode&gt;
+    &lt;QueryClientProvider client={queryClient}&gt;
+      &lt;MantineProvider defaultColorScheme=&quot;dark&quot;&gt;
+        &lt;BrowserRouter&gt;
+          &lt;App /&gt;
+        &lt;/BrowserRouter&gt;
+      &lt;/MantineProvider&gt;
+      &lt;ReactQueryDevtools initialIsOpen={false} /&gt;
+    &lt;/QueryClientProvider&gt;
+  &lt;/StrictMode&gt;,
+)</code></pre>
+<h3><code>src/App.tsx</code> · archivo completo</h3>
+<pre><code class="language-tsx">import { Navigate, Route, Routes } from 'react-router'
+
+import { PublicLayout } from './layouts/public-layout'
+import { MediaDetailPage } from './pages/media-detail-page'
+import { NotFoundPage } from './pages/not-found-page'
+import { SearchPage } from './pages/search-page'
+
+export default function App() {
+  return (
+    &lt;Routes&gt;
+      &lt;Route element={&lt;PublicLayout /&gt;}&gt;
+        &lt;Route index element={&lt;Navigate replace to=&quot;/search&quot; /&gt;} /&gt;
+        &lt;Route path=&quot;search&quot; element={&lt;SearchPage /&gt;} /&gt;
+        &lt;Route
+          path=&quot;media/:mediaType/:externalId&quot;
+          element={&lt;MediaDetailPage /&gt;}
+        /&gt;
+        &lt;Route path=&quot;*&quot; element={&lt;NotFoundPage /&gt;} /&gt;
+      &lt;/Route&gt;
+    &lt;/Routes&gt;
+  )
+}</code></pre>
+<h3><code>src/layouts/public-layout.tsx</code> · archivo completo</h3>
+<pre><code class="language-tsx">import { Outlet } from 'react-router'
+
+import { AppHeader } from '../components/app-header'
+
+export function PublicLayout() {
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+      &lt;main&gt;
+        &lt;Outlet /&gt;
+      &lt;/main&gt;
+    &lt;/&gt;
+  )
+}</code></pre>
+<h3><code>src/pages/search-page.tsx</code> · archivo completo</h3>
+<pre><code class="language-tsx">import {
+  Alert,
+  Button,
+  Container,
+  Group,
+  Loader,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core'
+import { useState, type FormEvent } from 'react'
+
+import { toMediaSearchCardModel } from '../adapters/media-search-item-to-card-model'
+import { MediaSearchResults } from '../components/media-search-results'
+import { useMediaSearch } from '../hooks/features/use-media'
+import type { SearchMediaInput } from '../types/media-api'
+import type { MediaType } from '../types/media-item'
+
+export function SearchPage() {
+  const [draftQuery, setDraftQuery] = useState('')
+  const [draftMediaType, setDraftMediaType] =
+    useState&lt;MediaType&gt;('movie')
+  const [submittedSearch, setSubmittedSearch] =
+    useState&lt;SearchMediaInput | null&gt;(null)
+
+  const mediaSearch = useMediaSearch(submittedSearch)
+  const items = (mediaSearch.data ?? []).map(toMediaSearchCardModel)
+
+  function handleSubmit(event: FormEvent&lt;HTMLFormElement&gt;) {
+    event.preventDefault()
+
+    const query = draftQuery.trim()
+
+    if (query.length &lt; 2) {
+      return
+    }
+
+    setSubmittedSearch({
+      query,
+      mediaType: draftMediaType,
+    })
+  }
+
+  function renderSearchContent() {
+    if (submittedSearch === null) {
+      return &lt;Text&gt;Escribe un título y confirma la búsqueda.&lt;/Text&gt;
+    }
+
+    if (mediaSearch.isLoading) {
+      return &lt;Loader aria-label=&quot;Buscando títulos&quot; /&gt;
+    }
+
+    if (mediaSearch.isError) {
+      const message =
+        mediaSearch.error instanceof Error
+          ? mediaSearch.error.message
+          : 'No se pudo completar la búsqueda.'
+
+      return &lt;Alert color=&quot;red&quot;&gt;{message}&lt;/Alert&gt;
+    }
+
+    if (items.length === 0) {
+      return &lt;Text&gt;No encontramos resultados para esta búsqueda.&lt;/Text&gt;
+    }
+
+    return &lt;MediaSearchResults items={items} /&gt;
+  }
+
+  return (
+      &lt;Container py=&quot;xl&quot; size=&quot;md&quot;&gt;
+        &lt;Stack gap=&quot;xl&quot;&gt;
+          &lt;div&gt;
+            &lt;Title order={2}&gt;Busca en el catálogo remoto&lt;/Title&gt;
+            &lt;Text c=&quot;dimmed&quot;&gt;
+              Confirma un título y un tipo para consultar la API.
+            &lt;/Text&gt;
+          &lt;/div&gt;
+
+          &lt;form onSubmit={handleSubmit}&gt;
+            &lt;Stack&gt;
+              &lt;TextInput
+                label=&quot;Título&quot;
+                minLength={2}
+                onChange={(event) =&gt;
+                  setDraftQuery(event.currentTarget.value)
+                }
+                placeholder=&quot;Dune&quot;
+                value={draftQuery}
+              /&gt;
+
+              &lt;Select
+                allowDeselect={false}
+                data={[
+                  { label: 'Película', value: 'movie' },
+                  { label: 'Serie', value: 'series' },
+                ]}
+                label=&quot;Tipo&quot;
+                onChange={(value) =&gt; {
+                  if (value === 'movie' || value === 'series') {
+                    setDraftMediaType(value)
+                  }
+                }}
+                value={draftMediaType}
+              /&gt;
+
+              &lt;Group justify=&quot;flex-end&quot;&gt;
+                &lt;Button
+                  disabled={draftQuery.trim().length &lt; 2}
+                  type=&quot;submit&quot;
+                &gt;
+                  Buscar
+                &lt;/Button&gt;
+              &lt;/Group&gt;
+            &lt;/Stack&gt;
+          &lt;/form&gt;
+
+          {mediaSearch.isFetching &amp;&amp; !mediaSearch.isLoading ? (
+            &lt;Text size=&quot;sm&quot;&gt;Actualizando resultados…&lt;/Text&gt;
+          ) : null}
+
+          {renderSearchContent()}
+        &lt;/Stack&gt;
+      &lt;/Container&gt;
+  )
+}</code></pre>
+<h3><code>src/pages/media-detail-page.tsx</code> · archivo completo</h3>
+<pre><code class="language-tsx">import { Anchor, Code, Container, Stack, Text, Title } from '@mantine/core'
+import { Link, useParams } from 'react-router'
+
+import { toMediaDetailInput } from '../adapters/media-detail-route-params-to-input'
+
+export function MediaDetailPage() {
+  const detailInput = toMediaDetailInput(useParams())
+
+  if (detailInput === null) {
+    return (
+      &lt;Container py=&quot;xl&quot; size=&quot;sm&quot;&gt;
+        &lt;Stack&gt;
+          &lt;Title order={1}&gt;URL de detalle no válida&lt;/Title&gt;
+          &lt;Text&gt;Revisa el tipo y el identificador del medio.&lt;/Text&gt;
+          &lt;Anchor component={Link} to=&quot;/search&quot;&gt;
+            Volver a la búsqueda
+          &lt;/Anchor&gt;
+        &lt;/Stack&gt;
+      &lt;/Container&gt;
+    )
+  }
+
+  return (
+    &lt;Container py=&quot;xl&quot; size=&quot;sm&quot;&gt;
+      &lt;Stack&gt;
+        &lt;Title order={1}&gt;Detalle provisional&lt;/Title&gt;
+        &lt;Text&gt;
+          La ruta ya produjo un input válido. La próxima sesión consultará el
+          detalle remoto.
+        &lt;/Text&gt;
+        &lt;Code block&gt;
+          {JSON.stringify(detailInput, null, 2)}
+        &lt;/Code&gt;
+        &lt;Anchor component={Link} to=&quot;/search&quot;&gt;
+          Volver a la búsqueda
+        &lt;/Anchor&gt;
+      &lt;/Stack&gt;
+    &lt;/Container&gt;
+  )
+}</code></pre>
+<h3><code>src/pages/not-found-page.tsx</code> · archivo completo</h3>
+<pre><code class="language-tsx">import { Anchor, Container, Stack, Text, Title } from '@mantine/core'
+import { Link } from 'react-router'
+
+export function NotFoundPage() {
+  return (
+    &lt;Container py=&quot;xl&quot; size=&quot;sm&quot;&gt;
+      &lt;Stack&gt;
+        &lt;Title order={1}&gt;Página no encontrada&lt;/Title&gt;
+        &lt;Text&gt;La URL no coincide con una página pública.&lt;/Text&gt;
+        &lt;Anchor component={Link} to=&quot;/search&quot;&gt;
+          Volver a la búsqueda
+        &lt;/Anchor&gt;
+      &lt;/Stack&gt;
+    &lt;/Container&gt;
+  )
+}</code></pre>
+<h3><code>src/adapters/media-detail-route-params-to-input.ts</code> · archivo completo</h3>
+<pre><code class="language-ts">import type { GetMediaDetailInput } from '../types/media-api'
+
+export type MediaDetailRouteParams = Readonly&lt;{
+  externalId?: string
+  mediaType?: string
+}&gt;
+
+export function toMediaDetailInput(
+  params: MediaDetailRouteParams,
+): GetMediaDetailInput | null {
+  if (params.mediaType !== 'movie' &amp;&amp; params.mediaType !== 'series') {
+    return null
+  }
+
+  if (params.externalId === undefined || params.externalId.length === 0) {
+    return null
+  }
+
+  return {
+    externalId: params.externalId,
+    mediaType: params.mediaType,
+  }
+}</code></pre>
+<h3><code>src/components/media-search-results.tsx</code> · archivo completo</h3>
+<pre><code class="language-tsx">import {
+  Anchor,
+  Badge,
+  Box,
+  Card,
+  Group,
+  Image,
+  SimpleGrid,
+  Stack,
+  Text,
+} from '@mantine/core'
+import { Link } from 'react-router'
+
+import type { MediaSearchCardModel } from '../types/media-search-card-model'
+
+type MediaSearchResultsProps = {
+  items: MediaSearchCardModel[]
+}
+
+export function MediaSearchResults(props: MediaSearchResultsProps) {
+  const { items } = props
+
+  return (
+    &lt;SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}&gt;
+      {items.map((item) =&gt; (
+        &lt;Card key={item.key} padding=&quot;lg&quot; radius=&quot;md&quot; withBorder&gt;
+          &lt;Card.Section&gt;
+            {item.posterUrl === null ? (
+              &lt;Box
+                aria-label={`Sin portada para ${item.title}`}
+                bg=&quot;gray.9&quot;
+                h={240}
+              &gt;
+                &lt;Text pt=&quot;xl&quot; ta=&quot;center&quot;&gt;
+                  Sin portada
+                &lt;/Text&gt;
+              &lt;/Box&gt;
+            ) : (
+              &lt;Image
+                alt={`Portada de ${item.title}`}
+                h={240}
+                src={item.posterUrl}
+              /&gt;
+            )}
+          &lt;/Card.Section&gt;
+
+          &lt;Stack gap=&quot;xs&quot; mt=&quot;md&quot;&gt;
+            &lt;Text fw={700}&gt;{item.title}&lt;/Text&gt;
+            &lt;Group gap=&quot;xs&quot;&gt;
+              &lt;Badge variant=&quot;light&quot;&gt;
+                {item.mediaType === 'movie' ? 'Película' : 'Serie'}
+              &lt;/Badge&gt;
+              &lt;Text c=&quot;dimmed&quot; size=&quot;sm&quot;&gt;
+                {item.releaseLabel}
+              &lt;/Text&gt;
+              {item.isLogged ? (
+                &lt;Badge color=&quot;green&quot;&gt;En biblioteca&lt;/Badge&gt;
+              ) : null}
+            &lt;/Group&gt;
+            &lt;Anchor
+              component={Link}
+              to={`/media/${item.mediaType}/${item.externalId}`}
+            &gt;
+              Ver detalle
+            &lt;/Anchor&gt;
+          &lt;/Stack&gt;
+        &lt;/Card&gt;
+      ))}
+    &lt;/SimpleGrid&gt;
+  )
+}</code></pre>
+<h3><code>src/adapters/__tests__/media-detail-route-params-to-input.test.ts</code> · archivo completo</h3>
+<pre><code class="language-ts">import { describe, expect, it } from 'vitest'
+
+import { toMediaDetailInput } from '../media-detail-route-params-to-input'
+
+describe('toMediaDetailInput', () =&gt; {
+  it('construye el input de una película', () =&gt; {
+    expect(
+      toMediaDetailInput({ mediaType: 'movie', externalId: '438631' }),
+    ).toEqual({ mediaType: 'movie', externalId: '438631' })
+  })
+
+  it('construye el input de una serie', () =&gt; {
+    expect(
+      toMediaDetailInput({ mediaType: 'series', externalId: '1399' }),
+    ).toEqual({ mediaType: 'series', externalId: '1399' })
+  })
+
+  it('rechaza un tipo que no pertenece al dominio', () =&gt; {
+    expect(
+      toMediaDetailInput({ mediaType: 'anime', externalId: '438631' }),
+    ).toBeNull()
+  })
+
+  it('rechaza una ruta sin identificador', () =&gt; {
+    expect(toMediaDetailInput({ mediaType: 'movie' })).toBeNull()
+  })
+
+  it('rechaza una ruta sin tipo', () =&gt; {
+    expect(toMediaDetailInput({ externalId: '438631' })).toBeNull()
+  })
+})</code></pre>
+<h3>Comprobación del checkpoint</h3>
+<pre><code class="language-bash">pnpm test
+pnpm build
+pnpm lint</code></pre>
+<p>Lee la salida completa. Un código de salida 0 comprueba tests, tipos, generación y lint del estado local; no demuestra por sí solo que el backend publicado esté disponible ni que la navegación se haya probado en un navegador.</p></main>
+      <footer>Material de trabajo en clase · Sesión 09</footer>
+    </article>
+  </body>
+</html>

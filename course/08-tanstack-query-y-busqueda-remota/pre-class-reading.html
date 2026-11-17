@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lectura previa de Sesión 08 para React Guide VI">
+    <title>Lectura previa · Sesión 08</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Lectura previa</p>
+        <h1>Lectura previa · Sesión 08</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Lectura previa · Sesión 08</h1>
+<h2>Antes de empezar</h2>
+<ul><li><strong>Tiempo estimado:</strong> 20 minutos.</li><li><strong>Objetivo:</strong> reconocer cómo una query key separa datos en caché y por qué una consulta diferida necesita distinguir <code>pending</code> de una petición real.</li></ul>
+<h2>Conocimientos previos</h2>
+<p>Necesitas reconocer <code>Promise</code>, DTO, fetcher y adapter desde la sesión 07, además de eventos, estado local y formularios controlados de las sesiones anteriores. No necesitas conocer TanStack Query.</p>
+<p>No necesitas implementar código. Lee los fragmentos indicados y relaciona cada idea con <code>searchMedia({ query, mediaType })</code> de la sesión 07.</p>
+<h2>Fuente 1 · Query keys</h2>
+<p>Lee la guía oficial <a href="https://tanstack.com/query/latest/docs/framework/react/guides/query-keys" target="_blank" rel="noreferrer">Query Keys</a>, desde la introducción hasta la sección <strong>If your query function depends on a variable, include it in your query key</strong>.</p>
+<ul><li><strong>Organización:</strong> TanStack.</li><li><strong>Versión:</strong> TanStack Query v5 para React.</li><li><strong>Verificada:</strong> 31 de agosto de 2026.</li><li><strong>Motivo:</strong> presenta la identidad de caché y la obligación de incluir las variables que usa la query function.</li></ul>
+<p>Mientras lees, identifica:</p>
+<ul><li>por qué la key superior es un arreglo;</li><li>qué propiedad debe cumplir para identificar datos;</li><li>qué ocurre cuando la query function depende de una variable;</li><li>por qué el orden de elementos del arreglo sí importa;</li><li>cómo un objeto serializable puede formar parte de la key.</li></ul>
+<p>Trasládalo a estos dos casos:</p>
+<pre><code class="language-text">Dune + movie
+Dune + series</code></pre>
+<p>Aunque el texto sea igual, el tipo cambia el recurso solicitado. Por eso no deben compartir una sola entrada de caché.</p>
+<h2>Fuente 2 · Consultas diferidas</h2>
+<p>Lee la guía oficial <a href="https://tanstack.com/query/latest/docs/framework/react/guides/disabling-queries" target="_blank" rel="noreferrer">Disabling/Pausing Queries</a>, desde <strong>Disabling/Pausing Queries</strong> hasta el final de <strong>isLoading (Previously: isInitialLoading)</strong>. La sección posterior sobre <code>skipToken</code> queda fuera de esta lectura.</p>
+<ul><li><strong>Organización:</strong> TanStack.</li><li><strong>Versión:</strong> TanStack Query v5 para React.</li><li><strong>Verificada:</strong> 31 de agosto de 2026.</li><li><strong>Motivo:</strong> diferencia una consulta pendiente de una petición activa y muestra el caso de un formulario diferido.</li></ul>
+<p>Mientras lees, diferencia:</p>
+<ul><li><code>status: pending</code>;</li><li><code>fetchStatus: idle</code>;</li><li><code>isLoading</code>;</li><li>una query deshabilitada permanentemente;</li><li>una lazy query que espera una condición visible.</li></ul>
+<p>En la sesión se usará una lazy query: la aplicación esperará una búsqueda enviada y válida. No se llamará <code>refetch()</code> para pasar parámetros.</p>
+<h2>Vocabulario que debes reconocer</h2>
+<ul><li><strong>Query key:</strong> identidad serializable de una entrada de caché.</li><li><strong>Query function:</strong> función que devuelve la Promise asociada a la key.</li><li><strong>Lazy query:</strong> consulta que espera una condición antes de ejecutar la primera petición.</li><li><strong><code>status</code>:</strong> estado de disponibilidad de datos.</li><li><strong><code>fetchStatus</code>:</strong> estado de ejecución de la query function.</li><li><strong><code>isLoading</code>:</strong> primera petición activa de una lazy query.</li></ul>
+<h2>Lleva a clase</h2>
+<ul><li>El checkpoint funcional de la sesión 07.</li><li><code>.env.local</code> con la URL entregada por el docente; no publiques su contenido.</li><li>DevTools del navegador disponibles.</li><li>Una frase propia que complete: “La query key debe cambiar cuando…”.</li></ul>
+<p>No instales TanStack Query antes de la clase. Las versiones y el lugar del provider se decidirán con el grupo.</p></main>
+      <footer>Material de preparación · Sesión 08</footer>
+    </article>
+  </body>
+</html>

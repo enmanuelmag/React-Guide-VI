@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 15 para React Guide VI">
+    <title>Guía estudiantil · Sesión 15 · Edición y reutilización</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 15 · Edición y reutilización</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 15 · Edición y reutilización</h1>
+<h2>Archivo de hooks de esta sesión</h2>
+<p>Reutiliza las <a href="../11-formularios-zod-y-modal-global/student-guide.md#qué-hace-cada-opción" target="_blank" rel="noreferrer">opciones y conexiones de Mantine Form explicadas en 11</a>: uncontrolled, valores iniciales, resolver síncrono, blur, <code>form.key</code>, <code>getInputProps</code> y <code>onSubmit</code>. Revisa qué callbacks necesita este caso; limpiar el preview con <code>onValuesChange</code> pertenecía al body local de 11, no es obligatorio en todos los formularios.</p>
+<p>Añade <code>useUpdateMediaLog</code>; conserva <code>useCreateMediaLog</code> y los hooks de lectura. Todas estas funciones se definen en <code>src/hooks/features/use-media.ts</code>. Las keys y los planes de familias se mantienen en <code>src/hooks/media-keys.ts</code>, importado desde <code>../media-keys</code>. Las páginas y componentes importan los hooks desde <code>../hooks/features/use-media</code>.</p>
+<h2>Contratos heredados disponibles</h2>
+<ul><li>La <strong>sesión 11</strong> define <code>mediaLogFormSchema</code>, <code>MediaLogFormValues</code> y <code>toCreateMediaLogBody</code>.</li><li>La <strong>sesión 13</strong> deja <code>CreateMediaLogForm</code>, sus props, su traductor de errores y <code>useCreateMediaLog</code> completos.</li><li>La <strong>sesión 14</strong> deja <code>UserMediaDataDto</code>, <code>SavedMediaDetails</code> y <code>PrivateMediaDetailPage</code> completos.</li></ul>
+<p>Importa esos símbolos desde sus archivos. Si falta alguno en el seed, corrige el checkpoint que lo introdujo en lugar de crear una copia.</p>
+<h2>Objetivo</h2>
+<p>Reutilizar status, prioridad y notas entre creación y edición, sin mezclar identidades ni duplicar el formulario. Después conectarás un PUT pesimista que cierra el editor cuando lista y detalle ya reflejan el servidor.</p>
+<h2>Punto de partida</h2>
+<p>Comienza desde el checkpoint completo de la sesión 14:</p>
+<ul><li>crear desde búsqueda y detalle público funciona;</li><li><code>CreateMediaLogForm</code> contiene Mantine Form, schema, campos y mutación;</li><li><code>/app/library/:logId</code> carga una entrada privada;</li><li><code>MediaDetailSelector</code> se deriva en <code>src/schemas/media-detail.ts</code> y el adapter ya validó <code>logId</code>;</li><li><code>entry</code> contiene <code>id</code>, <code>status</code>, <code>priority</code> y <code>notes</code>;</li><li>lista y detalle tienen familias de query keys;</li><li>Vitest está configurado y los tests viven dentro de <code>__tests__/</code>.</li></ul>
+<p>Antes de editar, crea un medio y abre su detalle privado. Conserva otro registro con values distintos.</p>
+<h2>Resultado observable</h2>
+<p>Desde el detalle privado podrás abrir “Editar mis datos”, modificar status, prioridad y notas, restablecer el snapshot inicial y guardar.</p>
+<pre><code class="language-text">entry
+  → initial values
+  → MediaLogForm
+  → update body
+  → PUT autenticado
+  → invalidate lista + detalle
+  → cerrar</code></pre>
+<p>Si falla el PUT, el modal permanece abierto y conserva tu trabajo.</p>
+<h2>Mapa del trabajo</h2>
+<pre><code class="language-text">1. Clasificar responsabilidades
+2. Extraer MediaLogForm
+3. Recuperar CreateMediaLogForm
+4. Crear adapters de edición
+5. Conectar PUT e invalidaciones
+6. Crear EditMediaLogForm
+7. Montar modal y verificar estados
+8. Probar adapters y recorrido</code></pre>
+<h2>1. Clasifica responsabilidades</h2>
+<p>Completa antes de mover código:</p>
+<div class="table-wrap"><table><thead><tr><th>Pieza</th><th>Identidad</th><th>Request</th><th>Campos</th></tr></thead><tbody><tr><td>Crear</td><td><code>mediaType + externalId</code></td><td>POST</td><td>Status, prioridad y notas</td></tr><tr><td>Compartido</td><td>Ninguna</td><td>Ninguno</td><td>Status, prioridad y notas</td></tr><tr><td>Editar</td><td><code>logId</code></td><td>PUT</td><td>Status, prioridad y notas</td></tr></tbody></table></div>
+<p>Comparte únicamente el mecanismo repetido. No diseñes un formulario con <code>mode</code>, <code>entry?</code> e <code>identity?</code>.</p>
+<h2>2. Extrae <code>MediaLogForm</code></h2>
+<p>Crea <code>src/components/media-log-form.tsx</code>. Esta es la referencia completa del componente compartido:</p>
+<pre><code class="language-tsx">import { Alert, Button, Group, Select, Stack, Textarea } from &quot;@mantine/core&quot;
+import { schemaResolver, useForm } from &quot;@mantine/form&quot;
+
+import {
+  MEDIA_PRIORITY_LABELS,
+  MEDIA_STATUS_LABELS,
+} from &quot;../constants/media-log&quot;
+import {
+  mediaLogFormSchema,
+  type MediaLogFormValues,
+} from &quot;../schemas/media-log&quot;
+import {
+  MEDIA_PRIORITY_VALUES,
+  MEDIA_STATUS_VALUES,
+} from &quot;../types/media-api&quot;
+
+const STATUS_OPTIONS = MEDIA_STATUS_VALUES.map((value) =&gt; ({
+  value,
+  label: MEDIA_STATUS_LABELS[value],
+}))
+
+const PRIORITY_OPTIONS = MEDIA_PRIORITY_VALUES.map((value) =&gt; ({
+  value,
+  label: MEDIA_PRIORITY_LABELS[value],
+}))
+
+export type MediaLogFormProps = {
+  initialValues: MediaLogFormValues
+  submitLabel: string
+  isPending: boolean
+  errorMessage: string | null
+  onSubmit: (values: MediaLogFormValues) =&gt; void
+  onCancel: () =&gt; void
+}
+
+export function MediaLogForm({
+  initialValues,
+  submitLabel,
+  isPending,
+  errorMessage,
+  onSubmit,
+  onCancel,
+}: MediaLogFormProps) {
+  const form = useForm&lt;MediaLogFormValues&gt;({
+    mode: &quot;uncontrolled&quot;,
+    initialValues,
+    validate: schemaResolver(mediaLogFormSchema, { sync: true }),
+    validateInputOnBlur: true,
+  })
+
+  return (
+    &lt;form noValidate onSubmit={form.onSubmit(onSubmit)}&gt;
+      &lt;Stack gap=&quot;sm&quot;&gt;
+        {errorMessage ? &lt;Alert color=&quot;red&quot;&gt;{errorMessage}&lt;/Alert&gt; : null}
+
+        &lt;Select
+          allowDeselect={false}
+          data={STATUS_OPTIONS}
+          disabled={isPending}
+          key={form.key(&quot;status&quot;)}
+          label=&quot;Status&quot;
+          {...form.getInputProps(&quot;status&quot;)}
+        /&gt;
+
+        &lt;Select
+          allowDeselect={false}
+          data={PRIORITY_OPTIONS}
+          disabled={isPending}
+          key={form.key(&quot;priority&quot;)}
+          label=&quot;Prioridad&quot;
+          {...form.getInputProps(&quot;priority&quot;)}
+        /&gt;
+
+        &lt;Textarea
+          autosize
+          disabled={isPending}
+          key={form.key(&quot;notes&quot;)}
+          label=&quot;Notas&quot;
+          minRows={3}
+          placeholder=&quot;Opcional&quot;
+          {...form.getInputProps(&quot;notes&quot;)}
+        /&gt;
+
+        &lt;Group justify=&quot;flex-end&quot;&gt;
+          &lt;Button
+            disabled={isPending}
+            onClick={() =&gt; form.reset()}
+            type=&quot;button&quot;
+            variant=&quot;default&quot;
+          &gt;
+            Restablecer
+          &lt;/Button&gt;
+          &lt;Button
+            disabled={isPending}
+            onClick={onCancel}
+            type=&quot;button&quot;
+            variant=&quot;subtle&quot;
+          &gt;
+            Cancelar
+          &lt;/Button&gt;
+          &lt;Button loading={isPending} type=&quot;submit&quot;&gt;
+            {submitLabel}
+          &lt;/Button&gt;
+        &lt;/Group&gt;
+      &lt;/Stack&gt;
+    &lt;/form&gt;
+  )
+}</code></pre>
+<p>Mueve desde creación:</p>
+<ul><li><code>useForm</code> en modo uncontrolled;</li><li>resolver del schema;</li><li>status, prioridad y notas;</li><li>validación;</li><li>error visible;</li><li>Restablecer, Cancelar y submit.</li></ul>
+<p>Cada input conserva conexiones equivalentes a:</p>
+<pre><code class="language-tsx">key={form.key(&quot;status&quot;)}
+{...form.getInputProps(&quot;status&quot;)}</code></pre>
+<p>La key de Mantine pertenece al input uncontrolled. No recibe <code>entry.id</code>.</p>
+<p>No muevas:</p>
+<ul><li>identidad de catálogo;</li><li>adapter de creación;</li><li>mutación POST;</li><li>copy específico de error;</li><li>cierre del modal global.</li></ul>
+<p>Checkpoint: <code>MediaLogForm</code> no importa API, Query, Firebase, Router, store o DTOs.</p>
+<h2>3. Recupera <code>CreateMediaLogForm</code></h2>
+<p>En <code>src/components/create-media-log-form.tsx</code>, declara los defaults con nombre:</p>
+<pre><code class="language-ts">export const CREATE_MEDIA_LOG_INITIAL_VALUES: MediaLogFormValues = {
+  status: &quot;pending&quot;,
+  priority: &quot;medium&quot;,
+  notes: &quot;&quot;,
+}</code></pre>
+<p>Convierte creación en un wrapper que:</p>
+<ol><li>recibe identidad de catálogo;</li><li>ejecuta <code>toCreateMediaLogBody(identity, values)</code>;</li><li>llama <code>useCreateMediaLog</code>;</li><li>traduce sus errores;</li><li>entrega props completas a <code>MediaLogForm</code>.</li></ol>
+<p>La referencia final de <code>src/components/create-media-log-form.tsx</code> es:</p>
+<pre><code class="language-tsx">import { Stack, Text } from &quot;@mantine/core&quot;
+
+import { toCreateMediaLogBody } from &quot;../adapters/media-log-form-to-create-body&quot;
+import { ApiError } from &quot;../api/http&quot;
+import { useCreateMediaLog } from &quot;../hooks/features/use-media&quot;
+import type { MediaLogFormValues } from &quot;../schemas/media-log&quot;
+import type { GetMediaDetailInput } from &quot;../types/media-api&quot;
+import { MediaLogForm } from &quot;./media-log-form&quot;
+
+export const CREATE_MEDIA_LOG_INITIAL_VALUES: MediaLogFormValues = {
+  status: &quot;pending&quot;,
+  priority: &quot;medium&quot;,
+  notes: &quot;&quot;,
+}
+
+type CreateMediaLogFormProps = {
+  identity: GetMediaDetailInput
+  onCreated: () =&gt; void
+  onCancel: () =&gt; void
+}
+
+function getCreateMediaLogErrorMessage(error: unknown): string {
+  if (!(error instanceof ApiError)) {
+    return &quot;Ocurrió un error inesperado. Intenta nuevamente.&quot;
+  }
+
+  switch (error.status) {
+    case 401:
+      return &quot;Tu sesión no pudo usarse para guardar. Vuelve a iniciar sesión.&quot;
+    case 404:
+      return &quot;Este medio ya no está disponible en el catálogo.&quot;
+    case 409:
+      return &quot;Este medio ya está en tu biblioteca.&quot;
+    default:
+      return &quot;El servidor no pudo guardar el medio. Intenta nuevamente.&quot;
+  }
+}
+
+export function CreateMediaLogForm({
+  identity,
+  onCreated,
+  onCancel,
+}: CreateMediaLogFormProps) {
+  const createMutation = useCreateMediaLog()
+
+  function handleSubmit(values: MediaLogFormValues) {
+    createMutation.mutate(toCreateMediaLogBody(identity, values), {
+      onSuccess: onCreated,
+    })
+  }
+
+  const errorMessage = createMutation.isError
+    ? getCreateMediaLogErrorMessage(createMutation.error)
+    : null
+
+  return (
+    &lt;Stack gap=&quot;md&quot;&gt;
+      &lt;Text size=&quot;sm&quot;&gt;
+        {identity.mediaType} · {identity.externalId}
+      &lt;/Text&gt;
+
+      &lt;MediaLogForm
+        errorMessage={errorMessage}
+        initialValues={CREATE_MEDIA_LOG_INITIAL_VALUES}
+        isPending={createMutation.isPending}
+        onCancel={onCancel}
+        onSubmit={handleSubmit}
+        submitLabel=&quot;Guardar en biblioteca&quot;
+      /&gt;
+    &lt;/Stack&gt;
+  )
+}</code></pre>
+<p>Prueba antes de continuar:</p>
+<ol><li>abre desde búsqueda;</li><li>cambia values;</li><li>pulsa Restablecer;</li><li>guarda y observa POST;</li><li>repite desde detalle público;</li><li>cancela y abre otra identidad.</li></ol>
+<p>No añadas edición mientras exista una regresión de creación.</p>
+<h2>4. Crea adapters de edición</h2>
+<h3>4.1 DTO a values</h3>
+<p>Crea <code>src/adapters/user-media-to-form-values.ts</code>:</p>
+<pre><code class="language-ts">import type { MediaLogFormValues } from &quot;../schemas/media-log&quot;
+import type { UserMediaDataDto } from &quot;../types/media-api&quot;
+
+export function toMediaLogFormValues(
+  entry: UserMediaDataDto,
+): MediaLogFormValues {
+  return {
+    status: entry.status,
+    priority: entry.priority,
+    notes: entry.notes ?? &quot;&quot;,
+  }
+}</code></pre>
+<p>El resultado es el snapshot inicial de esa instancia. No lo guardes en <code>useState</code> y no lo sincronices mediante Effect.</p>
+<h3>4.2 Values a body</h3>
+<p>En <code>src/types/media-api.ts</code>, declara el body remoto:</p>
+<pre><code class="language-ts">export type UpdateMediaLogBody = {
+  status: MediaStatus
+  priority: MediaPriority
+  notes: string | null
+}</code></pre>
+<p>Crea <code>src/adapters/media-log-form-to-update-body.ts</code>:</p>
+<pre><code class="language-ts">import type { MediaLogFormValues } from &quot;../schemas/media-log&quot;
+import type { UpdateMediaLogBody } from &quot;../types/media-api&quot;
+
+export function toUpdateMediaLogBody(
+  values: MediaLogFormValues,
+): UpdateMediaLogBody {
+  const notes = values.notes.trim()
+
+  return {
+    status: values.status,
+    priority: values.priority,
+    notes: notes === &quot;&quot; ? null : notes,
+  }
+}</code></pre>
+<p>Checkpoint:</p>
+<ul><li>el body contiene exactamente tres campos;</li><li>título, fechas, catálogo, userId y logId quedan fuera;</li><li>notas vacías o con espacios producen <code>null</code>.</li></ul>
+<h2>5. Distingue reset, cierre y cambio de registro</h2>
+<p>Usarás tres operaciones:</p>
+<div class="table-wrap"><table><thead><tr><th>Acción</th><th>Instancia</th><th>Resultado</th></tr></thead><tbody><tr><td><code>form.reset()</code></td><td>Se conserva</td><td>Vuelve a initial values y limpia errores</td></tr><tr><td>Cancelar</td><td>Se desmonta</td><td>Termina esa sesión de edición</td></tr><tr><td>Cambiar <code>entry.id</code></td><td>Se reemplaza</td><td>Monta un editor con otro snapshot</td></tr></tbody></table></div>
+<p>En el modal usarás:</p>
+<pre><code class="language-tsx">&lt;EditMediaLogForm key={entry.id} entry={entry} /&gt;</code></pre>
+<p>No confundas esa key con:</p>
+<pre><code class="language-tsx">&lt;Textarea key={form.key(&quot;notes&quot;)} /&gt;</code></pre>
+<p>La primera representa el registro. La segunda permite a Mantine actualizar un input uncontrolled.</p>
+<h2>6. Conecta PUT e invalidaciones</h2>
+<p>En el mismo <code>src/types/media-api.ts</code>, añade el input y el resultado consumido:</p>
+<pre><code class="language-ts">export type UpdateMediaLogInput = {
+  logId: string
+  body: UpdateMediaLogBody
+}
+
+export type UpdatedMediaLogDto = {
+  id: string
+}</code></pre>
+<p>Implementa <code>updateMediaLog</code> con:</p>
+<pre><code class="language-text">PUT /api/v2/media/:logId
+Bearer obligatorio
+Content-Type: application/json
+body mínimo</code></pre>
+<p>Codifica <code>logId</code> antes de colocarlo en la URL.</p>
+<p>En <code>src/api/media.ts</code>, combina estos imports con los fetchers existentes. <code>API_URL</code> ya existe en ese archivo desde la sesión 07:</p>
+<pre><code class="language-ts">import type {
+  UpdatedMediaLogDto,
+  UpdateMediaLogInput,
+} from &quot;../types/media-api&quot;
+import { requestJsonWithAuth } from &quot;./http&quot;
+
+export function updateMediaLog({
+  logId,
+  body,
+}: UpdateMediaLogInput): Promise&lt;UpdatedMediaLogDto&gt; {
+  return requestJsonWithAuth&lt;UpdatedMediaLogDto&gt;(
+    `${API_URL}/api/v2/media/${encodeURIComponent(logId)}`,
+    {
+      method: &quot;PUT&quot;,
+      headers: { &quot;Content-Type&quot;: &quot;application/json&quot; },
+      body: JSON.stringify(body),
+    },
+  )
+}</code></pre>
+<p>Crea la selección de familias y el hook en <code>src/hooks/features/use-media.ts</code>. Combina sus imports con los hooks existentes:</p>
+<pre><code class="language-ts">import { useMutation, useQueryClient } from &quot;@tanstack/react-query&quot;
+
+import { updateMediaLog } from &quot;../../api/media&quot;
+import { mediaKeys } from &quot;../media-keys&quot;
+
+export const UPDATE_MEDIA_LOG_INVALIDATION_KEYS = () =&gt; [
+  mediaKeys.lists(),
+  mediaKeys.details(),
+]
+
+export function useUpdateMediaLog() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: updateMediaLog,
+    onSuccess: async () =&gt; {
+      await Promise.all(
+        UPDATE_MEDIA_LOG_INVALIDATION_KEYS().map((queryKey) =&gt;
+          queryClient.invalidateQueries({ queryKey }),
+        ),
+      )
+    },
+  })
+}</code></pre>
+<p>No invalides búsquedas públicas. Status, prioridad y notas no cambian catálogo.</p>
+<p>No extraigas todavía un helper genérico. DELETE será el tercer consumidor en la sesión 16.</p>
+<p>Lista y detalle quedan stale. Por defecto, TanStack Query vuelve a consultar de inmediato solo las queries activas. En la ruta de detalle, el detalle hace refetch antes de cerrar; la lista normalmente está inactiva y hará refetch al regresar a <code>/app/library</code>.</p>
+<h2>7. Crea <code>EditMediaLogForm</code></h2>
+<p>El wrapper recibe:</p>
+<pre><code class="language-ts">type EditMediaLogFormProps = {
+  entry: UserMediaDataDto
+  onCancel: () =&gt; void
+  onUpdated: () =&gt; void
+}</code></pre>
+<p>Debe:</p>
+<ol><li>derivar <code>initialValues</code> con <code>toMediaLogFormValues(entry)</code>;</li><li>crear la mutación de update;</li><li>convertir values con <code>toUpdateMediaLogBody</code>;</li><li>usar <code>entry.id</code> como <code>logId</code> del input remoto;</li><li>traducir errores;</li><li>entregar props a <code>MediaLogForm</code>.</li></ol>
+<p>Define primero el traductor de errores de edición en <code>src/lib/media-log-errors.ts</code>:</p>
+<pre><code class="language-ts">import { ApiError } from &quot;../api/http&quot;
+
+export function getUpdateMediaLogErrorMessage(error: unknown): string {
+  if (!(error instanceof ApiError)) {
+    return &quot;Ocurrió un error inesperado. Intenta nuevamente.&quot;
+  }
+
+  switch (error.status) {
+    case 400:
+      return &quot;Revisa los valores antes de guardar.&quot;
+    case 401:
+      return &quot;La sesión no pudo autorizar la actualización.&quot;
+    case 404:
+      return &quot;No encontramos ese registro en tu biblioteca.&quot;
+    default:
+      return &quot;No pudimos guardar los cambios. Intenta nuevamente.&quot;
+  }
+}</code></pre>
+<p>La referencia completa de <code>src/components/edit-media-log-form.tsx</code> define las props e importa el traductor antes de usarlo:</p>
+<pre><code class="language-tsx">import { toUpdateMediaLogBody } from &quot;../adapters/media-log-form-to-update-body&quot;
+import { toMediaLogFormValues } from &quot;../adapters/user-media-to-form-values&quot;
+import { useUpdateMediaLog } from &quot;../hooks/features/use-media&quot;
+import { getUpdateMediaLogErrorMessage } from &quot;../lib/media-log-errors&quot;
+import type { MediaLogFormValues } from &quot;../schemas/media-log&quot;
+import type { UserMediaDataDto } from &quot;../types/media-api&quot;
+import { MediaLogForm } from &quot;./media-log-form&quot;
+
+type EditMediaLogFormProps = {
+  entry: UserMediaDataDto
+  onUpdated: () =&gt; void
+  onCancel: () =&gt; void
+}
+
+export function EditMediaLogForm({
+  entry,
+  onUpdated,
+  onCancel,
+}: EditMediaLogFormProps) {
+  const updateMutation = useUpdateMediaLog()
+  const initialValues = toMediaLogFormValues(entry)
+  const errorMessage = updateMutation.isError
+    ? getUpdateMediaLogErrorMessage(updateMutation.error)
+    : null
+
+  function handleSubmit(values: MediaLogFormValues) {
+    updateMutation.mutate(
+      {
+        logId: entry.id,
+        body: toUpdateMediaLogBody(values),
+      },
+      { onSuccess: onUpdated },
+    )
+  }
+
+  return (
+    &lt;MediaLogForm
+      errorMessage={errorMessage}
+      initialValues={initialValues}
+      isPending={updateMutation.isPending}
+      onCancel={onCancel}
+      onSubmit={handleSubmit}
+      submitLabel=&quot;Guardar cambios&quot;
+    /&gt;
+  )
+}</code></pre>
+<p>No copies <code>entry</code> a estado local. Mantine Form conserva los values actuales después del montaje.</p>
+<p>El traductor produce estos mensajes:</p>
+<div class="table-wrap"><table><thead><tr><th>Caso</th><th>Mensaje</th></tr></thead><tbody><tr><td><code>400</code></td><td>Revisa los valores antes de guardar.</td></tr><tr><td><code>401</code></td><td>La sesión no pudo autorizar la actualización.</td></tr><tr><td><code>404</code></td><td>No encontramos ese registro en tu biblioteca.</td></tr><tr><td>Otro</td><td>No pudimos guardar los cambios. Intenta nuevamente.</td></tr></tbody></table></div>
+<p>Ante error, no ejecutes reset, close o navegación.</p>
+<h2>8. Monta el modal privado</h2>
+<p><code>PrivateMediaDetailPage</code> es el único punto de apertura, por lo que usa estado local:</p>
+<pre><code class="language-ts">const [isEditOpen, setIsEditOpen] = useState(false)</code></pre>
+<p>Añade el botón “Editar mis datos” y un <code>Modal</code> de Mantine.</p>
+<p>Monta el editor solo cuando el modal está abierto y existe <code>entry</code>:</p>
+<pre><code class="language-tsx">{isEditOpen &amp;&amp; entry !== null ? (
+  &lt;EditMediaLogForm
+    key={entry.id}
+    entry={entry}
+    onCancel={() =&gt; setIsEditOpen(false)}
+    onUpdated={() =&gt; setIsEditOpen(false)}
+  /&gt;
+) : null}</code></pre>
+<p>La referencia final de <code>src/pages/private-media-detail-page.tsx</code> conserva todos los estados heredados y añade el consumidor del editor:</p>
+<pre><code class="language-tsx">import { useState } from &quot;react&quot;
+import { Alert, Button, Group, Modal, Stack } from &quot;@mantine/core&quot;
+import { Link, useParams } from &quot;react-router&quot;
+
+import { mediaCatalogDetailToModel } from &quot;../adapters/media-catalog-detail-to-model&quot;
+import { toLibraryLogDetailSelector } from &quot;../adapters/library-log-param-to-detail-selector&quot;
+import { toSavedMediaDetailsModel } from &quot;../adapters/user-media-to-saved-details&quot;
+import { ApiError } from &quot;../api/http&quot;
+import { EditMediaLogForm } from &quot;../components/edit-media-log-form&quot;
+import { MediaDetailContent } from &quot;../components/media-detail-content&quot;
+import { MediaDocumentTitle } from &quot;../components/media-document-title&quot;
+import { PageState } from &quot;../components/page-state&quot;
+import { SavedMediaDetails } from &quot;../components/saved-media-details&quot;
+import { useMediaDetail } from &quot;../hooks/features/use-media&quot;
+
+function getPrivateDetailErrorMessage(error: Error): string {
+  if (!(error instanceof ApiError)) {
+    return &quot;No pudimos cargar el detalle. Intenta nuevamente.&quot;
+  }
+
+  if (error.status === 401) {
+    return &quot;No pudimos autorizar esta consulta.&quot;
+  }
+
+  if (error.status === 404) {
+    return &quot;No encontramos ese registro en tu biblioteca.&quot;
+  }
+
+  return &quot;No pudimos cargar el detalle. Intenta nuevamente.&quot;
+}
+
+export function PrivateMediaDetailPage() {
+  const { logId } = useParams&lt;&quot;logId&quot;&gt;()
+  const [isEditOpen, setIsEditOpen] = useState(false)
+  const detailSelector = toLibraryLogDetailSelector(logId)
+  const detailQuery = useMediaDetail(detailSelector)
+
+  if (detailSelector === null) {
+    return (
+      &lt;PageState
+        variant=&quot;invalid&quot;
+        description=&quot;La URL no contiene un registro válido.&quot;
+      /&gt;
+    )
+  }
+
+  if (detailQuery.isError) {
+    return (
+      &lt;PageState
+        variant=&quot;error&quot;
+        title=&quot;No pudimos cargar el detalle&quot;
+        description={getPrivateDetailErrorMessage(detailQuery.error)}
+        onRetry={() =&gt; void detailQuery.refetch()}
+      /&gt;
+    )
+  }
+
+  if (!detailQuery.isSuccess) {
+    return (
+      &lt;PageState
+        variant=&quot;loading&quot;
+        title=&quot;Cargando detalle&quot;
+        description=&quot;Espera mientras recuperamos tu registro.&quot;
+      /&gt;
+    )
+  }
+
+  if (detailQuery.data.entry === null) {
+    return (
+      &lt;PageState
+        variant=&quot;unavailable&quot;
+        title=&quot;Registro no disponible&quot;
+        description=&quot;No pudimos leer los datos guardados. Vuelve a tu biblioteca.&quot;
+        onRetry={() =&gt; void detailQuery.refetch()}
+      /&gt;
+    )
+  }
+
+  const entry = detailQuery.data.entry
+  const savedDetails = toSavedMediaDetailsModel(entry)
+  const catalogDetails = detailQuery.data.catalog
+    ? mediaCatalogDetailToModel(detailQuery.data.catalog)
+    : null
+  const documentTitle = catalogDetails?.title ?? savedDetails.title
+
+  function closeEdit() {
+    setIsEditOpen(false)
+  }
+
+  return (
+    &lt;Stack gap=&quot;xl&quot;&gt;
+      &lt;MediaDocumentTitle title={documentTitle} /&gt;
+
+      {catalogDetails === null ? (
+        &lt;Alert color=&quot;gray&quot; title=&quot;Catálogo no disponible&quot;&gt;
+          Mostramos los datos personales conservados para este registro.
+        &lt;/Alert&gt;
+      ) : (
+        &lt;MediaDetailContent model={catalogDetails} /&gt;
+      )}
+
+      &lt;SavedMediaDetails details={savedDetails} /&gt;
+
+      &lt;Group&gt;
+        &lt;Button onClick={() =&gt; setIsEditOpen(true)}&gt;
+          Editar mis datos
+        &lt;/Button&gt;
+        &lt;Button component={Link} to=&quot;/app/library&quot; variant=&quot;subtle&quot;&gt;
+          Volver a la biblioteca
+        &lt;/Button&gt;
+      &lt;/Group&gt;
+
+      &lt;Modal
+        opened={isEditOpen}
+        onClose={closeEdit}
+        title=&quot;Editar entrada&quot;
+      &gt;
+        {isEditOpen ? (
+          &lt;EditMediaLogForm
+            key={entry.id}
+            entry={entry}
+            onCancel={closeEdit}
+            onUpdated={closeEdit}
+          /&gt;
+        ) : null}
+      &lt;/Modal&gt;
+    &lt;/Stack&gt;
+  )
+}</code></pre>
+<p>Después del guard, <code>entry</code> tiene una definición no nullable. El modal conserva <code>key={entry.id}</code> y los retries de <code>error</code> y <code>unavailable</code> siguen disponibles.</p>
+<p>No abras el modal antes de la rama exitosa. No pases el DTO por Zustand y no uses un Effect para observar <code>isSuccess</code>.</p>
+<p>Secuencia de éxito:</p>
+<pre><code class="language-text">submit
+→ PUT
+→ 200
+→ lista y detalle quedan stale
+→ refetch del detalle activo
+→ termina pending
+→ onUpdated
+→ cerrar
+→ al volver a la biblioteca, refetch de la lista stale</code></pre>
+<h2>Trabajo con agente</h2>
+<p>Entrega la suite al agente solo después de implementar y explicar ambos adapters.</p>
+<p>Prompt:</p>
+<pre><code class="language-text">Punto de entrada: toMediaLogFormValues y toUpdateMediaLogBody ya están
+implementados y la persona definió esta matriz:
+
+Comprueba:
+- notes null produce string vacío en form values;
+- status y prioridad se preservan;
+- notas con contenido se recortan;
+- notas vacías o con espacios producen null;
+- el body contiene exactamente status, priority y notes.
+
+Usa la skill ahk-test. La fuente del comportamiento esperado son los adapters y
+la matriz anterior.
+
+Único archivo que puedes crear o modificar:
+- src/adapters/__tests__/media-log-form-edit-adapters.test.ts
+
+Mantén producción, package.json, configuración, dependencias y cualquier otro
+archivo en solo lectura. No crees fixtures, builders, helpers ni otros archivos.
+No uses DOM, Mantine, Firebase, Query Client, mocks HTTP o snapshots. No cambies
+ni debilites una expectativa para obtener verde.
+
+Ejecuta pnpm test -- media-log-form-edit-adapters. Detente y pregunta si el
+comportamiento real contradice la matriz, si el comando no existe o si necesitas
+tocar otro archivo.
+
+Entrega la matriz cubierta, el archivo modificado, el exit status completo y una
+lectura posterior con imports, flujo, decisiones, supuestos y frontera de evidencia.</code></pre>
+<p>Después:</p>
+<ol><li>lee el test completo;</li><li>confirma que las expectativas corresponden a tu matriz;</li><li>revisa el diff;</li><li>ejecuta:</li></ol>
+<pre><code class="language-bash">pnpm test -- media-log-form-edit-adapters</code></pre>
+<p>El test no demuestra formulario, modal, autenticación, invalidación o request.</p>
+<h2>Verificación</h2>
+<h3>Tipos y test puro</h3>
+<pre><code class="language-bash">pnpm test -- media-log-form-edit-adapters
+pnpm build</code></pre>
+<p>Registra los códigos de salida. Un output truncado no demuestra éxito.</p>
+<h3>Network</h3>
+<p>Comprueba:</p>
+<ul><li>un solo PUT por submit;</li><li>URL construida con <code>logId</code>;</li><li>Bearer presente;</li><li>JSON con solo status, prioridad y notas;</li><li><code>notes: null</code> cuando el textarea queda vacío.</li></ul>
+<p>No copies ni publiques el token.</p>
+<h3>Query Devtools</h3>
+<p>Comprueba:</p>
+<ul><li>lista y detalle invalidados;</li><li>refetch del detalle activo;</li><li>cierre después del refetch;</li><li>refetch de la lista stale al volver a <code>/app/library</code>;</li><li>búsqueda pública sin invalidación nueva.</li></ul>
+<h3>Navegador</h3>
+<p>Comprueba:</p>
+<ul><li>creación después del refactor;</li><li>values iniciales desde <code>entry</code>;</li><li>reset del snapshot;</li><li>cancelar y reabrir;</li><li>pending visible;</li><li>error con values conservados;</li><li>detalle actualizado después de éxito;</li><li>labels nuevos al volver a biblioteca;</li><li>otro snapshot al abrir otro <code>logId</code>.</li></ul>
+<h2>Evidencia de salida</h2>
+<p>Entrega:</p>
+<ul><li>código del checkpoint;</li><li>captura del modal con initial values;</li><li>captura de Network sin exponer token;</li><li>captura de lista y detalle en Devtools;</li><li>salida completa del test dirigido;</li><li>salida completa de <code>pnpm build</code>;</li><li>explicación de lo que prueba cada evidencia.</li></ul>
+<p>Completa:</p>
+<pre><code class="language-text">Test puro demuestra:
+Network demuestra:
+Query Devtools demuestra:
+Navegador demuestra:
+Build demuestra:
+Todavía no demostramos:</code></pre>
+<h2>Errores que debes corregir</h2>
+<ul><li>Un formulario con <code>mode</code> permite combinaciones ambiguas.</li><li>Una mutation dentro de <code>MediaLogForm</code> mezcla mecanismo y caso de uso.</li><li>Copiar <code>entry</code> mediante Effect crea dos fuentes de verdad.</li><li>Usar <code>form.key(entry.id)</code> confunde input y registro.</li><li>Reset y cancelar no representan la misma intención.</li><li>Reenviar el DTO completo amplía el body sin necesidad.</li><li>Notas vacías como <code>&quot;&quot;</code> contradicen la ausencia remota acordada.</li><li>Optional auth no autoriza una entrada privada.</li><li>Invalidar búsqueda repite requests que no dependen del cambio.</li><li>Cerrar antes del refetch activo puede mostrar el detalle antiguo; la lista stale se actualiza al regresar.</li><li>Reset automático ante error borra trabajo local.</li><li>Un test fuera de <code>__tests__/</code> contradice la estructura del proyecto.</li></ul>
+<h2>Actividades opcionales</h2>
+<p>Cuando termines el checkpoint base:</p>
+<ul><li>añade un contador derivado de caracteres para notas;</li><li>muestra background refetch sin ocultar el detalle;</li><li>compara dos <code>entry.id</code> en React DevTools.</li></ul>
+<h2>Fuera de alcance</h2>
+<ul><li>DELETE y confirmación destructiva.</li><li>Navegación después de eliminar.</li><li>Helper genérico de invalidaciones.</li><li>Edición de título, fechas o catálogo.</li><li>Store global para edición.</li><li>React Testing Library, jsdom, MSW o tests de componentes.</li><li>Cambios en el backend.</li></ul>
+<p>La sesión 16 comenzará con C, R y U completos. Allí implementarás DELETE y comprobarás el recorrido CRUD antes de extraer una política compartida de invalidación.</p></main>
+      <footer>Material de trabajo en clase · Sesión 15</footer>
+    </article>
+  </body>
+</html>

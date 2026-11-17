@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 03 para React Guide VI">
+    <title>Guía estudiantil · Sesión 03 · Composición y catálogo estático</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 03 · Composición y catálogo estático</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 03 · Composición y catálogo estático</h1>
+<ul><li><strong>Modalidad:</strong> presencial</li><li><strong>Duración:</strong> 180 minutos, incluido un descanso de 30 minutos</li><li><strong>Preparación:</strong> <strong>lectura previa</strong></li><li><strong>Taller:</strong> <strong>encargo y rúbrica</strong></li></ul>
+<h2>Objetivo</h2>
+<p>Reorganizarás el catálogo de la sesión 02 para que cada componente tenga una responsabilidad reconocible. Antes del descanso construirás <code>MediaGrid</code>. Después completarás un taller calificable con <code>EmptyState</code> y <code>MediaTypeBadge</code>.</p>
+<pre><code class="language-text">App
+├── AppHeader
+└── main
+    └── MediaGrid
+        ├── EmptyState
+        └── MediaCard
+            └── MediaTypeBadge</code></pre>
+<h2>Conocimientos previos</h2>
+<ul><li>Componentes y props.</li><li><code>MediaItem[]</code> y <code>MediaType</code>.</li><li><code>map</code> y <code>media.id</code> como key.</li><li>Renderizado condicional básico.</li><li>Checkpoint completo de la sesión 02.</li></ul>
+<p>La sesión no usa estado, eventos, Effects, stores o dependencias nuevas.</p>
+<h2>Punto de partida</h2>
+<p>Continúa en tu copia de <code>MediaLog-Bootcamp</code>. La referencia <code>session-03-start</code> hereda <code>session-02-end</code> y añade solo CSS preparado y material estudiantil. Guarda tus cambios antes de consultar otra rama. Abre la copia inicial y ejecuta:</p>
+<pre><code class="language-bash">pnpm install --frozen-lockfile
+pnpm dev</code></pre>
+<p>Comprueba:</p>
+<ul><li>Se muestran seis tarjetas.</li><li>Existen películas y series.</li><li>Aftersun muestra “Poster no disponible”.</li><li>The Bear muestra “Sin descripción disponible”.</li><li>La consola no presenta warnings de key.</li><li><code>App.tsx</code> contiene <code>.media-list</code>, <code>map</code> y <code>media.id</code> como key.</li><li><code>MediaCard</code> contiene la decisión entre “Película” y “Serie”.</li></ul>
+<p>Si el proyecto no llega a este estado, muestra al docente el primer error. No cambies versiones o dependencias.</p>
+<h3>Checkpoint 1</h3>
+<p>Puedes seguir <code>mediaItems → App → map → MediaCard → JSX</code>.</p>
+<h2>Antes del descanso · 75 minutos</h2>
+<p>Primero se presenta todo el bloque conceptual sin abrir el editor. Después de la única transición al coding, seguimos con el proyecto y cerramos oralmente. El retorno temprano se explica antes del descanso; después lo aplicas en el taller.</p>
+<h2>1. Marcar la responsabilidad de la colección</h2>
+<p>Abre <code>src/App.tsx</code> y localiza:</p>
+<ol><li>El import de <code>mediaItems</code>.</li><li>El wrapper <code>.media-list</code>.</li><li>El recorrido con <code>map</code>.</li><li><code>media.id</code> como key.</li><li>La prop <code>data</code>.</li></ol>
+<p><code>App</code> debe conservar la elección de <code>mediaItems</code>. El wrapper y el recorrido pasarán a un componente que presenta una colección recibida.</p>
+<pre><code class="language-text">Antes                     Después
+
+App                       App
+└── map                    └── MediaGrid
+    └── MediaCard              └── MediaCard</code></pre>
+<p>No extraigas <code>main</code> o el título de la sección. Esas piezas siguen ayudando a leer la página dentro de <code>App</code>.</p>
+<h2>2. Crear MediaGrid</h2>
+<p>Crea <code>src/components/media-grid.tsx</code> e importa:</p>
+<pre><code class="language-tsx">import type { MediaItem } from '../types/media-item'
+import { MediaCard } from './media-card'</code></pre>
+<p>Declara el contrato y el componente:</p>
+<pre><code class="language-tsx">type MediaGridProps = {
+  items: MediaItem[]
+}
+
+export function MediaGrid(props: MediaGridProps) {
+  const { items } = props
+  return (
+    &lt;div className=&quot;media-list&quot;&gt;
+      {items.map((media) =&gt; (
+        &lt;MediaCard key={media.id} data={media} /&gt;
+      ))}
+    &lt;/div&gt;
+  )
+}</code></pre>
+<p>El wrapper conserva la clase <code>.media-list</code>; la refactorización no necesita renombrar estilos.</p>
+<h3>Checkpoint 2</h3>
+<ul><li><code>MediaGrid</code> recibe <code>items</code>.</li><li>El archivo no importa <code>mediaItems</code>.</li><li><code>map</code> y key viven dentro de <code>MediaGrid</code>.</li><li>La key permanece en <code>&lt;MediaCard /&gt;</code>.</li></ul>
+<h2>3. Conectar App con MediaGrid</h2>
+<p>Importa:</p>
+<pre><code class="language-tsx">import { MediaGrid } from './components/media-grid'</code></pre>
+<p>Reemplaza el wrapper y el recorrido antiguos por:</p>
+<pre><code class="language-tsx">&lt;MediaGrid items={mediaItems} /&gt;</code></pre>
+<p>Comprueba que exista un solo <code>map</code>. Elimina imports que ya no se usen, pero conserva el import de <code>mediaItems</code> en <code>App</code>.</p>
+<h3>Checkpoint 3</h3>
+<ul><li>Se muestran seis tarjetas.</li><li>Los dos tipos y los dos fallbacks continúan funcionando.</li><li>La consola no muestra warnings de key.</li><li><code>App</code> elige la colección.</li><li><code>MediaGrid</code> la recorre.</li></ul>
+<h2>4. Hacer visible el trabajo pendiente</h2>
+<p>Cambia temporalmente:</p>
+<pre><code class="language-tsx">&lt;MediaGrid items={[]} /&gt;</code></pre>
+<p>El proyecto no falla, pero el área de catálogo queda vacía y no explica la causa.</p>
+<p>Responde en tus notas:</p>
+<ul><li>¿Qué componente conoce <code>items.length</code>?</li><li>¿Qué debería mostrar cuando la longitud sea cero?</li><li>¿Qué componente podría presentar ese mensaje sin conocer el arreglo?</li></ul>
+<p>Restaura <code>items={mediaItems}</code>.</p>
+<h3>Checkpoint previo al taller</h3>
+<p><code>MediaGrid</code> representa los seis medios y conserva la key. Una colección vacía todavía no muestra un mensaje.</p>
+<p>Si no alcanzaste este checkpoint, solicita <code>session-03-workshop-start</code> antes del descanso.</p>
+<h2>5. Leer el encargo y la rúbrica</h2>
+<p>Abre <strong>workshop-rubric.md</strong>. Revisa trabajo obligatorio, restricciones, casos de aceptación, evidencia, criterios y actividad opcional.</p>
+<p>Formula tus preguntas antes del descanso. El docente no implementará los componentes del taller.</p>
+<h2>Descanso · 30 minutos</h2>
+<p>El taller comienza después del descanso desde el checkpoint indicado.</p>
+<h2>Taller calificable · 60 minutos</h2>
+<h2>6. Crear EmptyState</h2>
+<p>Crea <code>src/components/empty-state.tsx</code>.</p>
+<p>El componente recibe:</p>
+<pre><code class="language-text">title: string
+description: string</code></pre>
+<p>Presenta ambos textos con la clase <code>.empty-state</code>. No recibe <code>items</code> ni usa <code>children</code>.</p>
+<p>Integra el componente en <code>MediaGrid</code>. Cuando <code>items.length === 0</code>, usa un retorno temprano con:</p>
+<ul><li>Título: <code>Catálogo vacío</code>.</li><li>Descripción: <code>No hay películas o series disponibles.</code></li></ul>
+<p>Cuando la colección contiene elementos, <code>MediaGrid</code> conserva el recorrido actual.</p>
+<h3>Checkpoint 4</h3>
+<p>Prueba temporalmente <code>items={[]}</code>:</p>
+<ul><li>Aparecen título y descripción.</li><li>No aparece <code>0</code>.</li><li>No se renderizan tarjetas.</li><li>No existen errores de TypeScript.</li></ul>
+<p>Restaura <code>items={mediaItems}</code> después de comprobarlo.</p>
+<h2>7. Crear MediaTypeBadge</h2>
+<p>Crea <code>src/components/media-type-badge.tsx</code>.</p>
+<p>El componente recibe <code>mediaType: MediaType</code> y debe:</p>
+<ul><li>mostrar “Película” para <code>movie</code>;</li><li>mostrar “Serie” para <code>series</code>;</li><li>usar la clase <code>.media-type-badge</code>;</li><li>evitar recibir el objeto <code>MediaItem</code> completo.</li></ul>
+<p>Abre <code>MediaCard</code> y reemplaza la etiqueta inline por <code>&lt;MediaTypeBadge /&gt;</code>. Conserva fecha, título, poster y descripción.</p>
+<h3>Checkpoint 5</h3>
+<ul><li>Arrival o Past Lives muestra “Película”.</li><li>Severance o The Bear muestra “Serie”.</li><li><code>MediaCard</code> ya no calcula la etiqueta.</li><li>Los fallbacks siguen funcionando.</li></ul>
+<h2>8. Comparar el árbol</h2>
+<p>Revisa con otra persona:</p>
+<pre><code class="language-text">App
+├── AppHeader
+└── main
+    └── MediaGrid
+        ├── EmptyState
+        └── MediaCard
+            └── MediaTypeBadge</code></pre>
+<p>Cada persona explica:</p>
+<ul><li>por qué <code>MediaGrid</code> recibe <code>items</code>;</li><li>por qué <code>EmptyState</code> no recibe <code>items</code>;</li><li>por qué <code>MediaTypeBadge</code> recibe solo <code>mediaType</code>;</li><li>dónde viven <code>map</code> y key.</li></ul>
+<h2>9. Ejecutar los casos de aceptación</h2>
+<h3>Colección completa</h3>
+<p>Usa <code>&lt;MediaGrid items={mediaItems} /&gt;</code>. Comprueba seis tarjetas y consola sin warnings de key.</p>
+<h3>Colección vacía</h3>
+<p>Usa temporalmente <code>&lt;MediaGrid items={[]} /&gt;</code>. Comprueba el mensaje vacío y restaura el fixture.</p>
+<h3>Casos del fixture</h3>
+<p>Comprueba película, serie, poster nulo y descripción nula.</p>
+<h3>Build</h3>
+<p>Conserva <code>pnpm dev</code> y abre otra terminal:</p>
+<pre><code class="language-bash">pnpm build</code></pre>
+<p>Registra el resultado exacto. Si falla, lee el primer error y corrígelo antes de cambiar otra cosa.</p>
+<h3>Checkpoint final</h3>
+<ul><li><code>App</code> entrega <code>mediaItems</code> a <code>MediaGrid</code>.</li><li><code>MediaGrid</code> contiene <code>map</code>, key y la decisión vacía.</li><li><code>EmptyState</code> presenta título y descripción.</li><li><code>MediaCard</code> usa <code>MediaTypeBadge</code>.</li><li>Los seis casos funcionan.</li><li><code>pnpm build</code> termina con código 0.</li></ul>
+<h2>Actividad opcional</h2>
+<p>Después de cumplir todos los requisitos base, muestra el total de medios dentro de <code>MediaGrid</code> mediante <code>items.length</code>.</p>
+<p>Condiciones:</p>
+<ul><li>El total aparece solo con una colección no vacía.</li><li>El valor se calcula durante el render.</li><li>No usa <code>useState</code>.</li><li>No reemplaza ningún requisito obligatorio.</li></ul>
+<h2>Errores frecuentes</h2>
+<h3>MediaGrid importa mediaItems</h3>
+<p>Retira el import. <code>App</code> elige la fuente y la entrega mediante <code>items</code>.</p>
+<h3>Existen dos map</h3>
+<p>Conserva un solo recorrido dentro de <code>MediaGrid</code>. Retira el bloque anterior de <code>App</code>.</p>
+<h3>El warning de key reaparece</h3>
+<p>La key debe permanecer en <code>&lt;MediaCard key={media.id} data={media} /&gt;</code>, elemento directo que devuelve <code>map</code>.</p>
+<h3>EmptyState recibe items</h3>
+<p>Limita sus props a <code>title</code> y <code>description</code>. <code>MediaGrid</code> conoce la colección y decide cuándo mostrarlo.</p>
+<h3>Aparece un cero en lugar del mensaje</h3>
+<p>Usa <code>items.length === 0</code> con un retorno temprano. No renderices el número mediante <code>items.length &amp;&amp; ...</code>.</p>
+<h3>El badge recibe el objeto completo</h3>
+<p>El componente solo necesita <code>mediaType: MediaType</code>.</p>
+<h3>Desapareció un fallback</h3>
+<p>Recupera el código del seed. Extraer la etiqueta no requiere cambiar poster o descripción.</p>
+<h3>Quieres usar estado</h3>
+<p>Los datos llegan mediante props y no cambian por interacción. Retira <code>useState</code>, Effects o stores.</p>
+<h3>Una imagen local no carga</h3>
+<p>Comprueba que <code>public/posters/</code> conserve los SVG de 02 y que la ruta corresponda al archivo. El fallback de <code>posterUrl: null</code> es un caso distinto.</p>
+<h2>Vocabulario</h2>
+<ul><li><strong>Composición:</strong> construcción de una interfaz mediante componentes anidados.</li><li><strong>Responsabilidad:</strong> tarea o parte visual que pertenece a un componente.</li><li><strong>Jerarquía:</strong> relación padre-hijo del árbol de componentes.</li><li><strong>Contrato de props:</strong> forma de los datos que un componente espera.</li><li><strong>Refactorización:</strong> cambio de organización que conserva comportamiento.</li><li><strong>Regresión:</strong> comportamiento anterior que deja de funcionar.</li><li><strong>Estado vacío:</strong> mensaje que representa una fuente sin elementos.</li><li><strong>Retorno temprano:</strong> salida de una función antes del retorno principal.</li><li><strong>Valor derivado:</strong> valor calculado desde props o datos existentes.</li></ul>
+<h2>Si debes retomar</h2>
+<p>Anota el último checkpoint comprobado, el archivo guardado y el primer paso pendiente. La entrada del taller es <code>session-03-workshop-start</code>; tu entrega conserva tu propio trabajo. Al volver, comprueba ese estado y explica el paso pendiente antes de continuar. No cambies de rama sobre archivos sin guardar.</p>
+<h2>Evidencia y entrega</h2>
+<p>Entrega:</p>
+<ol><li>ZIP o enlace admitido por la plataforma institucional.</li><li>Captura del catálogo con seis medios.</li><li>Captura de “Catálogo vacío”.</li><li>Árbol final escrito o dibujado.</li><li>Resultado de <code>pnpm build</code>.</li><li>Explicación breve de quién posee <code>items</code>, <code>map</code>, key y la decisión vacía.</li></ol>
+<p>Incluye <code>src/</code>, <code>public/</code>, configuración, <code>package.json</code> y <code>pnpm-lock.yaml</code>.</p>
+<p>No incluyas <code>node_modules/</code>, <code>dist/</code>, tokens, contraseñas o variables de entorno.</p>
+<p>Las capturas demuestran lo observado en tu navegador. El build demuestra que TypeScript y Vite produjeron archivos. Ninguna de estas evidencias prueba una API, despliegue o producción.</p></main>
+      <footer>Material de trabajo en clase · Sesión 03</footer>
+    </article>
+  </body>
+</html>

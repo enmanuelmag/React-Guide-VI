@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lectura previa de Sesión 16 para React Guide VI">
+    <title>Lectura previa · Sesión 16 · Invalidación y navegación posterior</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Lectura previa</p>
+        <h1>Lectura previa · Sesión 16 · Invalidación y navegación posterior</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Lectura previa · Sesión 16 · Invalidación y navegación posterior</h1>
+<ul><li><strong>Duración estimada:</strong> 20 minutos</li><li><strong>Fuentes:</strong> 2 referencias oficiales</li><li><strong>Fecha de verificación:</strong> 7 de septiembre de 2026</li></ul>
+<h2>Propósito</h2>
+<p>Llegar a clase con dos comportamientos reconocibles:</p>
+<ul><li>TanStack Query puede marcar queries stale y decidir cuáles refetchear.</li><li>React Router puede cambiar de ruta por código y reemplazar la entrada actual del historial.</li></ul>
+<p>En clase aplicarás ambos comportamientos después de eliminar una entrada privada. La lectura no incluye la integración final.</p>
+<h2>Conocimientos previos</h2>
+<p>Recupera antes de leer:</p>
+<ul><li><code>useMutation</code> e invalidación desde las sesiones 13 y 15;</li><li>familias de query keys;</li><li>query activa e inactiva;</li><li><code>BrowserRouter</code>, rutas y <code>Link</code>;</li><li>detalle privado identificado por <code>logId</code>;</li><li>diferencia entre estado pending, error y éxito.</li></ul>
+<p>No necesitas escribir código ni ejecutar el proyecto antes de la sesión.</p>
+<h2>Fuente 1 · Invalidar y controlar el refetch</h2>
+<p>Lee en TanStack Query:</p>
+<ul><li><strong>Título:</strong> <a href="https://tanstack.com/query/latest/docs/reference/QueryClient" target="_blank" rel="noreferrer">QueryClient</a></li><li><strong>Organización:</strong> TanStack</li><li><strong>URL:</strong> <code>https://tanstack.com/query/latest/docs/reference/QueryClient</code></li><li><strong>Versión:</strong> <code>@tanstack/react-query@5.102.8</code>, fijada por el curso y vigente al verificar.</li><li><strong>Fecha de verificación:</strong> 7 de septiembre de 2026</li></ul>
+<p><strong>Tiempo sugerido:</strong> 12 minutos.</p>
+<p>Busca el método <code>queryClient.invalidateQueries</code> y concéntrate en:</p>
+<ul><li>qué significa marcar una query como invalid;</li><li>qué queries refetchea el comportamiento predeterminado;</li><li>los valores <code>active</code> y <code>none</code> de <code>refetchType</code>;</li><li>la diferencia entre marcar stale y ejecutar un nuevo request.</li></ul>
+<p>No estudies filtros mediante <code>predicate</code>, cancelación ni reintentos.</p>
+<p>Mientras lees, interpreta este caso:</p>
+<pre><code class="language-text">la pantalla consume un detalle
+→ la mutación elimina ese recurso
+→ el detalle sigue activo durante unos milisegundos</code></pre>
+<p>Pregúntate qué ocurriría si el cliente refetchea ese detalle antes de abandonar la ruta.</p>
+<h2>Fuente 2 · Navegar y reemplazar historial</h2>
+<p>Lee en React Router:</p>
+<ul><li><strong>Título:</strong> <a href="https://reactrouter.com/api/hooks/useNavigate" target="_blank" rel="noreferrer">useNavigate</a></li><li><strong>Organización:</strong> React Router</li><li><strong>URL:</strong> <code>https://reactrouter.com/api/hooks/useNavigate</code></li><li><strong>Versión:</strong> <code>react-router@8.3.1</code>, fijada por el curso en modo declarativo con <code>BrowserRouter</code> y vigente al verificar.</li><li><strong>Fecha de verificación:</strong> 7 de septiembre de 2026</li></ul>
+<p><strong>Tiempo sugerido:</strong> 8 minutos.</p>
+<p>Lee las secciones sobre:</p>
+<ul><li>navegar a un path mediante la función devuelta por <code>useNavigate</code>;</li><li>la opción <code>replace</code>;</li><li>el efecto de reemplazar la entrada actual del historial.</li></ul>
+<p>No estudies Data Mode, Framework Mode, loaders, actions, <code>RouterProvider</code> o navegación por deltas.</p>
+<p>Compara:</p>
+<pre><code class="language-ts">navigate(&quot;/app/library&quot;)
+navigate(&quot;/app/library&quot;, { replace: true })</code></pre>
+<p>La segunda opción sustituye la entrada actual. En clase decidirás por qué ese comportamiento sirve cuando la ruta actual apunta a un recurso eliminado.</p>
+<h2>Vocabulario previo</h2>
+<ul><li><strong>Invalidar:</strong> marcar datos de caché como desactualizados.</li><li><strong>Stale:</strong> estado de una query que ya no debe considerarse actual.</li><li><strong>Query activa:</strong> query con un consumidor montado.</li><li><strong>Refetch:</strong> nueva ejecución de una query.</li><li><strong>Navegación programática:</strong> cambio de ruta iniciado desde código.</li><li><strong>Historial:</strong> secuencia de ubicaciones que administra el navegador.</li><li><strong>Replace:</strong> opción que sustituye la entrada actual del historial.</li></ul></main>
+      <footer>Material de preparación · Sesión 16</footer>
+    </article>
+  </body>
+</html>

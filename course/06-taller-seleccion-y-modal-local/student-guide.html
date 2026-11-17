@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 06 para React Guide VI">
+    <title>Guía estudiantil · Sesión 06 · Selección y modal local</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 06 · Selección y modal local</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 06 · Selección y modal local</h1>
+<p>Presencial · 180 minutos. <strong>Lectura previa</strong> · <strong>Rúbrica</strong>.</p>
+<h2>Punto de entrada</h2>
+<p>MediaLog-Bootcamp en session-06-start: conserva 05 y añade detalle visual/CSS, sin selección ni Mantine. Comprueba filtros y seis medios. Sigue toda la presentación antes de abrir el editor. Guarda cambios antes de consultar ramas.</p>
+<h2>Coding después de la presentación</h2>
+<h3>Paso 1 · Comprobar soporte</h3>
+<p>Si la copia ya contiene estos archivos, no los dupliques. Si continúas desde 05-end, incorpóralos ahora:</p>
+<p><strong><code>src/components/media-detail-content.tsx</code> · archivo completo:</strong></p>
+<pre><code class="language-tsx">import type { MediaItem } from '../types/media-item'
+
+import { MediaTypeBadge } from './media-type-badge'
+
+type MediaDetailContentProps = {
+  media: MediaItem
+}
+
+export function MediaDetailContent(props: MediaDetailContentProps) {
+  const { media } = props
+
+  return (
+    &lt;article className=&quot;media-detail-content&quot;&gt;
+      {media.posterUrl !== null ? (
+        &lt;img src={media.posterUrl} alt=&quot;&quot; /&gt;
+      ) : (
+        &lt;p&gt;Poster no disponible&lt;/p&gt;
+      )}
+      &lt;MediaTypeBadge mediaType={media.mediaType} /&gt;
+      &lt;p&gt;{media.releaseDate}&lt;/p&gt;
+      &lt;p&gt;{media.description ?? 'Sin descripción disponible'}&lt;/p&gt;
+    &lt;/article&gt;
+  )
+}</code></pre>
+<p><strong><code>src/index.css</code> · archivo completo:</strong></p>
+<pre><code class="language-css">:root {
+  font-family: Inter, system-ui, sans-serif;
+  color: #f5f1e8;
+  background: #141412;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.app-header,
+.page-container {
+  width: min(960px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.app-header {
+  padding: 64px 0 32px;
+  border-bottom: 1px solid #3b3a34;
+}
+
+.app-header__eyebrow,
+.media-card__meta {
+  color: #d2a84a;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-container {
+  padding: 32px 0 64px;
+}
+
+.media-card {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 24px;
+  padding: 24px;
+  border: 1px solid #3b3a34;
+  border-radius: 16px;
+  background: #1d1d1a;
+}
+
+.media-card__poster {
+  display: grid;
+  min-height: 220px;
+  place-items: center;
+  border-radius: 10px;
+  color: #a9a59a;
+  background: #2a2924;
+}
+
+@media (max-width: 600px) {
+  .media-card {
+    grid-template-columns: 1fr;
+  }
+}
+.media-list {
+  display: grid;
+  gap: 24px;
+}
+.media-card__poster-image {
+  width: 100%;
+  height: 220px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.empty-state {
+  padding: 48px 24px;
+  border: 1px dashed #565349;
+  border-radius: 16px;
+  text-align: center;
+  color: #a9a59a;
+}
+
+.empty-state h3 {
+  margin-top: 0;
+  color: #f5f1e8;
+}
+
+.media-type-badge {
+  display: inline-flex;
+  padding: 2px 8px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
+.search-input {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.search-input input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #565349;
+  border-radius: 10px;
+  background: #20201b;
+  color: #f5f1e8;
+  font: inherit;
+}
+
+.search-input input:focus-visible {
+  outline: 2px solid #d9be74;
+  outline-offset: 2px;
+}
+
+.media-type-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.media-type-filter button {
+  padding: 10px 16px;
+  border: 1px solid #565349;
+  border-radius: 10px;
+  background: #20201b;
+  color: #f5f1e8;
+  font: inherit;
+  cursor: pointer;
+}
+
+.media-type-filter button[aria-pressed='true'] {
+  border-color: #d9be74;
+  background: #d9be74;
+  color: #141412;
+}
+
+.media-type-filter button:focus-visible {
+  outline: 2px solid #d9be74;
+  outline-offset: 2px;
+}
+
+.filter-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.filter-summary p {
+  margin: 0;
+}
+
+.filter-summary button {
+  padding: 10px 16px;
+  border: 1px solid #565349;
+  border-radius: 10px;
+  background: #20201b;
+  color: #f5f1e8;
+  font: inherit;
+  cursor: pointer;
+}
+
+.filter-summary button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.filter-summary button:focus-visible {
+  outline: 2px solid #d9be74;
+  outline-offset: 2px;
+}
+
+.media-detail-content img {
+  display: block;
+  width: 160px;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 16px;
+  border-radius: 10px;
+}
+
+.detail-button {
+  padding: 10px 16px;
+  border: 1px solid #565349;
+  border-radius: 10px;
+  background: #20201b;
+  color: #f5f1e8;
+  font: inherit;
+  cursor: pointer;
+}
+
+.detail-button:focus-visible {
+  outline: 2px solid #d9be74;
+  outline-offset: 2px;
+}
+
+.selection-preview {
+  margin-bottom: 24px;
+}</code></pre>
+<h3>Paso 2 · Instalar y configurar Mantine</h3>
+<pre><code class="language-bash">pnpm add --save-exact @mantine/core@9.4.1 @mantine/hooks@9.4.1
+pnpm add --save-exact -D postcss@8.5.26 postcss-preset-mantine@1.18.0 postcss-simple-vars@7.0.1</code></pre>
+<p><strong><code>postcss.config.cjs</code> · archivo completo:</strong></p>
+<pre><code class="language-js">module.exports = {
+  plugins: {
+    'postcss-preset-mantine': {},
+    'postcss-simple-vars': {
+      variables: {
+        'mantine-breakpoint-xs': '36em',
+        'mantine-breakpoint-sm': '48em',
+        'mantine-breakpoint-md': '62em',
+        'mantine-breakpoint-lg': '75em',
+        'mantine-breakpoint-xl': '88em',
+      },
+    },
+  },
+}</code></pre>
+<p><strong><code>src/main.tsx</code> · archivo completo:</strong></p>
+<pre><code class="language-tsx">import { MantineProvider } from '@mantine/core'
+import '@mantine/core/styles.css'
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+
+import App from './App'
+import './index.css'
+
+createRoot(document.getElementById('root')!).render(
+  &lt;StrictMode&gt;
+    &lt;MantineProvider defaultColorScheme=&quot;dark&quot;&gt;
+      &lt;App /&gt;
+    &lt;/MantineProvider&gt;
+  &lt;/StrictMode&gt;,
+)</code></pre>
+<p>Conserva export default de App. defaultColorScheme dark mantiene el aspecto inicial del toolkit; no creas theme. Ejecuta pnpm build y pnpm lint. Referencia session-06-step-01-mantine.</p>
+<h3>Paso 3 · Comprobar selección sin modal</h3>
+<p>Sustituye App completo. El diagnóstico y los dos botones son temporales:</p>
+<p><strong><code>src/App.tsx</code> · archivo completo:</strong></p>
+<pre><code class="language-tsx">import { useState } from 'react'
+
+import { AppHeader } from './components/app-header'
+import { EmptyState } from './components/empty-state'
+import { MediaGrid } from './components/media-grid'
+import {
+  MediaTypeFilter,
+  type MediaTypeFilterValue,
+} from './components/media-type-filter'
+import { SearchInput } from './components/search-input'
+import { mediaItems } from './data/media-items'
+
+function App() {
+  const [query, setQuery] = useState('')
+  const [mediaTypeFilter, setMediaTypeFilter] =
+    useState&lt;MediaTypeFilterValue&gt;('all')
+
+  const [selectedMediaId, setSelectedMediaId] = useState&lt;number | null&gt;(null)
+
+  const selectedMedia =
+    mediaItems.find((media) =&gt; media.id === selectedMediaId) ?? null
+  const isDetailOpened = selectedMedia !== null
+  const previewMedia = mediaItems[0] ?? null
+
+  function handleSelectMedia(mediaId: number) {
+    setSelectedMediaId(mediaId)
+  }
+
+  function handleCloseDetail() {
+    setSelectedMediaId(null)
+  }
+
+  const normalizedQuery = query.trim().toLowerCase()
+  const visibleMedia = mediaItems.filter((media) =&gt; {
+    const matchesQuery = media.title.toLowerCase().includes(normalizedQuery)
+    const matchesType =
+      mediaTypeFilter === 'all' || media.mediaType === mediaTypeFilter
+
+    return matchesQuery &amp;&amp; matchesType
+  })
+
+  const hasActiveFilters =
+    normalizedQuery.length &gt; 0 || mediaTypeFilter !== 'all'
+
+  const hasNoResults =
+    mediaItems.length &gt; 0 &amp;&amp;
+    hasActiveFilters &amp;&amp;
+    visibleMedia.length === 0
+
+  const resultCount = visibleMedia.length
+
+  function handleClearFilters() {
+    setQuery('')
+    setMediaTypeFilter('all')
+  }
+
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+
+      &lt;main className=&quot;page-container&quot;&gt;
+        &lt;h2&gt;Catálogo destacado&lt;/h2&gt;
+        &lt;SearchInput value={query} onQueryChange={setQuery} /&gt;
+        &lt;MediaTypeFilter
+          value={mediaTypeFilter}
+          onFilterChange={setMediaTypeFilter}
+        /&gt;
+        &lt;div className=&quot;filter-summary&quot;&gt;
+          &lt;p&gt;Mostrando {resultCount} de {mediaItems.length}&lt;/p&gt;
+          &lt;button
+            type=&quot;button&quot;
+            onClick={handleClearFilters}
+            disabled={!hasActiveFilters}
+          &gt;
+            Limpiar filtros
+          &lt;/button&gt;
+        &lt;/div&gt;
+        {previewMedia !== null ? (
+          &lt;div className=&quot;selection-preview&quot;&gt;
+            &lt;button
+              className=&quot;detail-button&quot;
+              type=&quot;button&quot;
+              onClick={() =&gt; handleSelectMedia(previewMedia.id)}
+            &gt;
+              Probar detalle
+            &lt;/button&gt;
+          &lt;/div&gt;
+        ) : null}
+        &lt;p&gt;
+          Selección: {selectedMedia?.title ?? 'Ninguna'} · Apertura: {String(isDetailOpened)}
+        &lt;/p&gt;
+        &lt;button className=&quot;detail-button&quot; type=&quot;button&quot; onClick={handleCloseDetail}&gt;
+          Limpiar selección
+        &lt;/button&gt;
+        {hasNoResults ? (
+          &lt;EmptyState
+            title=&quot;Sin resultados&quot;
+            description=&quot;No encontramos medios que coincidan con tus filtros.&quot;
+          /&gt;
+        ) : (
+          &lt;MediaGrid items={visibleMedia} /&gt;
+        )}
+      &lt;/main&gt;
+    &lt;/&gt;
+  )
+}
+
+export default App</code></pre>
+<p>Probar detalle muestra Arrival y true; Limpiar selección muestra Ninguna y false. Explica id recordado frente a objeto/apertura derivados. Referencia session-06-step-02-selection.</p>
+<h3>Paso 4 · Conectar el modal temporal</h3>
+<p><strong><code>src/App.tsx</code> · archivo completo:</strong></p>
+<pre><code class="language-tsx">import { Modal } from '@mantine/core'
+import { useState } from 'react'
+
+import { AppHeader } from './components/app-header'
+import { EmptyState } from './components/empty-state'
+import { MediaDetailContent } from './components/media-detail-content'
+import { MediaGrid } from './components/media-grid'
+import {
+  MediaTypeFilter,
+  type MediaTypeFilterValue,
+} from './components/media-type-filter'
+import { SearchInput } from './components/search-input'
+import { mediaItems } from './data/media-items'
+
+function App() {
+  const [query, setQuery] = useState('')
+  const [mediaTypeFilter, setMediaTypeFilter] =
+    useState&lt;MediaTypeFilterValue&gt;('all')
+
+  const [selectedMediaId, setSelectedMediaId] = useState&lt;number | null&gt;(null)
+
+  const selectedMedia =
+    mediaItems.find((media) =&gt; media.id === selectedMediaId) ?? null
+  const isDetailOpened = selectedMedia !== null
+  const previewMedia = mediaItems[0] ?? null
+
+  function handleSelectMedia(mediaId: number) {
+    setSelectedMediaId(mediaId)
+  }
+
+  function handleCloseDetail() {
+    setSelectedMediaId(null)
+  }
+
+  const normalizedQuery = query.trim().toLowerCase()
+  const visibleMedia = mediaItems.filter((media) =&gt; {
+    const matchesQuery = media.title.toLowerCase().includes(normalizedQuery)
+    const matchesType =
+      mediaTypeFilter === 'all' || media.mediaType === mediaTypeFilter
+
+    return matchesQuery &amp;&amp; matchesType
+  })
+
+  const hasActiveFilters =
+    normalizedQuery.length &gt; 0 || mediaTypeFilter !== 'all'
+
+  const hasNoResults =
+    mediaItems.length &gt; 0 &amp;&amp;
+    hasActiveFilters &amp;&amp;
+    visibleMedia.length === 0
+
+  const resultCount = visibleMedia.length
+
+  function handleClearFilters() {
+    setQuery('')
+    setMediaTypeFilter('all')
+  }
+
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+
+      &lt;main className=&quot;page-container&quot;&gt;
+        &lt;h2&gt;Catálogo destacado&lt;/h2&gt;
+        &lt;SearchInput value={query} onQueryChange={setQuery} /&gt;
+        &lt;MediaTypeFilter
+          value={mediaTypeFilter}
+          onFilterChange={setMediaTypeFilter}
+        /&gt;
+        &lt;div className=&quot;filter-summary&quot;&gt;
+          &lt;p&gt;Mostrando {resultCount} de {mediaItems.length}&lt;/p&gt;
+          &lt;button
+            type=&quot;button&quot;
+            onClick={handleClearFilters}
+            disabled={!hasActiveFilters}
+          &gt;
+            Limpiar filtros
+          &lt;/button&gt;
+        &lt;/div&gt;
+        {previewMedia !== null ? (
+          &lt;div className=&quot;selection-preview&quot;&gt;
+            &lt;button
+              className=&quot;detail-button&quot;
+              type=&quot;button&quot;
+              onClick={() =&gt; handleSelectMedia(previewMedia.id)}
+            &gt;
+              Probar detalle
+            &lt;/button&gt;
+          &lt;/div&gt;
+        ) : null}
+        {hasNoResults ? (
+          &lt;EmptyState
+            title=&quot;Sin resultados&quot;
+            description=&quot;No encontramos medios que coincidan con tus filtros.&quot;
+          /&gt;
+        ) : (
+          &lt;MediaGrid items={visibleMedia} /&gt;
+        )}
+      &lt;/main&gt;
+      &lt;Modal
+        opened={isDetailOpened}
+        onClose={handleCloseDetail}
+        title={selectedMedia?.title ?? 'Detalle'}
+        closeButtonProps={{ 'aria-label': 'Cerrar detalle' }}
+        centered
+      &gt;
+        {selectedMedia !== null ? (
+          &lt;MediaDetailContent media={selectedMedia} /&gt;
+        ) : null}
+      &lt;/Modal&gt;
+    &lt;/&gt;
+  )
+}
+
+export default App</code></pre>
+<p>Se retira el diagnóstico y se conserva el trigger. Prueba cierre superior, Escape, overlay, foco contenido y retorno al trigger. Referencia session-06-step-03-modal-preview, equivalente a session-06-workshop-start.</p>
+<h3>Paso 5 · Leer contratos antes del descanso</h3>
+<p>App define handleSelectMedia; Grid y Card recibirán onSelect con firma (mediaId: number) =&gt; void. Pasar una referencia no la ejecuta; una closure permite ejecutar con data.id durante el click. No escribas la llamada directamente como valor de onClick.</p>
+<h2>Descanso · 30 minutos</h2>
+<h2>Taller · 60 minutos</h2>
+<p>Comienza desde session-06-workshop-start. El modal funciona desde App y las tarjetas todavía no lo abren. La <strong>rúbrica</strong> contiene encargo, restricciones, matriz y puntuación.</p>
+<ol><li>Añade la firma requerida a Card sin botón todavía.</li><li>Añade onSelect a Grid y reenvíala a Card junto a data y key.</li><li>Conecta handleSelectMedia desde App. Completa los tres archivos antes de build; la edición parcial puede marcar props faltantes.</li><li>Desestructura onSelect en Card y añade Ver detalle con type=&quot;button&quot;, clase detail-button y handler que envía data.id.</li><li>Prueba identidades diferentes y retira previewMedia y Probar detalle.</li><li>Conserva filtros, contador, limpieza, vacíos y búsqueda desde mediaItems completo.</li><li>Recorre contenido nulo, poster ausente, tres cierres y foco.</li><li>Ejecuta pnpm build y pnpm lint y entrega evidencia separada.</li></ol>
+<p>Referencias para recuperar después del intento: session-06-step-04-callback-contracts (aún sin botón), session-06-step-05-card-selection (trigger aún presente), session-06-end (final). La solución docente no se incluye en esta guía.</p>
+<p>No guardes el objeto ni otro booleano en estado. No pases setters a hijos ni añadas Effects, memo, stores, useDisclosure, API o Router.</p>
+<h2>Reto opcional</h2>
+<p>Después de completar la base, aplica el nombre accesible específico de cada tarjeta y demuéstralo en el árbol de accesibilidad. Reutiliza el concepto explicado antes del descanso. Hasta +10 según la rúbrica.</p>
+<h2>Revisión y cierre · 15 minutos</h2>
+<p>Entrega código, demostración de hasta 90 segundos, resultado de build y explicación del recorrido. React DevTools, navegador y build son evidencias distintas; registra cualquier comprobación ausente.</p>
+<p>Si termina el tiempo, guarda bloque, archivo/cambio, primer paso pendiente y evidencia ausente. La siguiente sesión recibe este checkpoint completo; no retires filtros ni modal para continuar.</p></main>
+      <footer>Material de trabajo en clase · Sesión 06</footer>
+    </article>
+  </body>
+</html>

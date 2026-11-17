@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 14 para React Guide VI">
+    <title>Guía estudiantil · Sesión 14 · Detalle privado e identidades</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 14 · Detalle privado e identidades</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 14 · Detalle privado e identidades</h1>
+<h2>Contratos heredados</h2>
+<p>Reutiliza <code>MediaCatalogDetailDto</code>, <code>GetMediaDetailInput</code>, <code>MediaType</code>, <code>MediaStatus</code>, <code>MediaPriority</code>, <code>UserMediaDataDto</code> y <code>MediaDetailDto</code> desde el checkpoint. Se construyeron en la <strong>sesión 07</strong>; <code>MEDIA_TYPE_VALUES</code> reemplazó después la unión directa sin ampliar su dominio. Esta sesión los importa y no crea versiones locales.</p>
+<p><code>MediaDetailDto</code> conserva esta raíz:</p>
+<pre><code class="language-ts">type MediaDetailDto = {
+  catalog: MediaCatalogDetailDto | null
+  entry: UserMediaDataDto | null
+  isLogged: boolean
+}</code></pre>
+<h2>Archivo de hooks de esta sesión</h2>
+<p>Modifica <code>useMediaDetail</code> para aceptar el selector discriminado; conserva los demás hooks. Todas estas funciones se definen en <code>src/hooks/features/use-media.ts</code>. Las keys y los planes de familias se mantienen en <code>src/hooks/media-keys.ts</code>, importado desde <code>../media-keys</code>. Las páginas y componentes importan los hooks desde <code>../hooks/features/use-media</code>.</p>
+<h2>Objetivo</h2>
+<p>Conectar una fila de biblioteca con una URL privada por <code>logId</code>, consultar el registro correcto y mostrar sus datos personales junto a la metadata de catálogo.</p>
+<p>Al terminar podrás explicar por qué una obra y tu registro usan identidades distintas.</p>
+<h2>Punto de partida</h2>
+<p>Comienza desde el checkpoint completo de la sesión 13:</p>
+<ul><li>puedes iniciar y cerrar sesión;</li><li><code>/app/library</code> muestra tu biblioteca;</li><li>cada modelo de fila conserva <code>logId</code>;</li><li>búsqueda y detalle público usan <code>authScope</code> y autenticación opcional;</li><li><code>MediaDetailDto</code> contiene <code>catalog</code>, <code>entry</code> e <code>isLogged</code>;</li><li><code>PageState</code> presenta estados completos de página y admite retry opcional en error o ausencia;</li><li>el formulario de creación funciona y no cambia en esta sesión;</li><li>Vitest ya está configurado y los tests viven dentro de <code>__tests__/</code>.</li></ul>
+<p>Antes de editar, comprueba un detalle público y abre la biblioteca. Conserva una película y una serie para el recorrido final.</p>
+<h2>Resultado observable</h2>
+<p>Desde <code>/app/library</code> podrás abrir:</p>
+<pre><code class="language-text">/app/library/:logId</code></pre>
+<p>La página consultará ese registro con Bearer y mostrará:</p>
+<ul><li>detalle de catálogo cuando exista;</li><li>status;</li><li>prioridad;</li><li>notas o “Sin notas”.</li></ul>
+<p>Una recarga directa debe conservar el recorrido. La aplicación no transportará el DTO desde la lista.</p>
+<h2>Mapa del trabajo</h2>
+<pre><code class="language-text">1. Distinguir identidades
+2. Crear selector discriminado
+3. Adaptar key, fetcher y hook
+4. Comprobar detalle público
+5. Validar logId y declarar ruta
+6. Representar entry
+7. Enlazar la biblioteca
+8. Probar adapter y recorrido</code></pre>
+<h2>1. Distingue las identidades</h2>
+<p>Completa antes de escribir código:</p>
+<div class="table-wrap"><table><thead><tr><th>Dato</th><th>Identifica</th><th>Ruta</th></tr></thead><tbody><tr><td><code>mediaType + externalId</code></td><td>Una obra de catálogo</td><td><code>/media/:mediaType/:externalId</code></td></tr><tr><td><code>logId</code></td><td>Tu registro personal</td><td><code>/app/library/:logId</code></td></tr></tbody></table></div>
+<p>Dos personas pueden guardar la misma película. Compartirán <code>mediaType + externalId</code>, pero tendrán <code>logId</code>, status, prioridad y notas distintos.</p>
+<p>No reemplaces una identidad por la otra.</p>
+<h2>2. Crea un selector discriminado</h2>
+<p>La sesión 13 ya dejó values canónicos equivalentes en <code>src/types/media-item.ts</code>. Confirma el checkpoint y no vuelvas a declararlos:</p>
+<pre><code class="language-ts">export const MEDIA_TYPE_VALUES = [&quot;movie&quot;, &quot;series&quot;] as const
+export type MediaType = (typeof MEDIA_TYPE_VALUES)[number]</code></pre>
+<p>Crea <code>src/schemas/media-detail.ts</code> reutilizando esos values:</p>
+<pre><code class="language-ts">import { z } from &quot;zod/v4&quot;
+
+import { MEDIA_TYPE_VALUES } from &quot;../types/media-item&quot;
+
+export const mediaDetailSelectorSchema = z.discriminatedUnion(&quot;kind&quot;, [
+  z.object({
+    kind: z.literal(&quot;catalog&quot;),
+    mediaType: z.enum(MEDIA_TYPE_VALUES),
+    externalId: z.string().trim().min(1),
+  }),
+  z.object({
+    kind: z.literal(&quot;log&quot;),
+    logId: z.string().trim().min(1),
+  }),
+])
+
+export type MediaDetailSelector = z.infer&lt;typeof mediaDetailSelectorSchema&gt;</code></pre>
+<p>Importa el tipo desde este schema en <code>src/api/media.ts</code>, keys, hook y adapters. No conserves otra declaración de <code>MediaDetailSelector</code> en <code>src/types/media-api.ts</code>.</p>
+<p>Comprueba el narrowing:</p>
+<pre><code class="language-ts">if (selector.kind === &quot;catalog&quot;) {
+  selector.mediaType
+  selector.externalId
+} else {
+  selector.logId
+}</code></pre>
+<p>Checkpoint:</p>
+<ul><li>puedes construir una rama completa de cada tipo;</li><li>TypeScript rechaza <code>{ kind: &quot;log&quot;, externalId: &quot;438631&quot; }</code>;</li><li>el tipo no contiene tres propiedades opcionales.</li></ul>
+<h2>3. Adapta la query de detalle</h2>
+<h3>3.1 Key</h3>
+<p>Parte del objeto completo de <code>mediaKeys</code> entregado en la <strong>sesión 13</strong>. En <code>src/hooks/media-keys.ts</code>, importa <code>MediaDetailSelector</code> desde <code>../schemas/media-detail</code> y sustituye la firma anterior:</p>
+<pre><code class="language-ts">detail: (selector: MediaDetailSelector, authScope: string) =&gt;
+  [...mediaKeys.details(), selector, authScope] as const</code></pre>
+<p>La key debe describir todas las variables que cambian la respuesta. No coloques el token, el email ni el objeto Firebase <code>User</code> en ella.</p>
+<h3>3.2 Fetcher</h3>
+<p>En <code>src/api/media.ts</code>, conserva <code>API_URL</code>, definido en ese archivo desde la sesión 07. Combina estos imports con los fetchers existentes y haz que <code>getMediaDetail</code> construya params según <code>selector.kind</code>:</p>
+<pre><code class="language-ts">import type { MediaDetailSelector } from &quot;../schemas/media-detail&quot;
+import type { MediaDetailDto } from &quot;../types/media-api&quot;
+import {
+  requestJsonWithAuth,
+  requestJsonWithOptionalAuth,
+} from &quot;./http&quot;
+
+export function getMediaDetail(
+  selector: MediaDetailSelector,
+): Promise&lt;MediaDetailDto&gt; {
+  const params = new URLSearchParams()
+
+  if (selector.kind === &quot;catalog&quot;) {
+    params.set(&quot;externalId&quot;, selector.externalId)
+    params.set(&quot;mediaType&quot;, selector.mediaType)
+  } else {
+    params.set(&quot;logId&quot;, selector.logId)
+  }
+
+  const url = `${API_URL}/api/v2/media/detail?${params.toString()}`
+
+  return selector.kind === &quot;log&quot;
+    ? requestJsonWithAuth&lt;MediaDetailDto&gt;(url)
+    : requestJsonWithOptionalAuth&lt;MediaDetailDto&gt;(url)
+}</code></pre>
+<pre><code class="language-text">catalog → externalId + mediaType → optional auth
+log     → logId                  → required auth</code></pre>
+<p>Conserva un solo fetcher y el mismo <code>MediaDetailDto</code>. <code>kind</code> no se envía al backend.</p>
+<h3>3.3 Hook</h3>
+<p>En <code>src/hooks/features/use-media.ts</code>, combina estos imports con los hooks existentes y adapta <code>useMediaDetail</code> para recibir <code>MediaDetailSelector | null</code>:</p>
+<pre><code class="language-ts">import { useQuery } from &quot;@tanstack/react-query&quot;
+
+import { getMediaDetail } from &quot;../../api/media&quot;
+import { useAuth } from &quot;../../auth/auth-provider&quot;
+import {
+  mediaDetailSelectorSchema,
+  type MediaDetailSelector,
+} from &quot;../../schemas/media-detail&quot;
+import { mediaKeys } from &quot;../media-keys&quot;
+
+const DISABLED_DETAIL_SELECTOR = mediaDetailSelectorSchema.parse({
+  kind: &quot;log&quot;,
+  logId: &quot;__disabled__&quot;,
+})
+
+export function useMediaDetail(selector: MediaDetailSelector | null) {
+  const authState = useAuth()
+  const authScope =
+    authState.status === &quot;authenticated&quot;
+      ? authState.user.uid
+      : authState.status
+  const querySelector = selector ?? DISABLED_DETAIL_SELECTOR
+  const canQuery =
+    selector !== null &amp;&amp;
+    authState.status !== &quot;checking&quot; &amp;&amp;
+    (selector.kind === &quot;catalog&quot; || authState.status === &quot;authenticated&quot;)
+
+  return useQuery({
+    queryKey: mediaKeys.detail(querySelector, authScope),
+    queryFn: () =&gt; getMediaDetail(querySelector),
+    enabled: canQuery,
+  })
+}</code></pre>
+<p>Debe:</p>
+<ul><li>derivar <code>authScope</code> desde Auth;</li><li>permanecer deshabilitado durante <code>checking</code>;</li><li>permitir catálogo en estado anónimo;</li><li>permitir log solo con estado <code>authenticated</code>;</li><li>conservar una key válida mediante el centinela interno conocido;</li><li>impedir que el fetcher ejecute cuando el selector sea <code>null</code>.</li></ul>
+<p>No uses un hook condicional ni introduzcas <code>skipToken</code> en este checkpoint.</p>
+<p>Checkpoint en Query Devtools:</p>
+<pre><code class="language-text">catalog + anonymous
+catalog + user.uid
+log + user.uid</code></pre>
+<p>Cada combinación debe tener una key propia.</p>
+<h2>4. Comprueba el detalle público</h2>
+<p>Antes de crear la página privada, parte de la integración construida en la <strong>sesión 10</strong> y adapta <code>MediaDetailPage</code>.</p>
+<p>Conserva dos valores con responsabilidades distintas:</p>
+<ul><li><code>detailInput</code>: identidad pública que ya usa el formulario de creación;</li><li><code>detailSelector</code>: identidad que usa la query.</li></ul>
+<p>Deriva la rama <code>catalog</code> desde el input validado y llama <code>useMediaDetail(detailSelector)</code>.</p>
+<p>Comprueba:</p>
+<ol><li>búsqueda sin sesión;</li><li>navegación a detalle;</li><li>detalle después de iniciar sesión;</li><li>apertura del modal de creación;</li><li>body de creación con <code>mediaType + externalId</code>.</li></ol>
+<p>No continúes si aparece una regresión pública.</p>
+<h2>5. Convierte <code>logId</code> en selector</h2>
+<p>En <code>src/App.tsx</code>, importa la página y declara la ruta dentro del layout privado:</p>
+<pre><code class="language-tsx">import { PrivateMediaDetailPage } from &quot;./pages/private-media-detail-page&quot;
+
+&lt;Route path=&quot;library/:logId&quot; element={&lt;PrivateMediaDetailPage /&gt;} /&gt;</code></pre>
+<p>Crea <code>src/adapters/library-log-param-to-detail-selector.ts</code> con una función pura:</p>
+<pre><code class="language-ts">import {
+  mediaDetailSelectorSchema,
+  type MediaDetailSelector,
+} from &quot;../schemas/media-detail&quot;
+
+export function toLibraryLogDetailSelector(
+  logId: string | undefined,
+): MediaDetailSelector | null {
+  const result = mediaDetailSelectorSchema.safeParse({ kind: &quot;log&quot;, logId })
+
+  return result.success ? result.data : null
+}</code></pre>
+<p>Comportamientos acordados:</p>
+<div class="table-wrap"><table><thead><tr><th>Entrada</th><th>Resultado</th></tr></thead><tbody><tr><td><code>undefined</code></td><td><code>null</code></td></tr><tr><td><code>&quot;&quot;</code></td><td><code>null</code></td></tr><tr><td>espacios</td><td><code>null</code></td></tr><tr><td>id válido</td><td>rama <code>{ kind: &quot;log&quot;, logId }</code> normalizada</td></tr></tbody></table></div>
+<p>La función no importa Router, Firebase o TanStack Query. <code>safeParse</code> rechaza los casos inválidos y entrega el <code>logId</code> recortado. No uses un cast: no comprobaría el parámetro externo.</p>
+<p>En <code>PrivateMediaDetailPage</code>:</p>
+<ol><li>lee <code>logId</code> con <code>useParams</code>;</li><li>llama el adapter;</li><li>llama <code>useMediaDetail(selector)</code>;</li><li>después representa una URL inválida.</li></ol>
+<p>Este orden mantiene los hooks en la misma posición durante cada render.</p>
+<p>Para la primera carga activa usa <code>detailQuery.isLoading</code>. Una query deshabilitada puede estar <code>pending</code> sin ejecutar un fetch.</p>
+<p>Importa <code>PageState</code> desde <code>../components/page-state</code> y representa los dos primeros casos:</p>
+<pre><code class="language-tsx">if (detailSelector === null) {
+  return (
+    &lt;PageState
+      variant=&quot;invalid&quot;
+      description=&quot;La URL no contiene un registro válido.&quot;
+    /&gt;
+  )
+}
+
+if (detailQuery.isLoading) {
+  return (
+    &lt;PageState
+      variant=&quot;loading&quot;
+      title=&quot;Cargando detalle&quot;
+      description=&quot;Espera mientras recuperamos tu registro.&quot;
+    /&gt;
+  )
+}</code></pre>
+<h2>6. Representa los datos personales</h2>
+<p>Crea <code>src/types/saved-media-details.ts</code>:</p>
+<pre><code class="language-ts">export type SavedMediaDetailsModel = Readonly&lt;{
+  title: string
+  statusLabel: string
+  priorityLabel: string
+  notes: string | null
+}&gt;</code></pre>
+<p>Implementa <code>src/adapters/user-media-to-saved-details.ts</code> reutilizando los labels compartidos de status y prioridad:</p>
+<pre><code class="language-ts">import {
+  MEDIA_PRIORITY_LABELS,
+  MEDIA_STATUS_LABELS,
+} from &quot;../constants/media-log&quot;
+import type { UserMediaDataDto } from &quot;../types/media-api&quot;
+import type { SavedMediaDetailsModel } from &quot;../types/saved-media-details&quot;
+
+export function toSavedMediaDetailsModel(
+  entry: UserMediaDataDto,
+): SavedMediaDetailsModel {
+  return {
+    title: entry.title,
+    statusLabel: MEDIA_STATUS_LABELS[entry.status],
+    priorityLabel: MEDIA_PRIORITY_LABELS[entry.priority],
+    notes: entry.notes,
+  }
+}</code></pre>
+<p>El adapter:</p>
+<ul><li>conserva el título personal;</li><li>traduce status y prioridad;</li><li>conserva <code>notes</code> nullable;</li><li>no inventa poster, descripción, géneros o fecha.</li></ul>
+<p>Crea <code>src/components/saved-media-details.tsx</code>:</p>
+<pre><code class="language-tsx">import { Stack, Text } from &quot;@mantine/core&quot;
+
+import type { SavedMediaDetailsModel } from &quot;../types/saved-media-details&quot;
+
+type SavedMediaDetailsProps = {
+  details: SavedMediaDetailsModel
+}
+
+export function SavedMediaDetails({ details }: SavedMediaDetailsProps) {
+  return (
+    &lt;Stack gap=&quot;sm&quot;&gt;
+      &lt;Text&gt;
+        &lt;strong&gt;Status:&lt;/strong&gt; {details.statusLabel}
+      &lt;/Text&gt;
+      &lt;Text&gt;
+        &lt;strong&gt;Prioridad:&lt;/strong&gt; {details.priorityLabel}
+      &lt;/Text&gt;
+      &lt;Text style={{ whiteSpace: &quot;pre-wrap&quot; }}&gt;
+        &lt;strong&gt;Notas:&lt;/strong&gt; {details.notes ?? &quot;Sin notas&quot;}
+      &lt;/Text&gt;
+    &lt;/Stack&gt;
+  )
+}</code></pre>
+<p>El componente muestra los tres campos personales. Usa “Sin notas” cuando el valor sea <code>null</code> y conserva saltos de línea.</p>
+<p>No añadas controles editables.</p>
+<h2>7. Compón los estados de la página</h2>
+<p>Representa los casos en este orden:</p>
+<ol><li>selector inválido;</li><li>primera carga activa;</li><li>error HTTP o de red;</li><li>respuesta con <code>entry: null</code>;</li><li>éxito con catálogo;</li><li>éxito personal con <code>catalog: null</code>.</li></ol>
+<p>Antes de representar el error, importa <code>ApiError</code> desde <code>../api/http</code> y define:</p>
+<pre><code class="language-ts">function getPrivateDetailErrorMessage(error: Error): string {
+  if (!(error instanceof ApiError)) {
+    return &quot;No pudimos cargar el detalle. Intenta nuevamente.&quot;
+  }
+
+  if (error.status === 401) {
+    return &quot;No pudimos autorizar esta consulta.&quot;
+  }
+
+  if (error.status === 404) {
+    return &quot;No encontramos ese registro en tu biblioteca.&quot;
+  }
+
+  return &quot;No pudimos cargar el detalle. Intenta nuevamente.&quot;
+}</code></pre>
+<p>Después de invalidez y carga, completa error y ausencia del registro:</p>
+<pre><code class="language-tsx">if (detailQuery.isError) {
+  return (
+    &lt;PageState
+      variant=&quot;error&quot;
+      title=&quot;No pudimos cargar el detalle&quot;
+      description={getPrivateDetailErrorMessage(detailQuery.error)}
+      onRetry={() =&gt; void detailQuery.refetch()}
+    /&gt;
+  )
+}
+
+if (!detailQuery.isSuccess) {
+  return (
+    &lt;PageState
+      variant=&quot;loading&quot;
+      title=&quot;Cargando detalle&quot;
+      description=&quot;Espera mientras recuperamos tu registro.&quot;
+    /&gt;
+  )
+}
+
+if (detailQuery.data.entry === null) {
+  return (
+    &lt;PageState
+      variant=&quot;unavailable&quot;
+      title=&quot;Registro no disponible&quot;
+      description=&quot;No pudimos leer los datos guardados. Vuelve a tu biblioteca.&quot;
+      onRetry={() =&gt; void detailQuery.refetch()}
+    /&gt;
+  )
+}</code></pre>
+<p>La página conserva <code>detailQuery</code>; <code>PageState</code> recibe únicamente la variante, el copy y el callback. <strong>Reintentar</strong> aparece en <code>error</code> y <code>unavailable</code>, no en <code>loading</code> o <code>invalid</code>.</p>
+<p>Durante el éxito:</p>
+<pre><code class="language-text">entry
+  → toSavedMediaDetailsModel
+  → SavedMediaDetails
+
+catalog disponible
+  → mediaCatalogDetailToModel
+  → MediaDetailContent</code></pre>
+<p>Si <code>entry</code> existe pero <code>catalog</code> es <code>null</code>, conserva un <code>Alert</code> dentro del contenido y muestra <code>SavedMediaDetails</code>. Ese caso es parcial: todavía existe información útil y no debe reemplazarse toda la página con <code>PageState</code>.</p>
+<p>Reutiliza <code>MediaDocumentTitle</code>. Usa el título del catálogo o, si falta, el título de <code>entry</code>.</p>
+<p>Si <code>catalog</code> es <code>null</code>, muestra un aviso neutral y conserva los datos personales. No uses una assertion ni inventes metadata.</p>
+<p>Traduce errores localmente:</p>
+<div class="table-wrap"><table><thead><tr><th>Caso</th><th>Mensaje esperado</th></tr></thead><tbody><tr><td><code>401</code></td><td>No pudimos autorizar esta consulta.</td></tr><tr><td><code>404</code></td><td>No encontramos ese registro en tu biblioteca.</td></tr><tr><td>Red o <code>5xx</code></td><td>No pudimos cargar el detalle. Intenta nuevamente.</td></tr></tbody></table></div>
+<p>No ejecutes logout ante <code>401</code>. No digas que el id pertenece a otra persona cuando recibas <code>404</code>.</p>
+<p>La referencia final de <code>src/pages/private-media-detail-page.tsx</code> reúne los imports, el traductor, los estados y los dos consumidores visuales:</p>
+<pre><code class="language-tsx">import { Alert, Button, Stack } from &quot;@mantine/core&quot;
+import { Link, useParams } from &quot;react-router&quot;
+
+import { mediaCatalogDetailToModel } from &quot;../adapters/media-catalog-detail-to-model&quot;
+import { toLibraryLogDetailSelector } from &quot;../adapters/library-log-param-to-detail-selector&quot;
+import { toSavedMediaDetailsModel } from &quot;../adapters/user-media-to-saved-details&quot;
+import { ApiError } from &quot;../api/http&quot;
+import { MediaDetailContent } from &quot;../components/media-detail-content&quot;
+import { MediaDocumentTitle } from &quot;../components/media-document-title&quot;
+import { PageState } from &quot;../components/page-state&quot;
+import { SavedMediaDetails } from &quot;../components/saved-media-details&quot;
+import { useMediaDetail } from &quot;../hooks/features/use-media&quot;
+
+function getPrivateDetailErrorMessage(error: Error): string {
+  if (!(error instanceof ApiError)) {
+    return &quot;No pudimos cargar el detalle. Intenta nuevamente.&quot;
+  }
+
+  if (error.status === 401) {
+    return &quot;No pudimos autorizar esta consulta.&quot;
+  }
+
+  if (error.status === 404) {
+    return &quot;No encontramos ese registro en tu biblioteca.&quot;
+  }
+
+  return &quot;No pudimos cargar el detalle. Intenta nuevamente.&quot;
+}
+
+export function PrivateMediaDetailPage() {
+  const { logId } = useParams&lt;&quot;logId&quot;&gt;()
+  const detailSelector = toLibraryLogDetailSelector(logId)
+  const detailQuery = useMediaDetail(detailSelector)
+
+  if (detailSelector === null) {
+    return (
+      &lt;PageState
+        variant=&quot;invalid&quot;
+        description=&quot;La URL no contiene un registro válido.&quot;
+      /&gt;
+    )
+  }
+
+  if (detailQuery.isError) {
+    return (
+      &lt;PageState
+        variant=&quot;error&quot;
+        title=&quot;No pudimos cargar el detalle&quot;
+        description={getPrivateDetailErrorMessage(detailQuery.error)}
+        onRetry={() =&gt; void detailQuery.refetch()}
+      /&gt;
+    )
+  }
+
+  if (!detailQuery.isSuccess) {
+    return (
+      &lt;PageState
+        variant=&quot;loading&quot;
+        title=&quot;Cargando detalle&quot;
+        description=&quot;Espera mientras recuperamos tu registro.&quot;
+      /&gt;
+    )
+  }
+
+  if (detailQuery.data.entry === null) {
+    return (
+      &lt;PageState
+        variant=&quot;unavailable&quot;
+        title=&quot;Registro no disponible&quot;
+        description=&quot;No pudimos leer los datos guardados. Vuelve a tu biblioteca.&quot;
+        onRetry={() =&gt; void detailQuery.refetch()}
+      /&gt;
+    )
+  }
+
+  const savedDetails = toSavedMediaDetailsModel(detailQuery.data.entry)
+  const catalogDetails = detailQuery.data.catalog
+    ? mediaCatalogDetailToModel(detailQuery.data.catalog)
+    : null
+  const documentTitle = catalogDetails?.title ?? savedDetails.title
+
+  return (
+    &lt;Stack gap=&quot;xl&quot;&gt;
+      &lt;MediaDocumentTitle title={documentTitle} /&gt;
+
+      {catalogDetails === null ? (
+        &lt;Alert color=&quot;gray&quot; title=&quot;Catálogo no disponible&quot;&gt;
+          Mostramos los datos personales conservados para este registro.
+        &lt;/Alert&gt;
+      ) : (
+        &lt;MediaDetailContent model={catalogDetails} /&gt;
+      )}
+
+      &lt;SavedMediaDetails details={savedDetails} /&gt;
+      &lt;Button component={Link} to=&quot;/app/library&quot; variant=&quot;subtle&quot;&gt;
+        Volver a la biblioteca
+      &lt;/Button&gt;
+    &lt;/Stack&gt;
+  )
+}</code></pre>
+<p>El guard <code>!detailQuery.isSuccess</code> deja <code>detailQuery.data</code> definida en las ramas siguientes. La página conserva la query y entrega únicamente <code>onRetry</code> a <code>PageState</code>.</p>
+<h2>8. Enlaza la biblioteca</h2>
+<p>Añade una acción a la fila de la sesión 13. En <code>src/components/library-media-list-item.tsx</code>, importa <code>Button</code> desde Mantine y <code>Link</code> desde React Router; dentro del <code>Stack</code> usa la prop existente <code>data</code>:</p>
+<pre><code class="language-tsx">&lt;Button
+  component={Link}
+  to={`/app/library/${data.logId}`}
+  variant=&quot;subtle&quot;
+&gt;
+  Ver detalle
+&lt;/Button&gt;</code></pre>
+<p>La fila entrega identidad. La página consulta la fuente remota.</p>
+<p>No uses:</p>
+<ul><li><code>location.state</code> para transportar el DTO;</li><li><code>useNavigate</code> dentro de un Effect;</li><li>Zustand para conservar la fila;</li><li>una segunda query de catálogo construida desde datos parciales de la lista.</li></ul>
+<p>Checkpoint:</p>
+<ol><li>abre un registro desde la lista;</li><li>observa <code>logId</code> en la URL;</li><li>recarga;</li><li>vuelve a la biblioteca;</li><li>abre otro registro;</li><li>confirma que cambia la key.</li></ol>
+<h2>Trabajo con agente</h2>
+<p>Entrega el trabajo al agente solo después de implementar y explicar <code>toLibraryLogDetailSelector</code>.</p>
+<p>Prompt:</p>
+<pre><code class="language-text">Usa la skill ahk-test para crear y ejecutar tests Vitest del adapter puro
+toLibraryLogDetailSelector según estos comportamientos:
+- undefined produce null;
+- string vacío produce null;
+- espacios producen null;
+- un id válido se recorta y produce un selector log.
+
+Alcance único: src/adapters/__tests__/library-log-param-to-detail-selector.test.ts
+y soporte exclusivo dentro de src/adapters/__tests__/. Producción, package.json,
+configuración, dependencias y otros tests permanecen en solo lectura. No uses
+DOM, Router, Firebase, Query Client, mocks HTTP o snapshots. Ejecuta pnpm test
+-- library-log-param-to-detail-selector y entrega matriz, archivos, exit status
+y frontera de evidencia.</code></pre>
+<p>Después:</p>
+<ol><li>lee el test completo;</li><li>confirma que las expectativas corresponden a la matriz humana;</li><li>confirma que no reimplementa la función;</li><li>revisa el diff;</li><li>ejecuta:</li></ol>
+<pre><code class="language-bash">pnpm test -- library-log-param-to-detail-selector</code></pre>
+<p>El test no demuestra navegación, autenticación, query keys, requests o interfaz.</p>
+<h2>Verificación</h2>
+<h3>Tipos y test puro</h3>
+<pre><code class="language-bash">pnpm test -- library-log-param-to-detail-selector
+pnpm build</code></pre>
+<p>Registra los códigos de salida. Un output truncado no demuestra que el comando terminó bien.</p>
+<h3>Network</h3>
+<p>Comprueba:</p>
+<ul><li>detalle público por <code>externalId + mediaType</code>;</li><li>detalle privado por <code>logId</code>;</li><li>Bearer presente en la consulta privada;</li><li>ausencia de una consulta de log durante <code>checking</code>.</li></ul>
+<p>No copies ni publiques el token.</p>
+<h3>Query Devtools</h3>
+<p>Comprueba:</p>
+<ul><li>selector completo en la key;</li><li><code>authScope</code> correspondiente;</li><li>keys separadas para catálogo y log;</li><li>otra key al abrir otro registro.</li></ul>
+<h3>Navegador</h3>
+<p>Comprueba:</p>
+<ul><li>Link desde la biblioteca;</li><li>recarga directa;</li><li>status, prioridad y notas;</li><li>“Sin notas”;</li><li>fallback de <code>catalog: null</code> mediante el caso preparado;</li><li><code>404</code> neutral;</li><li>regreso a biblioteca;</li><li>protección de ruta después de logout.</li></ul>
+<h2>Evidencia de salida</h2>
+<p>Entrega:</p>
+<ul><li>código del checkpoint;</li><li>captura de la URL privada sin exponer token;</li><li>captura de la key con selector y scope;</li><li>captura de la página con catálogo y datos personales;</li><li>salida completa del test dirigido;</li><li>salida completa de <code>pnpm build</code>;</li><li>explicación breve de lo que demuestra cada evidencia.</li></ul>
+<p>Completa:</p>
+<pre><code class="language-text">Test puro demuestra:
+Network demuestra:
+Query Devtools demuestra:
+Navegador demuestra:
+Build demuestra:
+Todavía no demostramos:</code></pre>
+<h2>Errores que debes corregir</h2>
+<ul><li>Un selector con campos opcionales permite estados inválidos.</li><li>Una key sin <code>kind</code> puede mezclar preguntas distintas.</li><li>Un token en la key expone una credencial y no mejora la identidad de caché.</li><li>Optional auth no satisface la intención privada de <code>logId</code>.</li><li>Un hook después de un retorno rompe el orden esperado.</li><li><code>logId!</code> oculta una entrada externa sin validarla.</li><li>Copiar el DTO a <code>useState</code> crea otra fuente de datos.</li><li>Añadir <code>entry</code> a <code>MediaDetailContent</code> mezcla responsabilidades.</li><li>Tratar <code>catalog: null</code> como loading confunde estados remotos.</li><li>Reemplazar los datos personales con <code>PageState</code> cuando solo falta catálogo oculta información útil.</li><li>Un <code>404</code> que revela pertenencia facilita enumerar recursos.</li><li>Un test fuera de <code>__tests__/</code> contradice la estructura del proyecto.</li></ul>
+<h2>Actividades opcionales</h2>
+<p>Cuando termines el checkpoint base:</p>
+<ul><li>muestra background refetch sin ocultar los datos existentes;</li><li>prueba un parámetro codificado y explica qué recibe <code>useParams</code>.</li></ul>
+<h2>Fuera de alcance</h2>
+<ul><li><code>MediaLogForm</code>, initial values y modal de edición.</li><li><code>PUT</code>, <code>DELETE</code>.</li><li>Entradas manuales o linking.</li><li>Loaders, actions y Data Mode.</li><li>Fetching mediante Effect.</li><li>DTOs en Zustand, storage o navigation state.</li><li>React Testing Library, jsdom, MSW o tests de componentes.</li><li>Cambios en el backend.</li></ul>
+<p>La sesión 15 comenzará desde <code>entry</code> ya cargado y visible. Allí aparecerán el segundo consumidor del formulario y la actualización pesimista.</p></main>
+      <footer>Material de trabajo en clase · Sesión 14</footer>
+    </article>
+  </body>
+</html>

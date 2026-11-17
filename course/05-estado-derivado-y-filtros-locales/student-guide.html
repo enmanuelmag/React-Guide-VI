@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 05 para React Guide VI">
+    <title>Guía estudiantil · Sesión 05 · Estado derivado y filtros locales</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 05 · Estado derivado y filtros locales</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 05 · Estado derivado y filtros locales</h1>
+<h2>Meta y punto de entrada</h2>
+<p>Parte de MediaLog-Bootcamp en session-05-start, idéntica a session-04-end. Conserva tu copia y guarda cambios antes de consultar referencias. Deben funcionar la búsqueda, los seis medios y los dos mensajes de vacío.</p>
+<p>Primero sigue la presentación completa. Abre el editor cuando el docente termine ese bloque; todos los pasos siguientes ocurren después de las slides. Lectura: <strong>pre-class-reading.md</strong>.</p>
+<h2>Paso 1 · Crear el control por tipo</h2>
+<p>Crea el archivo siguiente. all amplía el valor del control, no el tipo de un medio. Todavía no aparece en pantalla: falta conectarlo a App.</p>
+<p><strong><code>src/components/media-type-filter.tsx</code> · archivo completo:</strong></p>
+<pre><code class="language-tsx">import type { MediaType } from '../types/media-item'
+
+export type MediaTypeFilterValue = MediaType | 'all'
+
+type MediaTypeFilterProps = {
+  value: MediaTypeFilterValue
+  onFilterChange: (value: MediaTypeFilterValue) =&gt; void
+}
+
+const mediaTypeOptions: {
+  value: MediaTypeFilterValue
+  label: string
+}[] = [
+  { value: 'all', label: 'Todos' },
+  { value: 'movie', label: 'Películas' },
+  { value: 'series', label: 'Series' },
+]
+
+export function MediaTypeFilter(props: MediaTypeFilterProps) {
+  const { value, onFilterChange } = props
+
+  return (
+    &lt;div className=&quot;media-type-filter&quot;&gt;
+      {mediaTypeOptions.map((option) =&gt; (
+        &lt;button
+          key={option.value}
+          type=&quot;button&quot;
+          aria-pressed={value === option.value}
+          onClick={() =&gt; onFilterChange(option.value)}
+        &gt;
+          {option.label}
+        &lt;/button&gt;
+      ))}
+    &lt;/div&gt;
+  )
+}</code></pre>
+<p>Incorpora los estilos como soporte; conserva todos los anteriores:</p>
+<p><strong><code>src/index.css</code> · archivo completo:</strong></p>
+<pre><code class="language-css">:root {
+  font-family: Inter, system-ui, sans-serif;
+  color: #f5f1e8;
+  background: #141412;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.app-header,
+.page-container {
+  width: min(960px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.app-header {
+  padding: 64px 0 32px;
+  border-bottom: 1px solid #3b3a34;
+}
+
+.app-header__eyebrow,
+.media-card__meta {
+  color: #d2a84a;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-container {
+  padding: 32px 0 64px;
+}
+
+.media-card {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 24px;
+  padding: 24px;
+  border: 1px solid #3b3a34;
+  border-radius: 16px;
+  background: #1d1d1a;
+}
+
+.media-card__poster {
+  display: grid;
+  min-height: 220px;
+  place-items: center;
+  border-radius: 10px;
+  color: #a9a59a;
+  background: #2a2924;
+}
+
+@media (max-width: 600px) {
+  .media-card {
+    grid-template-columns: 1fr;
+  }
+}
+.media-list {
+  display: grid;
+  gap: 24px;
+}
+.media-card__poster-image {
+  width: 100%;
+  height: 220px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.empty-state {
+  padding: 48px 24px;
+  border: 1px dashed #565349;
+  border-radius: 16px;
+  text-align: center;
+  color: #a9a59a;
+}
+
+.empty-state h3 {
+  margin-top: 0;
+  color: #f5f1e8;
+}
+
+.media-type-badge {
+  display: inline-flex;
+  padding: 2px 8px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
+.search-input {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.search-input input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #565349;
+  border-radius: 10px;
+  background: #20201b;
+  color: #f5f1e8;
+  font: inherit;
+}
+
+.search-input input:focus-visible {
+  outline: 2px solid #d9be74;
+  outline-offset: 2px;
+}
+
+.media-type-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.media-type-filter button {
+  padding: 10px 16px;
+  border: 1px solid #565349;
+  border-radius: 10px;
+  background: #20201b;
+  color: #f5f1e8;
+  font: inherit;
+  cursor: pointer;
+}
+
+.media-type-filter button[aria-pressed='true'] {
+  border-color: #d9be74;
+  background: #d9be74;
+  color: #141412;
+}
+
+.media-type-filter button:focus-visible {
+  outline: 2px solid #d9be74;
+  outline-offset: 2px;
+}</code></pre>
+<p>Comprobación: pnpm build y pnpm lint. Referencia session-05-step-01-type-filter. Explica por qué exportar no equivale a renderizar.</p>
+<h2>Paso 2 · Conectar el estado en App</h2>
+<p>Sustituye el archivo completo. El control cambia su opción activa, pero todavía no cambia la colección por tipo.</p>
+<p><strong><code>src/App.tsx</code> · archivo completo:</strong></p>
+<pre><code class="language-tsx">import { useState } from 'react'
+
+import { AppHeader } from './components/app-header'
+import { EmptyState } from './components/empty-state'
+import { MediaGrid } from './components/media-grid'
+import {
+  MediaTypeFilter,
+  type MediaTypeFilterValue,
+} from './components/media-type-filter'
+import { SearchInput } from './components/search-input'
+import { mediaItems } from './data/media-items'
+
+function App() {
+  const [query, setQuery] = useState('')
+  const [mediaTypeFilter, setMediaTypeFilter] =
+    useState&lt;MediaTypeFilterValue&gt;('all')
+
+  const normalizedQuery = query.trim().toLowerCase()
+  const visibleMedia = mediaItems.filter((media) =&gt;
+    media.title.toLowerCase().includes(normalizedQuery),
+  )
+
+  const hasNoResults =
+    mediaItems.length &gt; 0 &amp;&amp;
+    normalizedQuery.length &gt; 0 &amp;&amp;
+    visibleMedia.length === 0
+
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+
+      &lt;main className=&quot;page-container&quot;&gt;
+        &lt;h2&gt;Catálogo destacado&lt;/h2&gt;
+        &lt;SearchInput value={query} onQueryChange={setQuery} /&gt;
+        &lt;MediaTypeFilter
+          value={mediaTypeFilter}
+          onFilterChange={setMediaTypeFilter}
+        /&gt;
+        {hasNoResults ? (
+          &lt;EmptyState
+            title=&quot;Sin resultados&quot;
+            description=&quot;No encontramos medios que coincidan con tu búsqueda.&quot;
+          /&gt;
+        ) : (
+          &lt;MediaGrid items={visibleMedia} /&gt;
+        )}
+      &lt;/main&gt;
+    &lt;/&gt;
+  )
+}
+
+export default App</code></pre>
+<p>Pulsa Películas y Series: cambia aria-pressed y continúan seis medios con consulta vacía. Explica callback → setter → render → prop. Referencia session-05-step-02-controlled-type.</p>
+<h2>Paso 3 · Combinar criterios</h2>
+<p>Sustituye App por este estado:</p>
+<p><strong><code>src/App.tsx</code> · archivo completo:</strong></p>
+<pre><code class="language-tsx">import { useState } from 'react'
+
+import { AppHeader } from './components/app-header'
+import { EmptyState } from './components/empty-state'
+import { MediaGrid } from './components/media-grid'
+import {
+  MediaTypeFilter,
+  type MediaTypeFilterValue,
+} from './components/media-type-filter'
+import { SearchInput } from './components/search-input'
+import { mediaItems } from './data/media-items'
+
+function App() {
+  const [query, setQuery] = useState('')
+  const [mediaTypeFilter, setMediaTypeFilter] =
+    useState&lt;MediaTypeFilterValue&gt;('all')
+
+  const normalizedQuery = query.trim().toLowerCase()
+  const visibleMedia = mediaItems.filter((media) =&gt; {
+    const matchesQuery = media.title.toLowerCase().includes(normalizedQuery)
+    const matchesType =
+      mediaTypeFilter === 'all' || media.mediaType === mediaTypeFilter
+
+    return matchesQuery &amp;&amp; matchesType
+  })
+
+  const hasNoResults =
+    mediaItems.length &gt; 0 &amp;&amp;
+    normalizedQuery.length &gt; 0 &amp;&amp;
+    visibleMedia.length === 0
+
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+
+      &lt;main className=&quot;page-container&quot;&gt;
+        &lt;h2&gt;Catálogo destacado&lt;/h2&gt;
+        &lt;SearchInput value={query} onQueryChange={setQuery} /&gt;
+        &lt;MediaTypeFilter
+          value={mediaTypeFilter}
+          onFilterChange={setMediaTypeFilter}
+        /&gt;
+        {hasNoResults ? (
+          &lt;EmptyState
+            title=&quot;Sin resultados&quot;
+            description=&quot;No encontramos medios que coincidan con tu búsqueda.&quot;
+          /&gt;
+        ) : (
+          &lt;MediaGrid items={visibleMedia} /&gt;
+        )}
+      &lt;/main&gt;
+    &lt;/&gt;
+  )
+}
+
+export default App</code></pre>
+<p>Prueba Películas sin consulta: 3; Series sin consulta: 3; bear/Series: 1; bear/Películas: 0. Explica por qué se usa OR dentro del tipo y AND entre criterios. Referencia session-05-step-03-combined-filters.</p>
+<h2>Paso 4 · Conservar la causa del vacío</h2>
+<p>Sustituye App completo:</p>
+<p><strong><code>src/App.tsx</code> · archivo completo:</strong></p>
+<pre><code class="language-tsx">import { useState } from 'react'
+
+import { AppHeader } from './components/app-header'
+import { EmptyState } from './components/empty-state'
+import { MediaGrid } from './components/media-grid'
+import {
+  MediaTypeFilter,
+  type MediaTypeFilterValue,
+} from './components/media-type-filter'
+import { SearchInput } from './components/search-input'
+import { mediaItems } from './data/media-items'
+
+function App() {
+  const [query, setQuery] = useState('')
+  const [mediaTypeFilter, setMediaTypeFilter] =
+    useState&lt;MediaTypeFilterValue&gt;('all')
+
+  const normalizedQuery = query.trim().toLowerCase()
+  const visibleMedia = mediaItems.filter((media) =&gt; {
+    const matchesQuery = media.title.toLowerCase().includes(normalizedQuery)
+    const matchesType =
+      mediaTypeFilter === 'all' || media.mediaType === mediaTypeFilter
+
+    return matchesQuery &amp;&amp; matchesType
+  })
+
+  const hasActiveFilters =
+    normalizedQuery.length &gt; 0 || mediaTypeFilter !== 'all'
+
+  const hasNoResults =
+    mediaItems.length &gt; 0 &amp;&amp;
+    hasActiveFilters &amp;&amp;
+    visibleMedia.length === 0
+
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+
+      &lt;main className=&quot;page-container&quot;&gt;
+        &lt;h2&gt;Catálogo destacado&lt;/h2&gt;
+        &lt;SearchInput value={query} onQueryChange={setQuery} /&gt;
+        &lt;MediaTypeFilter
+          value={mediaTypeFilter}
+          onFilterChange={setMediaTypeFilter}
+        /&gt;
+        {hasNoResults ? (
+          &lt;EmptyState
+            title=&quot;Sin resultados&quot;
+            description=&quot;No encontramos medios que coincidan con tus filtros.&quot;
+          /&gt;
+        ) : (
+          &lt;MediaGrid items={visibleMedia} /&gt;
+        )}
+      &lt;/main&gt;
+    &lt;/&gt;
+  )
+}
+
+export default App</code></pre>
+<p>Referencia session-05-step-04-empty-causes. Los espacios solos no activan el filtro. El tipo concreto sí puede hacerlo sin texto. No copies resultados a otro estado.</p>
+<h2>Práctica individual · Contar y limpiar</h2>
+<p>Dispones de diez minutos para intentar y revisar:</p>
+<ol><li>Deriva resultCount desde visibleMedia.</li><li>Muestra la cantidad visible y el total de mediaItems.</li><li>Crea handleClearFilters para restaurar query vacía y mediaTypeFilter en all.</li><li>Conecta un botón “Limpiar filtros” con type=&quot;button&quot;.</li><li>Deshabilítalo cuando no existan filtros efectivos.</li><li>Aplica el CSS de soporte y comprueba comportamiento.</li></ol>
+<p>Pistas: el arreglo conoce su longitud; los setters ya existen; hasActiveFilters indica si hay algo que limpiar. No uses Effects ni más estado.</p>
+<p>El docente entrega este CSS de soporte durante la revisión. No contiene la lógica de la práctica:</p>
+<p><strong><code>src/index.css</code> · archivo completo:</strong></p>
+<pre><code class="language-css">:root {
+  font-family: Inter, system-ui, sans-serif;
+  color: #f5f1e8;
+  background: #141412;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.app-header,
+.page-container {
+  width: min(960px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.app-header {
+  padding: 64px 0 32px;
+  border-bottom: 1px solid #3b3a34;
+}
+
+.app-header__eyebrow,
+.media-card__meta {
+  color: #d2a84a;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-container {
+  padding: 32px 0 64px;
+}
+
+.media-card {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 24px;
+  padding: 24px;
+  border: 1px solid #3b3a34;
+  border-radius: 16px;
+  background: #1d1d1a;
+}
+
+.media-card__poster {
+  display: grid;
+  min-height: 220px;
+  place-items: center;
+  border-radius: 10px;
+  color: #a9a59a;
+  background: #2a2924;
+}
+
+@media (max-width: 600px) {
+  .media-card {
+    grid-template-columns: 1fr;
+  }
+}
+.media-list {
+  display: grid;
+  gap: 24px;
+}
+.media-card__poster-image {
+  width: 100%;
+  height: 220px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.empty-state {
+  padding: 48px 24px;
+  border: 1px dashed #565349;
+  border-radius: 16px;
+  text-align: center;
+  color: #a9a59a;
+}
+
+.empty-state h3 {
+  margin-top: 0;
+  color: #f5f1e8;
+}
+
+.media-type-badge {
+  display: inline-flex;
+  padding: 2px 8px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
+.search-input {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.search-input input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #565349;
+  border-radius: 10px;
+  background: #20201b;
+  color: #f5f1e8;
+  font: inherit;
+}
+
+.search-input input:focus-visible {
+  outline: 2px solid #d9be74;
+  outline-offset: 2px;
+}
+
+.media-type-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.media-type-filter button {
+  padding: 10px 16px;
+  border: 1px solid #565349;
+  border-radius: 10px;
+  background: #20201b;
+  color: #f5f1e8;
+  font: inherit;
+  cursor: pointer;
+}
+
+.media-type-filter button[aria-pressed='true'] {
+  border-color: #d9be74;
+  background: #d9be74;
+  color: #141412;
+}
+
+.media-type-filter button:focus-visible {
+  outline: 2px solid #d9be74;
+  outline-offset: 2px;
+}
+
+.filter-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.filter-summary p {
+  margin: 0;
+}
+
+.filter-summary button {
+  padding: 10px 16px;
+  border: 1px solid #565349;
+  border-radius: 10px;
+  background: #20201b;
+  color: #f5f1e8;
+  font: inherit;
+  cursor: pointer;
+}
+
+.filter-summary button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.filter-summary button:focus-visible {
+  outline: 2px solid #d9be74;
+  outline-offset: 2px;
+}</code></pre>
+<h2>Matriz de aceptación</h2>
+<div class="table-wrap"><table><thead><tr><th>Caso</th><th>Consulta</th><th>Tipo</th><th>Resultado esperado</th></tr></thead><tbody><tr><td>Inicial</td><td>vacía</td><td>Todos</td><td>6; limpiar deshabilitado</td></tr><tr><td>Películas</td><td>vacía</td><td>Películas</td><td>3: Arrival, Aftersun, Past Lives</td></tr><tr><td>Series</td><td>vacía</td><td>Series</td><td>3: Severance, The Bear, Blue Eye Samurai</td></tr><tr><td>Texto</td><td>bear</td><td>Todos</td><td>1: The Bear</td></tr><tr><td>Combinación</td><td>bear</td><td>Series</td><td>1: The Bear</td></tr><tr><td>Sin coincidencia</td><td>bear</td><td>Películas</td><td>0; Sin resultados</td></tr><tr><td>Texto inexistente</td><td>matrix</td><td>Todos</td><td>0; Sin resultados</td></tr><tr><td>Normalización</td><td>dos espacios + BEAR + dos espacios</td><td>Series</td><td>1; texto escrito se conserva</td></tr><tr><td>Espacios solos</td><td>tres espacios</td><td>Todos</td><td>6; limpiar deshabilitado</td></tr><tr><td>Espacios y tipo</td><td>tres espacios</td><td>Películas</td><td>3; limpiar habilitado</td></tr><tr><td>Limpiar</td><td>cualquier consulta y tipo</td><td>click Limpiar filtros</td><td>consulta vacía, Todos, 6 y botón deshabilitado</td></tr><tr><td>Fuente vacía</td><td>vacía</td><td>Todos</td><td>0 de 0; Catálogo vacío</td></tr><tr><td>Fuente vacía filtrada</td><td>bear</td><td>Películas</td><td>0 de 0; Catálogo vacío; limpiar habilitado</td></tr></tbody></table></div>
+<p>Para comprobar fuente vacía, guarda primero el contenido de src/data/media-items.ts. Sustitúyelo temporalmente por:</p>
+<pre><code class="language-ts">import type { MediaItem } from '../types/media-item'
+
+export const mediaItems: MediaItem[] = []</code></pre>
+<p>Después restaura tu archivo guardado y confirma los seis medios. No entregues la fuente vacía. Comprueba también Tab, Enter y Espacio sobre los botones.</p>
+<h2>Evidencia y checkpoint</h2>
+<p>Ejecuta:</p>
+<pre><code class="language-bash">pnpm build
+pnpm lint</code></pre>
+<p>Registra resultados de comandos y casos observados por separado. El build no demuestra clicks, mensajes ni lector de pantalla.</p>
+<p>Al terminar debe haber dos estados en App, filtros combinados, contador derivado y limpieza de ambos controles. Conserva MediaGrid items={visibleMedia}. No añadas selección, modal, Mantine ni Effects. session-05-end es referencia para comparar después de realizar la práctica.</p>
+<h2>Pausar y continuar</h2>
+<p>Guarda bloque alcanzado, último archivo modificado, primer paso pendiente y comprobación ausente. Retoma ese paso antes de selección en 06. Cargar una rama recupera código, pero debes poder explicar su flujo.</p>
+<p>Completa oralmente: “React recuerda query y mediaTypeFilter. JavaScript calcula la lista y el conteo porque dispone de todos sus datos de entrada”.</p></main>
+      <footer>Material de trabajo en clase · Sesión 05</footer>
+    </article>
+  </body>
+</html>

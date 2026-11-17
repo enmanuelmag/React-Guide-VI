@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 08 para React Guide VI">
+    <title>Guía estudiantil · Sesión 08 · TanStack Query y búsqueda remota</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 08 · TanStack Query y búsqueda remota</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 08 · TanStack Query y búsqueda remota</h1>
+<ul><li><strong>Semana:</strong> 4.</li><li><strong>Modalidad:</strong> virtual.</li><li><strong>Duración:</strong> 90 minutos.</li><li><strong>Lectura previa:</strong> <strong>pre-class-reading.md</strong>.</li><li><strong>Checkpoint de la sesión:</strong> <strong>session-draft.md</strong>.</li></ul>
+<h2>Meta</h2>
+<p>Al terminar, tu aplicación buscará películas o series en la API mediante TanStack Query. Escribir en el formulario no ejecutará requests; enviar una búsqueda válida creará una identidad de caché y mostrará estados inicial, carga, error, vacío o éxito.</p>
+<h2>Una imagen mental antes del código</h2>
+<p>Piensa en una mesa de estudio dentro de una biblioteca. La API es la biblioteca remota y la caché es la mesa donde conservas temporalmente lo que ya pediste. La <strong>query key</strong> es la signatura completa del material: <code>Dune + movie</code> y <code>Dune + series</code> no describen el mismo resultado. La <strong>query function</strong> explica cómo pedirlo. <code>staleTime</code> indica durante cuánto tiempo la copia se considera suficientemente reciente.</p>
+<p>“Stale” no quiere decir “dato falso” y la caché no es almacenamiento permanente. Solo indica que TanStack Query puede necesitar volver a consultar el origen.</p>
+<h2>Punto de partida</h2>
+<p>Necesitas el checkpoint completo de la sesión 07:</p>
+<ul><li><code>.env.local</code> contiene <code>VITE_API_URL=https://bootcamp-medialog.cardor.dev</code>.</li><li><code>src/api/media.ts</code> exporta <code>searchMedia()</code>.</li><li><code>src/types/media-api.ts</code> exporta <code>SearchMediaInput</code> y <code>MediaSearchItemDto</code>.</li><li><code>src/types/media-item.ts</code> exporta <code>MediaType</code>.</li><li>El explorador local y el modal todavía funcionan.</li><li><code>pnpm test</code> y <code>pnpm build</code> terminaban correctamente.</li></ul>
+<p>La URL base de esta API es pública y también aparece en <code>.env.example</code>. No guardes tokens, contraseñas, claves privadas ni cuentas de servicio en la guía o en Git.</p>
+<h2>Resultado esperado</h2>
+<pre><code class="language-text">formulario
+  borrador de título y tipo
+       ↓ submit
+SearchMediaInput confirmado
+       ↓
+query key + searchMedia()
+       ↓
+MediaSearchItemDto[] en caché
+       ↓ adapter puro
+MediaSearchCardModel[]
+       ↓
+lista visual sin detalle ni navegación</code></pre>
+<h2>1. Instala versiones reproducibles</h2>
+<p>Desde la raíz del proyecto semilla:</p>
+<pre><code class="language-bash">pnpm add @tanstack/react-query@5.102.8
+pnpm add @tanstack/react-query-devtools@5.102.8</code></pre>
+<p>Dentro del proyecto, usa pnpm para estas dependencias; no uses npm o yarn ni instales React Query como paquete global.</p>
+<h2>2. Crea un Query Client estable</h2>
+<p>Abre <code>src/main.tsx</code>. Conserva Mantine, <code>StrictMode</code>, los estilos y cualquier tema existente. Agrega Query con esta estructura:</p>
+<pre><code class="language-tsx">import { StrictMode } from &quot;react&quot;
+import { createRoot } from &quot;react-dom/client&quot;
+import { MantineProvider } from &quot;@mantine/core&quot;
+import {
+  QueryClient,
+  QueryClientProvider,
+} from &quot;@tanstack/react-query&quot;
+import { ReactQueryDevtools } from &quot;@tanstack/react-query-devtools&quot;
+
+import App from &quot;./App&quot;
+
+import &quot;@mantine/core/styles.css&quot;
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+})
+
+createRoot(document.getElementById(&quot;root&quot;)!).render(
+  &lt;StrictMode&gt;
+    &lt;QueryClientProvider client={queryClient}&gt;
+      &lt;MantineProvider&gt;
+        &lt;App /&gt;
+      &lt;/MantineProvider&gt;
+      &lt;ReactQueryDevtools initialIsOpen={false} /&gt;
+    &lt;/QueryClientProvider&gt;
+  &lt;/StrictMode&gt;,
+)</code></pre>
+<p>El client está fuera del componente y no se crea en cada render.</p>
+<p>Comprueba que la aplicación todavía monta:</p>
+<pre><code class="language-bash">pnpm build</code></pre>
+<h3>Checkpoint 1</h3>
+<ul><li>El build termina con código 0.</li><li>Devtools aparece cuando ejecutas la aplicación.</li><li>Todavía no hay una búsqueda remota ejecutada.</li></ul>
+<h2>3. Define la familia de query keys</h2>
+<p>Crea <code>src/hooks/media-keys.ts</code>:</p>
+<pre><code class="language-ts">import type { SearchMediaInput } from &quot;../types/media-api&quot;
+
+export const mediaKeys = {
+  all: [&quot;media&quot;] as const,
+  searches: () =&gt; [...mediaKeys.all, &quot;search&quot;] as const,
+  search: (search: SearchMediaInput) =&gt;
+    [
+      ...mediaKeys.searches(),
+      {
+        query: search.query.trim(),
+        mediaType: search.mediaType,
+      },
+    ] as const,
+}</code></pre>
+<p>Lee dos resultados posibles:</p>
+<pre><code class="language-text">[&quot;media&quot;, &quot;search&quot;, { query: &quot;Dune&quot;, mediaType: &quot;movie&quot; }]
+[&quot;media&quot;, &quot;search&quot;, { query: &quot;Dune&quot;, mediaType: &quot;series&quot; }]</code></pre>
+<p>Son entradas distintas porque la función remota depende del texto y del tipo.</p>
+<p>No agregues <code>Date.now()</code>, un objeto no serializable o valores que no cambien el recurso.</p>
+<h2>4. Crea el hook de búsqueda</h2>
+<p>Crea <code>src/hooks/features/use-media.ts</code>:</p>
+<p>Este archivo reúne los hooks de Media, uno por caso de uso. Hoy defines <code>useMediaSearch</code>; la pantalla lo llama con sus parámetros y representa la respuesta. Así mantienes una forma consistente de configurar la consulta y puedes reutilizarla sin copiar su lógica en cada componente.</p>
+<p>Separar el hook permite probarlo con un entorno propio de Query; también sería posible probar la lógica a través del componente. En esta sesión comprobarás la integración con Devtools y Network, sin instalar herramientas nuevas para probar hooks.</p>
+<pre><code class="language-ts">import { useQuery } from &quot;@tanstack/react-query&quot;
+
+import { searchMedia } from &quot;../../api/media&quot;
+import type { SearchMediaInput } from &quot;../../types/media-api&quot;
+import { mediaKeys } from &quot;../media-keys&quot;
+
+export function useMediaSearch(search: SearchMediaInput | null) {
+  const normalizedSearch: SearchMediaInput = {
+    query: search?.query.trim() ?? &quot;&quot;,
+    mediaType: search?.mediaType ?? &quot;movie&quot;,
+  }
+
+  return useQuery({
+    queryKey: mediaKeys.search(normalizedSearch),
+    queryFn: () =&gt; searchMedia(normalizedSearch),
+    enabled: normalizedSearch.query.length &gt;= 2,
+  })
+}</code></pre>
+<p>Antes del primer submit, el texto normalizado está vacío y <code>enabled</code> es false. La query no ejecuta <code>searchMedia()</code>.</p>
+<p>No agregues un Effect. No llames <code>refetch()</code> desde el formulario.</p>
+<h3>Checkpoint 2</h3>
+<p>Puedes explicar:</p>
+<ul><li>qué variables usa <code>queryFn</code>;</li><li>dónde aparecen esas variables en la key;</li><li>qué condición habilita la consulta;</li><li>por qué <code>movie</code> es solo un valor seguro para construir la key deshabilitada inicial.</li></ul>
+<h2>5. Crea el contrato visual</h2>
+<p>El DTO remoto no es un <code>MediaItem</code> local. Crea <code>src/types/media-search-card-model.ts</code>:</p>
+<pre><code class="language-ts">import type { MediaType } from &quot;./media-item&quot;
+
+export type MediaSearchCardModel = {
+  key: string
+  externalId: string
+  mediaType: MediaType
+  title: string
+  releaseLabel: string
+  posterUrl: string | null
+  isLogged: boolean
+}</code></pre>
+<p>Este modelo conserva la identidad pública para las sesiones siguientes, pero todavía no navega ni abre detalles.</p>
+<h2>6. Traduce el DTO con un adapter puro</h2>
+<p>Crea <code>src/adapters/media-search-item-to-card-model.ts</code>:</p>
+<pre><code class="language-ts">import type { MediaSearchItemDto } from &quot;../types/media-api&quot;
+import type { MediaSearchCardModel } from &quot;../types/media-search-card-model&quot;
+
+export function toMediaSearchCardModel(
+  dto: MediaSearchItemDto,
+): MediaSearchCardModel {
+  return {
+    key: `${dto.mediaType}:${dto.externalId}`,
+    externalId: dto.externalId,
+    mediaType: dto.mediaType,
+    title: dto.title,
+    releaseLabel:
+      dto.releaseYear &gt; 0 ? String(dto.releaseYear) : &quot;Fecha desconocida&quot;,
+    posterUrl: dto.coverUrl,
+    isLogged: dto.isLogged,
+  }
+}</code></pre>
+<p>Comprueba la transformación:</p>
+<div class="table-wrap"><table><thead><tr><th>DTO</th><th>Modelo visual</th></tr></thead><tbody><tr><td><code>coverUrl</code></td><td><code>posterUrl</code></td></tr><tr><td><code>releaseYear: 2021</code></td><td><code>releaseLabel: &quot;2021&quot;</code></td></tr><tr><td><code>releaseYear: 0</code></td><td><code>releaseLabel: &quot;Fecha desconocida&quot;</code></td></tr><tr><td><code>mediaType + externalId</code></td><td><code>key</code> estable para React</td></tr></tbody></table></div>
+<p>No uses <code>as MediaItem</code>. Un assertion no renombra campos ni agrega los que faltan.</p>
+<h3>Transición visual desde el catálogo local</h3>
+<p>En 06 usamos Mantine para el modal; en 07 conservamos esa interfaz. Ahora la nueva búsqueda incorpora controles, distribución y feedback del toolkit. El provider y los estilos ya están instalados: no se repite su configuración ni se rediseña el catálogo anterior.</p>
+<p>Una primitive es una pieza básica de composición: <code>Container</code> limita el ancho, <code>Stack</code> distribuye verticalmente y <code>Group</code> agrupa horizontalmente. <code>TextInput</code>, <code>Select</code> y <code>Button</code> presentan controles; React conserva borrador y submit, y Query conserva el estado remoto. El elemento HTML <code>&lt;form&gt;</code> mantiene la semántica y el envío. <code>Card</code> y <code>Badge</code> presentan los resultados; <code>Loader</code> y <code>Alert</code> comunican carga y error. Desde esta sesión, las pantallas nuevas priorizan Mantine cuando ofrece una pieza apropiada, conservando HTML semántico y componentes propios con una responsabilidad útil.</p>
+<div class="table-wrap"><table><thead><tr><th>Necesidad</th><th>Herramienta</th></tr></thead><tbody><tr><td>Semántica del documento</td><td>HTML, como <code>&lt;form&gt;</code> y encabezados.</td></tr><tr><td>Diseño propio de un componente</td><td>CSS y <code>className</code>, aplicado a su raíz.</td></tr><tr><td>Estilizar una parte interna de Mantine</td><td><code>classNames</code>, mapa de selectores de su Styles API a clases CSS.</td></tr><tr><td>Distribución habitual</td><td><code>Container</code>, <code>Stack</code> y <code>Group</code>, según los ejemplos de esta guía.</td></tr></tbody></table></div>
+<p>Por ejemplo, <code>className=&quot;search-field&quot;</code> identifica la raíz de un <code>TextInput</code>; <code>classNames={{ input: &quot;search-field-input&quot; }}</code> aplica una clase al input interno. Son alternativas para una necesidad de estilo, no archivos CSS nuevos que debas añadir al checkpoint. HTML/CSS siguen siendo útiles para semántica y personalización.</p>
+<p>El <code>MediaTypeBadge</code> anterior se conserva con el catálogo local. La nueva lista usa <code>Badge</code> para mostrar tipo y pertenencia a biblioteca. No añadimos una migración del wrapper al ejercicio de Query: si luego se reutiliza ese componente de dominio, su implementación visual puede cambiar conservando su contrato.</p>
+<p>El fallback manual es material preparado para leer y usar si falla el agente. No requiere otra actividad de maquetación ni resuelve consultas, estados remotos o navegación.</p>
+<p>Referencia docente: <a href="https://mantine.dev/styles/styles-api/" target="_blank" rel="noreferrer">Mantine Styles API</a>, consultada el 5 de septiembre de 2026.</p>
+<h2>7. Limita el trabajo del agente</h2>
+<p>Las decisiones anteriores son humanas: contrato visual, adapter, identidad y alcance. Ahora puedes delegar solamente el componente repetitivo de lista.</p>
+<p>Sigue la rutina de la sesión 07:</p>
+<ol><li>Usa Context7 solo si necesitas confirmar una API de librería y está disponible.</li><li>Revisa las skills y <code>skills-lock.json</code>.</li><li>Ejecuta AutoSkills solo si falta una skill pertinente.</li><li>Delimita la tarea con Agent Harness Kit.</li><li>Lee el código y ejecuta evidencia antes de aceptarlo.</li></ol>
+<p>Prompt listo para copiar:</p>
+<pre><code class="language-text">Objetivo: implementar únicamente el componente presentacional de resultados remotos.
+
+Archivo permitido:
+- src/components/media-search-results.tsx
+
+Contrato ya decidido:
+- exporta MediaSearchResults
+- recibe props { items: MediaSearchCardModel[] }
+- renderiza una tarjeta por item
+- usa item.key como React key
+- muestra title, releaseLabel y un label para movie o series
+- muestra la portada cuando posterUrl no es null
+- muestra un fallback textual accesible cuando posterUrl es null
+- puede mostrar un badge si isLogged es true
+
+Cambios prohibidos:
+- no modificar ningún otro archivo
+- no añadir fetch, useQuery, query keys, Effects ni estado
+- no añadir selección, onSelect, botones de detalle, modal o navegación
+- no cambiar tipos, dependencias ni estilos globales
+- no usar externalId aislado como key
+
+Salida esperada:
+- un componente tipado que solo presenta items
+- imports compatibles con los componentes Mantine ya instalados
+- pnpm build ejecutado al finalizar
+
+Condición de parada:
+- detente después de informar el archivo modificado, el resultado de pnpm build y cualquier limitación; no intentes corregir otros archivos.</code></pre>
+<p>Revisa el alcance:</p>
+<pre><code class="language-bash">git diff -- src/components/media-search-results.tsx
+git status --short</code></pre>
+<p>Después lee todo el archivo. Localiza props, <code>map</code>, key, fallback y ausencia de hooks.</p>
+<h3>Fallback manual</h3>
+<p>Si no puedes usar el agente, crea <code>src/components/media-search-results.tsx</code> manualmente:</p>
+<pre><code class="language-tsx">import {
+  Badge,
+  Box,
+  Card,
+  Group,
+  Image,
+  SimpleGrid,
+  Stack,
+  Text,
+} from &quot;@mantine/core&quot;
+
+import type { MediaSearchCardModel } from &quot;../types/media-search-card-model&quot;
+
+type MediaSearchResultsProps = {
+  items: MediaSearchCardModel[]
+}
+
+export function MediaSearchResults({
+  items,
+}: MediaSearchResultsProps) {
+  return (
+    &lt;SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}&gt;
+      {items.map((item) =&gt; (
+        &lt;Card key={item.key} padding=&quot;lg&quot; radius=&quot;md&quot; withBorder&gt;
+          &lt;Card.Section&gt;
+            {item.posterUrl === null ? (
+              &lt;Box
+                aria-label={`Sin portada para ${item.title}`}
+                bg=&quot;gray.1&quot;
+                h={240}
+              &gt;
+                &lt;Text ta=&quot;center&quot; pt=&quot;xl&quot;&gt;
+                  Sin portada
+                &lt;/Text&gt;
+              &lt;/Box&gt;
+            ) : (
+              &lt;Image
+                alt={`Portada de ${item.title}`}
+                h={240}
+                src={item.posterUrl}
+              /&gt;
+            )}
+          &lt;/Card.Section&gt;
+
+          &lt;Stack gap=&quot;xs&quot; mt=&quot;md&quot;&gt;
+            &lt;Text fw={700}&gt;{item.title}&lt;/Text&gt;
+            &lt;Group gap=&quot;xs&quot;&gt;
+              &lt;Badge variant=&quot;light&quot;&gt;
+                {item.mediaType === &quot;movie&quot; ? &quot;Película&quot; : &quot;Serie&quot;}
+              &lt;/Badge&gt;
+              &lt;Text c=&quot;dimmed&quot; size=&quot;sm&quot;&gt;
+                {item.releaseLabel}
+              &lt;/Text&gt;
+              {item.isLogged ? &lt;Badge color=&quot;green&quot;&gt;En biblioteca&lt;/Badge&gt; : null}
+            &lt;/Group&gt;
+          &lt;/Stack&gt;
+        &lt;/Card&gt;
+      ))}
+    &lt;/SimpleGrid&gt;
+  )
+}</code></pre>
+<p>El fallback es una implementación completa, no una segunda tarea adicional.</p>
+<h2>8. Separa borrador y búsqueda enviada</h2>
+<p>Abre <code>src/App.tsx</code>. La nueva pantalla remota reemplaza los imports activos del fixture y modal, pero no borra esos archivos.</p>
+<p>Agrega los imports principales:</p>
+<pre><code class="language-tsx">import { useState, type FormEvent } from &quot;react&quot;
+import {
+  Alert,
+  Button,
+  Container,
+  Group,
+  Loader,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from &quot;@mantine/core&quot;
+
+import { toMediaSearchCardModel } from &quot;./adapters/media-search-item-to-card-model&quot;
+import { MediaSearchResults } from &quot;./components/media-search-results&quot;
+import { useMediaSearch } from &quot;./hooks/features/use-media&quot;
+import type { SearchMediaInput } from &quot;./types/media-api&quot;
+import type { MediaType } from &quot;./types/media-item&quot;</code></pre>
+<p>Dentro de <code>App</code> crea estado local:</p>
+<pre><code class="language-tsx">const [draftQuery, setDraftQuery] = useState(&quot;&quot;)
+const [draftMediaType, setDraftMediaType] =
+  useState&lt;MediaType&gt;(&quot;movie&quot;)
+const [submittedSearch, setSubmittedSearch] =
+  useState&lt;SearchMediaInput | null&gt;(null)
+
+const mediaSearch = useMediaSearch(submittedSearch)
+
+const items = (mediaSearch.data ?? []).map(toMediaSearchCardModel)</code></pre>
+<p><code>items</code> se deriva en cada render. No crees <code>setItems</code>.</p>
+<p>Agrega el submit:</p>
+<pre><code class="language-tsx">function handleSubmit(event: FormEvent&lt;HTMLFormElement&gt;) {
+  event.preventDefault()
+
+  const query = draftQuery.trim()
+
+  if (query.length &lt; 2) {
+    return
+  }
+
+  setSubmittedSearch({
+    query,
+    mediaType: draftMediaType,
+  })
+}</code></pre>
+<h3>Checkpoint 3</h3>
+<p>Con Network abierto:</p>
+<ol><li>Escribe <code>Dune</code>.</li><li>Cambia el tipo.</li><li>Confirma que todavía no hay request.</li><li>Envía el formulario.</li><li>Identifica el request y su key.</li></ol>
+<p>Si aparece un request antes del submit, el hook está recibiendo el borrador en vez de <code>submittedSearch</code>.</p>
+<h2>9. Representa los cinco estados</h2>
+<p>Dentro de <code>App</code>, antes del <code>return</code>, agrega una función local:</p>
+<pre><code class="language-tsx">function renderSearchContent() {
+  if (submittedSearch === null) {
+    return &lt;Text&gt;Escribe un título y confirma la búsqueda.&lt;/Text&gt;
+  }
+
+  if (mediaSearch.isLoading) {
+    return &lt;Loader aria-label=&quot;Buscando títulos&quot; /&gt;
+  }
+
+  if (mediaSearch.isError) {
+    const message =
+      mediaSearch.error instanceof Error
+        ? mediaSearch.error.message
+        : &quot;No se pudo completar la búsqueda.&quot;
+
+    return &lt;Alert color=&quot;red&quot;&gt;{message}&lt;/Alert&gt;
+  }
+
+  if (items.length === 0) {
+    return &lt;Text&gt;No encontramos resultados para esta búsqueda.&lt;/Text&gt;
+  }
+
+  return &lt;MediaSearchResults items={items} /&gt;
+}</code></pre>
+<p>Usa <code>isLoading</code>, no <code>isPending</code>. Antes del submit, la query puede no tener datos y estar pending, pero no está ejecutando una petición.</p>
+<h2>10. Compón la pantalla</h2>
+<p>El <code>return</code> de <code>App</code> puede quedar así:</p>
+<pre><code class="language-tsx">return (
+  &lt;Container py=&quot;xl&quot; size=&quot;lg&quot;&gt;
+    &lt;Stack gap=&quot;xl&quot;&gt;
+      &lt;div&gt;
+        &lt;Title order={1}&gt;Explorar catálogo&lt;/Title&gt;
+        &lt;Text c=&quot;dimmed&quot;&gt;
+          Busca una película o serie en el catálogo remoto.
+        &lt;/Text&gt;
+      &lt;/div&gt;
+
+      &lt;form onSubmit={handleSubmit}&gt;
+        &lt;Group align=&quot;end&quot; grow&gt;
+          &lt;TextInput
+            label=&quot;Título&quot;
+            minLength={2}
+            onChange={(event) =&gt;
+              setDraftQuery(event.currentTarget.value)
+            }
+            placeholder=&quot;Dune&quot;
+            value={draftQuery}
+          /&gt;
+
+          &lt;Select
+            allowDeselect={false}
+            data={[
+              { label: &quot;Película&quot;, value: &quot;movie&quot; },
+              { label: &quot;Serie&quot;, value: &quot;series&quot; },
+            ]}
+            label=&quot;Tipo&quot;
+            onChange={(value) =&gt; {
+              if (value === &quot;movie&quot; || value === &quot;series&quot;) {
+                setDraftMediaType(value)
+              }
+            }}
+            value={draftMediaType}
+          /&gt;
+
+          &lt;Button
+            disabled={draftQuery.trim().length &lt; 2}
+            type=&quot;submit&quot;
+          &gt;
+            Buscar
+          &lt;/Button&gt;
+        &lt;/Group&gt;
+      &lt;/form&gt;
+
+      {mediaSearch.isFetching &amp;&amp; !mediaSearch.isLoading ? (
+        &lt;Text c=&quot;dimmed&quot; size=&quot;sm&quot;&gt;
+          Actualizando resultados…
+        &lt;/Text&gt;
+      ) : null}
+
+      {renderSearchContent()}
+    &lt;/Stack&gt;
+  &lt;/Container&gt;
+)</code></pre>
+<p>Si tu checkpoint usa componentes de layout equivalentes, conserva su estilo. No cambies la responsabilidad de cada estado.</p>
+<h3>Checkpoint 4</h3>
+<p>La pantalla debe poder mostrar:</p>
+<ul><li><strong>Inicial:</strong> antes del submit.</li><li><strong>Carga:</strong> primera petición activa.</li><li><strong>Error:</strong> request rechazado o response no exitosa.</li><li><strong>Vacío:</strong> response exitosa con arreglo vacío.</li><li><strong>Éxito:</strong> una o más tarjetas.</li></ul>
+<p>Las tarjetas no tienen botón, callback, modal ni enlace.</p>
+<h2>11. Observa la caché</h2>
+<p>Abre Query Devtools y Network:</p>
+<ol><li>Limpia Network.</li><li>Busca <code>Dune</code> con <code>movie</code>.</li><li>Anota la key y el request.</li><li>Busca <code>Dune</code> con <code>series</code>.</li><li>Confirma otra key y otro request.</li><li>Regresa a <code>Dune</code> con <code>movie</code> antes de cinco minutos.</li><li>Compara la entrada de Devtools con los requests de Network.</li></ol>
+<p>En el checkpoint preparado, la primera entrada todavía está fresh. Volver a ella debe reutilizar datos sin confundir película y serie.</p>
+<p>No concluyas que “Query nunca vuelve a solicitar”. El resultado depende de frescura, montaje, conectividad y configuración.</p>
+<h2>12. Ejecuta la comprobación final</h2>
+<pre><code class="language-bash">pnpm build</code></pre>
+<p>Registra el código de salida. Si falla, lee el primer error propio del proyecto; no ocultes el problema con casts.</p>
+<p>Después revisa:</p>
+<pre><code class="language-bash">git status --short
+git diff --check</code></pre>
+<h3>Evidencia y límite</h3>
+<ul><li><code>pnpm build</code>: tipos y generación del bundle.</li><li>Network: requests realmente observados durante esta ejecución.</li><li>Query Devtools: keys, estados y datos presentes en ese Query Client.</li><li>Lectura del diff: alcance de los archivos cambiados.</li></ul>
+<p>Estas comprobaciones no demuestran rutas, query de detalle, autenticación, disponibilidad futura del backend ni producción.</p>
+<h2>Checklist de salida</h2>
+<ul><li>[ ] Instalé Query y Devtools <code>5.102.8</code> con pnpm.</li><li>[ ] <code>QueryClient</code> se crea fuera de los componentes.</li><li>[ ] La key incluye texto normalizado y tipo.</li><li>[ ] El hook usa <code>searchMedia()</code>.</li><li>[ ] La query espera una búsqueda válida.</li><li>[ ] Escribir no solicita datos.</li><li>[ ] El submit cambia <code>submittedSearch</code>.</li><li>[ ] Query conserva el DTO.</li><li>[ ] El adapter produce el modelo visual.</li><li>[ ] No copié resultados a estado local.</li><li>[ ] La carga usa <code>isLoading</code>.</li><li>[ ] Puedo observar inicio, carga, error, vacío y éxito.</li><li>[ ] Revisé el archivo producido por el agente.</li><li>[ ] Las tarjetas no adelantan detalle o navegación.</li><li>[ ] El build final terminó correctamente.</li></ul>
+<h2>Vocabulario</h2>
+<ul><li><strong>Estado remoto:</strong> datos cuyo origen y ciclo de vida dependen de otro sistema.</li><li><strong>Query:</strong> descripción declarativa de un recurso remoto.</li><li><strong>Query key:</strong> arreglo serializable que identifica una entrada de caché.</li><li><strong>Query function:</strong> función que obtiene el recurso asociado a la key.</li><li><strong>Query Client:</strong> objeto que coordina consultas y caché.</li><li><strong>Lazy query:</strong> consulta que espera una condición antes de la primera petición.</li><li><strong>Fresh:</strong> dato que todavía no se considera vencido según <code>staleTime</code>.</li><li><strong>Borrador:</strong> valores que todavía estás editando.</li><li><strong>Submit:</strong> confirmación que cambia los parámetros enviados.</li><li><strong>Modelo visual:</strong> forma mínima que necesita un componente para presentar datos.</li></ul>
+<h2>Fuera de alcance</h2>
+<p>No agregues todavía:</p>
+<ul><li>Router, páginas, enlaces o parámetros de URL.</li><li>Query de detalle, selección o modal remoto.</li><li>Zustand, Zod, Firebase, mutaciones o invalidaciones.</li><li><code>useEffect</code>, Suspense, <code>skipToken</code> o sincronización con la URL.</li><li>Testing Library, jsdom, MSW o tests del Query Client.</li></ul>
+<h2>Siguiente dependencia</h2>
+<p>La búsqueda remota ya preserva <code>mediaType + externalId</code>, pero una tarjeta todavía no tiene una dirección compartible. En la sesión 09, React Router introducirá páginas y URLs. Esa sesión mostrará una página de detalle provisional a partir de parámetros; la petición de detalle llegará en la sesión 10.</p>
+<h2>Ruta ejecutable y referencia autosuficiente</h2>
+<p>Esta es la secuencia real de ramas del proyecto progresivo:</p>
+<p><code>session-08-start</code> → <code>session-08-step-01-query-provider</code> → <code>session-08-step-02-query-identity</code> → <code>session-08-step-03-submitted-search</code> → <code>session-08-step-04-results-adapter</code> → <code>session-08-end</code></p>
+<p>La rama <code>session-08-end</code> es el checkpoint completo. Cada rama intermedia compila y permite retomar la demostración desde una transformación concreta. Los archivos que no aparecen aquí se conservan sin cambios desde la sesión anterior.</p>
+<p>Ejecuta la instalación de esta sesión exactamente así:</p>
+<pre><code class="language-bash">pnpm add --save-exact @tanstack/react-query@5.102.8 @tanstack/react-query-devtools@5.102.8</code></pre>
+<p>El lockfile lo genera pnpm. No lo escribas a mano. A continuación están <strong>completos</strong> todos los archivos que el docente o el estudiante debe crear o reemplazar durante la sesión; no hace falta abrir el repositorio de referencia en otra ventana.</p>
+<h3><code>package.json</code> · archivo completo</h3>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;medialog-bootcamp&quot;,
+  &quot;private&quot;: true,
+  &quot;version&quot;: &quot;0.0.0&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;packageManager&quot;: &quot;pnpm@11.17.0&quot;,
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;&gt;=22.22.0&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;dev&quot;: &quot;vite&quot;,
+    &quot;build&quot;: &quot;tsc -b &amp;&amp; vite build&quot;,
+    &quot;lint&quot;: &quot;oxlint&quot;,
+    &quot;test&quot;: &quot;vitest run&quot;,
+    &quot;preview&quot;: &quot;vite preview&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;@mantine/core&quot;: &quot;9.4.1&quot;,
+    &quot;@mantine/hooks&quot;: &quot;9.4.1&quot;,
+    &quot;@tanstack/react-query&quot;: &quot;5.102.8&quot;,
+    &quot;@tanstack/react-query-devtools&quot;: &quot;5.102.8&quot;,
+    &quot;react&quot;: &quot;19.2.8&quot;,
+    &quot;react-dom&quot;: &quot;19.2.8&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@types/node&quot;: &quot;^24.13.3&quot;,
+    &quot;@types/react&quot;: &quot;^19.2.18&quot;,
+    &quot;@types/react-dom&quot;: &quot;^19.2.4&quot;,
+    &quot;@vitejs/plugin-react&quot;: &quot;^6.1.0&quot;,
+    &quot;oxlint&quot;: &quot;^1.79.0&quot;,
+    &quot;postcss&quot;: &quot;8.5.26&quot;,
+    &quot;postcss-preset-mantine&quot;: &quot;1.18.0&quot;,
+    &quot;postcss-simple-vars&quot;: &quot;7.0.1&quot;,
+    &quot;typescript&quot;: &quot;6.0.3&quot;,
+    &quot;vite&quot;: &quot;8.2.2&quot;,
+    &quot;vitest&quot;: &quot;4.1.11&quot;
+  }
+}</code></pre>
+<h3><code>src/main.tsx</code> · archivo completo</h3>
+<pre><code class="language-tsx">import { MantineProvider } from '@mantine/core'
+import '@mantine/core/styles.css'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+
+import App from './App'
+import './index.css'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+})
+
+createRoot(document.getElementById('root')!).render(
+  &lt;StrictMode&gt;
+    &lt;QueryClientProvider client={queryClient}&gt;
+      &lt;MantineProvider defaultColorScheme=&quot;dark&quot;&gt;
+        &lt;App /&gt;
+      &lt;/MantineProvider&gt;
+      &lt;ReactQueryDevtools initialIsOpen={false} /&gt;
+    &lt;/QueryClientProvider&gt;
+  &lt;/StrictMode&gt;,
+)</code></pre>
+<h3><code>src/hooks/media-keys.ts</code> · archivo completo</h3>
+<pre><code class="language-ts">import type { SearchMediaInput } from '../types/media-api'
+
+export const mediaKeys = {
+  all: ['media'] as const,
+  searches: () =&gt; [...mediaKeys.all, 'search'] as const,
+  search: (input: SearchMediaInput) =&gt;
+    [
+      ...mediaKeys.searches(),
+      {
+        query: input.query.trim(),
+        mediaType: input.mediaType,
+      },
+    ] as const,
+}</code></pre>
+<h3><code>src/hooks/features/use-media.ts</code> · archivo completo</h3>
+<pre><code class="language-ts">import { useQuery } from '@tanstack/react-query'
+
+import { searchMedia } from '../../api/media'
+import type { SearchMediaInput } from '../../types/media-api'
+import { mediaKeys } from '../media-keys'
+
+const emptySearch: SearchMediaInput = {
+  query: '',
+  mediaType: 'movie',
+}
+
+export function useMediaSearch(input: SearchMediaInput | null) {
+  const normalizedInput =
+    input === null
+      ? emptySearch
+      : {
+          query: input.query.trim(),
+          mediaType: input.mediaType,
+        }
+
+  return useQuery({
+    queryKey: mediaKeys.search(normalizedInput),
+    queryFn: () =&gt; searchMedia(normalizedInput),
+    enabled: input !== null &amp;&amp; normalizedInput.query.length &gt;= 2,
+  })
+}</code></pre>
+<h3><code>src/types/media-search-card-model.ts</code> · archivo completo</h3>
+<pre><code class="language-ts">import type { MediaType } from './media-item'
+
+export type MediaSearchCardModel = {
+  key: string
+  externalId: string
+  mediaType: MediaType
+  title: string
+  releaseLabel: string
+  posterUrl: string | null
+  isLogged: boolean
+}</code></pre>
+<h3><code>src/adapters/media-search-item-to-card-model.ts</code> · archivo completo</h3>
+<pre><code class="language-ts">import type { MediaSearchItemDto } from '../types/media-api'
+import type { MediaSearchCardModel } from '../types/media-search-card-model'
+
+export function toMediaSearchCardModel(
+  dto: MediaSearchItemDto,
+): MediaSearchCardModel {
+  return {
+    key: `${dto.mediaType}:${dto.externalId}`,
+    externalId: dto.externalId,
+    mediaType: dto.mediaType,
+    title: dto.title,
+    releaseLabel:
+      dto.releaseYear &gt; 0 ? String(dto.releaseYear) : 'Fecha desconocida',
+    posterUrl: dto.coverUrl,
+    isLogged: dto.isLogged,
+  }
+}</code></pre>
+<h3><code>src/components/media-search-results.tsx</code> · archivo completo</h3>
+<pre><code class="language-tsx">import {
+  Badge,
+  Box,
+  Card,
+  Group,
+  Image,
+  SimpleGrid,
+  Stack,
+  Text,
+} from '@mantine/core'
+
+import type { MediaSearchCardModel } from '../types/media-search-card-model'
+
+type MediaSearchResultsProps = {
+  items: MediaSearchCardModel[]
+}
+
+export function MediaSearchResults(props: MediaSearchResultsProps) {
+  const { items } = props
+
+  return (
+    &lt;SimpleGrid cols={{ base: 1, sm: 2, md: 3 }}&gt;
+      {items.map((item) =&gt; (
+        &lt;Card key={item.key} padding=&quot;lg&quot; radius=&quot;md&quot; withBorder&gt;
+          &lt;Card.Section&gt;
+            {item.posterUrl === null ? (
+              &lt;Box
+                aria-label={`Sin portada para ${item.title}`}
+                bg=&quot;gray.9&quot;
+                h={240}
+              &gt;
+                &lt;Text pt=&quot;xl&quot; ta=&quot;center&quot;&gt;
+                  Sin portada
+                &lt;/Text&gt;
+              &lt;/Box&gt;
+            ) : (
+              &lt;Image
+                alt={`Portada de ${item.title}`}
+                h={240}
+                src={item.posterUrl}
+              /&gt;
+            )}
+          &lt;/Card.Section&gt;
+
+          &lt;Stack gap=&quot;xs&quot; mt=&quot;md&quot;&gt;
+            &lt;Text fw={700}&gt;{item.title}&lt;/Text&gt;
+            &lt;Group gap=&quot;xs&quot;&gt;
+              &lt;Badge variant=&quot;light&quot;&gt;
+                {item.mediaType === 'movie' ? 'Película' : 'Serie'}
+              &lt;/Badge&gt;
+              &lt;Text c=&quot;dimmed&quot; size=&quot;sm&quot;&gt;
+                {item.releaseLabel}
+              &lt;/Text&gt;
+              {item.isLogged ? (
+                &lt;Badge color=&quot;green&quot;&gt;En biblioteca&lt;/Badge&gt;
+              ) : null}
+            &lt;/Group&gt;
+          &lt;/Stack&gt;
+        &lt;/Card&gt;
+      ))}
+    &lt;/SimpleGrid&gt;
+  )
+}</code></pre>
+<h3><code>src/App.tsx</code> · archivo completo</h3>
+<pre><code class="language-tsx">import {
+  Alert,
+  Button,
+  Container,
+  Group,
+  Loader,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core'
+import { useState, type FormEvent } from 'react'
+
+import { toMediaSearchCardModel } from './adapters/media-search-item-to-card-model'
+import { AppHeader } from './components/app-header'
+import { MediaSearchResults } from './components/media-search-results'
+import { useMediaSearch } from './hooks/features/use-media'
+import type { SearchMediaInput } from './types/media-api'
+import type { MediaType } from './types/media-item'
+
+function App() {
+  const [draftQuery, setDraftQuery] = useState('')
+  const [draftMediaType, setDraftMediaType] =
+    useState&lt;MediaType&gt;('movie')
+  const [submittedSearch, setSubmittedSearch] =
+    useState&lt;SearchMediaInput | null&gt;(null)
+
+  const mediaSearch = useMediaSearch(submittedSearch)
+  const items = (mediaSearch.data ?? []).map(toMediaSearchCardModel)
+
+  function handleSubmit(event: FormEvent&lt;HTMLFormElement&gt;) {
+    event.preventDefault()
+
+    const query = draftQuery.trim()
+
+    if (query.length &lt; 2) {
+      return
+    }
+
+    setSubmittedSearch({
+      query,
+      mediaType: draftMediaType,
+    })
+  }
+
+  function renderSearchContent() {
+    if (submittedSearch === null) {
+      return &lt;Text&gt;Escribe un título y confirma la búsqueda.&lt;/Text&gt;
+    }
+
+    if (mediaSearch.isLoading) {
+      return &lt;Loader aria-label=&quot;Buscando títulos&quot; /&gt;
+    }
+
+    if (mediaSearch.isError) {
+      const message =
+        mediaSearch.error instanceof Error
+          ? mediaSearch.error.message
+          : 'No se pudo completar la búsqueda.'
+
+      return &lt;Alert color=&quot;red&quot;&gt;{message}&lt;/Alert&gt;
+    }
+
+    if (items.length === 0) {
+      return &lt;Text&gt;No encontramos resultados para esta búsqueda.&lt;/Text&gt;
+    }
+
+    return &lt;MediaSearchResults items={items} /&gt;
+  }
+
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+
+      &lt;Container component=&quot;main&quot; py=&quot;xl&quot; size=&quot;md&quot;&gt;
+        &lt;Stack gap=&quot;xl&quot;&gt;
+          &lt;div&gt;
+            &lt;Title order={2}&gt;Busca en el catálogo remoto&lt;/Title&gt;
+            &lt;Text c=&quot;dimmed&quot;&gt;
+              Confirma un título y un tipo para consultar la API.
+            &lt;/Text&gt;
+          &lt;/div&gt;
+
+          &lt;form onSubmit={handleSubmit}&gt;
+            &lt;Stack&gt;
+              &lt;TextInput
+                label=&quot;Título&quot;
+                minLength={2}
+                onChange={(event) =&gt;
+                  setDraftQuery(event.currentTarget.value)
+                }
+                placeholder=&quot;Dune&quot;
+                value={draftQuery}
+              /&gt;
+
+              &lt;Select
+                allowDeselect={false}
+                data={[
+                  { label: 'Película', value: 'movie' },
+                  { label: 'Serie', value: 'series' },
+                ]}
+                label=&quot;Tipo&quot;
+                onChange={(value) =&gt; {
+                  if (value === 'movie' || value === 'series') {
+                    setDraftMediaType(value)
+                  }
+                }}
+                value={draftMediaType}
+              /&gt;
+
+              &lt;Group justify=&quot;flex-end&quot;&gt;
+                &lt;Button
+                  disabled={draftQuery.trim().length &lt; 2}
+                  type=&quot;submit&quot;
+                &gt;
+                  Buscar
+                &lt;/Button&gt;
+              &lt;/Group&gt;
+            &lt;/Stack&gt;
+          &lt;/form&gt;
+
+          {mediaSearch.isFetching &amp;&amp; !mediaSearch.isLoading ? (
+            &lt;Text size=&quot;sm&quot;&gt;Actualizando resultados…&lt;/Text&gt;
+          ) : null}
+
+          {renderSearchContent()}
+        &lt;/Stack&gt;
+      &lt;/Container&gt;
+    &lt;/&gt;
+  )
+}
+
+export default App</code></pre>
+<h3>Comprobación del checkpoint</h3>
+<pre><code class="language-bash">pnpm test
+pnpm build
+pnpm lint</code></pre>
+<p>Lee la salida completa. Un código de salida 0 comprueba tests, tipos, generación y lint del estado local; no demuestra por sí solo que el backend publicado esté disponible ni que la navegación se haya probado en un navegador.</p></main>
+      <footer>Material de trabajo en clase · Sesión 08</footer>
+    </article>
+  </body>
+</html>

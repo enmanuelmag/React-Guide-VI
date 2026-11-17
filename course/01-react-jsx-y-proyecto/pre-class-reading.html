@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lectura previa de Sesión 01 para React Guide VI">
+    <title>Lectura previa · Sesión 01 · React, Vite y JSX</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Lectura previa</p>
+        <h1>Lectura previa · Sesión 01 · React, Vite y JSX</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Lectura previa · Sesión 01 · React, Vite y JSX</h1>
+<h2>Propósito</h2>
+<p>Llegar a la sesión con una primera definición de componente y reconocer el comando que crea un proyecto React con TypeScript. Durante la clase usarás ese vocabulario para construir el primer árbol de componentes de Medialog.</p>
+<ul><li><strong>Tiempo estimado:</strong> 20 minutos</li><li><strong>Stack de la cohorte:</strong> React <code>19.2.8</code>, React DOM <code>19.2.8</code>, <code>create-vite@9.2.0</code> y pnpm <code>11.17.0</code></li><li><strong>Fecha de verificación de fuentes:</strong> 29 de agosto de 2026</li></ul>
+<h2>Conocimientos previos</h2>
+<ul><li>Reconocer etiquetas HTML como <code>header</code>, <code>main</code>, <code>article</code>, <code>h1</code> y <code>p</code>.</li><li>Abrir una terminal y ejecutar un comando.</li><li>Reconocer una función de JavaScript.</li><li>Ubicar archivos y carpetas desde el editor.</li></ul>
+<p>No necesitas conocer props, estado, TypeScript avanzado ni herramientas de build.</p>
+<h2>Fuente principal · Componentes de React</h2>
+<p><strong>React · <a href="https://react.dev/learn/your-first-component" target="_blank" rel="noreferrer">Your First Component</a></strong></p>
+<p>Lee estas secciones:</p>
+<ol><li><code>Components: UI building blocks</code>.</li><li><code>Defining a component</code>.</li><li><code>Using a component</code>.</li><li><code>Nesting and organizing components</code>.</li></ol>
+<p>Detén la lectura antes de los desafíos. Busca respuestas para estas preguntas:</p>
+<ul><li>¿Qué forma tiene un componente React?</li><li>¿Por qué el nombre de un componente comienza con mayúscula?</li><li>¿Qué diferencia visible existe entre declarar <code>Profile</code> y escribir <code>&lt;Profile /&gt;</code>?</li><li>¿Cómo puede un componente usar otros componentes?</li></ul>
+<p>La documentación corresponde a React 19. El curso fija React <code>19.2.8</code> para reproducir sus checkpoints.</p>
+<h2>Fuente secundaria · Crear un proyecto con Vite</h2>
+<p><strong>Vite · <a href="https://vite.dev/guide/" target="_blank" rel="noreferrer">Getting Started</a></strong></p>
+<p>Lee únicamente:</p>
+<ol><li><code>Overview</code>.</li><li><code>Scaffolding Your First Vite Project</code> hasta la lista de templates admitidos.</li></ol>
+<p>En las pestañas de comandos, selecciona <strong>pnpm</strong>. Identifica:</p>
+<ul><li>qué dos capacidades principales aporta Vite;</li><li>qué comando inicia el generador;</li><li>qué template combina React y TypeScript.</li></ul>
+<p>La verificación usó <code>create-vite@9.2.0</code>. Ese scaffold resolvió Vite <code>8.2.2</code> el 29 de agosto de 2026. La sesión fijará el generador para evitar que el comando cambie durante la cohorte.</p>
+<h2>Recorrido sugerido</h2>
+<ol><li>Dedica 12 minutos a la fuente de React.</li><li>Escribe en una línea la diferencia entre <code>function Profile()</code> y <code>&lt;Profile /&gt;</code>.</li><li>Dedica 6 minutos a la fuente de Vite.</li><li>Anota el nombre del template React con TypeScript.</li><li>Usa los últimos 2 minutos para revisar el vocabulario y anotar una duda.</li></ol>
+<p>No ejecutes todavía el scaffold. Lo construiremos juntos durante la sesión para reconocer cada archivo inicial.</p>
+<h2>Vocabulario previo</h2>
+<ul><li><strong>Interfaz de usuario:</strong> parte visible e interactiva de una aplicación.</li><li><strong>Componente:</strong> función de React que devuelve marcado y representa una parte de la interfaz.</li><li><strong>Composición:</strong> uso de componentes dentro de otros componentes.</li><li><strong>JSX:</strong> sintaxis similar a HTML que aparece dentro de código JavaScript o TypeScript.</li><li><strong>Scaffold:</strong> estructura inicial de archivos creada por una herramienta.</li><li><strong>Template:</strong> variante de scaffold preparada para un stack concreto.</li><li><strong>Servidor de desarrollo:</strong> proceso local que sirve la aplicación mientras trabajas.</li></ul></main>
+      <footer>Material de preparación · Sesión 01</footer>
+    </article>
+  </body>
+</html>

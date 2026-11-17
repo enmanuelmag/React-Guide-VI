@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 04 para React Guide VI">
+    <title>Guía estudiantil · Sesión 04 · Eventos y `useState`</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 04 · Eventos y `useState`</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 04 · Eventos y <code>useState</code></h1>
+<ul><li><strong>Modalidad:</strong> virtual</li><li><strong>Duración:</strong> 90 minutos</li><li><strong>Preparación:</strong> <strong>lectura previa</strong></li></ul>
+<h2>Objetivo</h2>
+<p>Añadirás la primera interacción del catálogo. Un input controlado conservará la consulta en <code>App</code>, y la interfaz calculará qué medios mostrar sin guardar otra colección en estado.</p>
+<pre><code class="language-text">escribes un título
+→ SearchInput comunica un string
+→ App actualiza query
+→ React renderiza otra vez
+→ App calcula visibleMedia
+→ MediaGrid muestra el resultado</code></pre>
+<h2>Conocimientos previos</h2>
+<ul><li>Componentes y props.</li><li><code>MediaItem[]</code>, <code>map</code> y key.</li><li>Composición de <code>MediaGrid</code>, <code>MediaCard</code>, <code>MediaTypeBadge</code> y <code>EmptyState</code>.</li><li>Métodos de strings y arreglos de JavaScript.</li><li>Checkpoint completo de la sesión 03.</li></ul>
+<p>Esta sesión no usa filtro por tipo, selección, modal, Effects, stores o API.</p>
+<h2>Punto de partida</h2>
+<p>Continúa tu copia de <code>MediaLog-Bootcamp</code>: <code>session-04-start</code> coincide con <code>session-03-end</code>. Guarda tus cambios antes de consultar otra rama. Primero se presenta el bloque conceptual completo; después trabajamos en el editor y cerramos oralmente.</p>
+<p>Abre el proyecto final de 03 y ejecuta:</p>
+<pre><code class="language-bash">pnpm install --frozen-lockfile
+pnpm dev</code></pre>
+<p>Comprueba:</p>
+<ul><li>Se muestran seis medios.</li><li>Existen películas y series.</li><li>Los fallbacks de poster y descripción funcionan.</li><li><code>App</code> renderiza <code>&lt;MediaGrid items={mediaItems} /&gt;</code>.</li><li><code>MediaGrid</code> conserva <code>map</code> y <code>media.id</code> como key.</li><li>Pasar temporalmente <code>[]</code> muestra “Catálogo vacío”.</li><li>La consola no presenta warnings de key.</li></ul>
+<p>Restaura <code>items={mediaItems}</code> después de probar el vacío.</p>
+<h3>Checkpoint 1</h3>
+<p>Puedes seguir <code>mediaItems → App → MediaGrid → MediaCard</code>. Ningún dato cambia por una interacción.</p>
+<h2>1. Observar la limitación de una variable local</h2>
+<p>Sigue la demostración docente con un input no controlado, una variable local y un párrafo que intenta mostrar el texto.</p>
+<p>Antes de escribir, predice:</p>
+<ul><li>qué mostrará el campo;</li><li>qué mostrará el párrafo;</li><li>si React ejecutará otro render;</li><li>si la colección cambiará.</li></ul>
+<p>El estado temporal no forma parte del checkpoint. Retíralo antes de continuar.</p>
+<h2>2. Declarar query con useState</h2>
+<p>Abre <code>src/App.tsx</code> e importa:</p>
+<pre><code class="language-tsx">import { useState } from &quot;react&quot;</code></pre>
+<p>Dentro de <code>App</code>, antes de cualquier retorno o condición, declara:</p>
+<pre><code class="language-tsx">const [query, setQuery] = useState(&quot;&quot;)</code></pre>
+<p>Lee los nombres:</p>
+<ul><li><code>query</code> es el valor disponible durante el render actual.</li><li><code>setQuery</code> solicita otro render con un valor nuevo.</li><li><code>&quot;&quot;</code> representa una consulta inicial vacía.</li></ul>
+<p>No declares el Hook dentro de un handler, <code>if</code>, <code>map</code> o loop.</p>
+<h3>Checkpoint 2</h3>
+<ul><li><code>App</code> compila con <code>useState</code>.</li><li>Existe un solo estado.</li><li>El fixture permanece fuera del estado.</li><li>La interfaz todavía muestra el catálogo completo.</li></ul>
+<p>Completa la conexión del siguiente paso antes de ejecutar build; una declaración de estado todavía sin consumidor puede aparecer como no usada.</p>
+<h2>3. Controlar el input desde App</h2>
+<p>Añade una etiqueta y el input dentro de <code>App</code>:</p>
+<pre><code class="language-tsx">&lt;label className=&quot;search-input&quot;&gt;
+  Buscar por título
+  &lt;input
+    type=&quot;search&quot;
+    value={query}
+    onChange={(event) =&gt;
+      setQuery(event.currentTarget.value)
+    }
+  /&gt;
+&lt;/label&gt;</code></pre>
+<p>Añade de forma temporal:</p>
+<pre><code class="language-tsx">&lt;p&gt;Consulta actual: {query}&lt;/p&gt;</code></pre>
+<p>Escribe y borra texto. El campo y el párrafo deben mostrar el mismo valor.</p>
+<h3>Sigue un cambio</h3>
+<p>Para la letra <code>b</code>, completa en tus notas:</p>
+<pre><code class="language-text">evento entrega: ______
+setter recibe: ______
+siguiente render lee query: ______
+value del input recibe: ______</code></pre>
+<p>El archivo completo de <code>src/App.tsx</code> en esta etapa es:</p>
+<pre><code class="language-tsx">import { useState } from 'react'
+
+import { AppHeader } from './components/app-header'
+import { MediaGrid } from './components/media-grid'
+import { mediaItems } from './data/media-items'
+
+function App() {
+  const [query, setQuery] = useState('')
+
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+
+      &lt;main className=&quot;page-container&quot;&gt;
+        &lt;h2&gt;Catálogo destacado&lt;/h2&gt;
+        &lt;label className=&quot;search-input&quot;&gt;
+          Buscar por título
+          &lt;input
+            type=&quot;search&quot;
+            value={query}
+            onChange={(event) =&gt; setQuery(event.currentTarget.value)}
+          /&gt;
+        &lt;/label&gt;
+        &lt;p&gt;Consulta actual: {query}&lt;/p&gt;
+        &lt;MediaGrid items={mediaItems} /&gt;
+      &lt;/main&gt;
+    &lt;/&gt;
+  )
+}
+
+export default App</code></pre>
+<p>Añade al final de <code>src/index.css</code> estos estilos entregados por el docente:</p>
+<pre><code class="language-css">.search-input {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.search-input input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #565349;
+  border-radius: 10px;
+  background: #20201b;
+  color: #f5f1e8;
+  font: inherit;
+}
+
+.search-input input:focus-visible {
+  outline: 2px solid #d9be74;
+  outline-offset: 2px;
+}</code></pre>
+<h3>Checkpoint 3</h3>
+<ul><li>El input permite escribir.</li><li>El párrafo cambia con cada edición.</li><li>Borrar deja <code>query === &quot;&quot;</code>.</li><li><code>value</code> y <code>onChange</code> forman el circuito controlado.</li></ul>
+<h2>4. Distinguir evento y render</h2>
+<p>Durante la demostración, observa un log dentro del handler y otro en el cuerpo de <code>App</code>.</p>
+<p>Registra:</p>
+<ul><li>cuál log representa el evento del navegador;</li><li>cuál representa la ejecución del componente;</li><li>por qué puede aparecer otra ejecución del cuerpo bajo <code>StrictMode</code> durante desarrollo;</li><li>qué logs deben retirarse después.</li></ul>
+<p>No elimines <code>&lt;StrictMode&gt;</code> de <code>main.tsx</code>. Retira solo los logs temporales.</p>
+<h2>5. Normalizar la consulta</h2>
+<p>Debajo de <code>useState</code>, calcula:</p>
+<pre><code class="language-tsx">const normalizedQuery = query.trim().toLowerCase()</code></pre>
+<p>Prueba mentalmente:</p>
+<div class="table-wrap"><table><thead><tr><th>query</th><th>normalizedQuery</th></tr></thead><tbody><tr><td><code>&quot;bear&quot;</code></td><td><code>&quot;bear&quot;</code></td></tr><tr><td><code>&quot;BEAR&quot;</code></td><td><code>&quot;bear&quot;</code></td></tr><tr><td><code>&quot;  bear  &quot;</code></td><td><code>&quot;bear&quot;</code></td></tr><tr><td><code>&quot;&quot;</code></td><td><code>&quot;&quot;</code></td></tr></tbody></table></div>
+<p><code>normalizedQuery</code> no necesita estado. El render puede calcularla desde <code>query</code>.</p>
+<h2>6. Calcular visibleMedia</h2>
+<p>Añade:</p>
+<pre><code class="language-tsx">const visibleMedia = mediaItems.filter((media) =&gt;
+  media.title.toLowerCase().includes(normalizedQuery),
+)</code></pre>
+<p>Cambia la prop del grid:</p>
+<pre><code class="language-tsx">&lt;MediaGrid items={visibleMedia} /&gt;</code></pre>
+<p>No modifiques el fixture ni <code>MediaGrid</code>.</p>
+<h3>Comprobaciones</h3>
+<ol><li>Escribe <code>bear</code>: aparece The Bear.</li><li>Escribe <code>BEAR</code>: aparece el mismo resultado.</li><li>Escribe espacios antes y después: la coincidencia se conserva.</li><li>Borra la consulta: aparecen los seis medios.</li></ol>
+<p>Una consulta vacía muestra todo porque cualquier título incluye el string vacío. El código conserva una sola fuente de verdad.</p>
+<p>App completo después de conectar el filtro:</p>
+<pre><code class="language-tsx">import { useState } from 'react'
+
+import { AppHeader } from './components/app-header'
+import { MediaGrid } from './components/media-grid'
+import { mediaItems } from './data/media-items'
+
+function App() {
+  const [query, setQuery] = useState('')
+
+  const normalizedQuery = query.trim().toLowerCase()
+  const visibleMedia = mediaItems.filter((media) =&gt;
+    media.title.toLowerCase().includes(normalizedQuery),
+  )
+
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+
+      &lt;main className=&quot;page-container&quot;&gt;
+        &lt;h2&gt;Catálogo destacado&lt;/h2&gt;
+        &lt;label className=&quot;search-input&quot;&gt;
+          Buscar por título
+          &lt;input
+            type=&quot;search&quot;
+            value={query}
+            onChange={(event) =&gt; setQuery(event.currentTarget.value)}
+          /&gt;
+        &lt;/label&gt;
+        &lt;p&gt;Consulta actual: {query}&lt;/p&gt;
+        &lt;MediaGrid items={visibleMedia} /&gt;
+      &lt;/main&gt;
+    &lt;/&gt;
+  )
+}
+
+export default App</code></pre>
+<p>Si escribes matrix en esta etapa, todavía aparece Catálogo vacío. La práctica distinguirá ese mensaje de Sin resultados.</p>
+<h3>Checkpoint 4</h3>
+<ul><li><code>mediaItems</code> conserva seis entradas.</li><li><code>visibleMedia</code> cambia según <code>query</code>.</li><li><code>MediaGrid</code> recibe la colección calculada.</li><li>No existe <code>useState</code> para la lista.</li><li>No existe un Effect.</li></ul>
+<h2>7. Extraer SearchInput</h2>
+<p>Crea <code>src/components/search-input.tsx</code>.</p>
+<p>Declara el contrato:</p>
+<pre><code class="language-tsx">type SearchInputProps = {
+  value: string
+  onQueryChange: (value: string) =&gt; void
+}</code></pre>
+<p>El componente debe:</p>
+<ul><li>renderizar una etiqueta visible “Buscar por título”;</li><li>usar <code>&lt;input type=&quot;search&quot; /&gt;</code>;</li><li>recibir el valor mediante <code>value</code>;</li><li>ejecutar <code>onQueryChange</code> con <code>event.currentTarget.value</code>;</li><li>usar la clase <code>.search-input</code> en la etiqueta;</li><li>evitar <code>useState</code>.</li></ul>
+<p>Este es <code>src/components/search-input.tsx</code> completo:</p>
+<pre><code class="language-tsx">type SearchInputProps = {
+  value: string
+  onQueryChange: (value: string) =&gt; void
+}
+
+export function SearchInput(props: SearchInputProps) {
+  const { value, onQueryChange } = props
+
+  return (
+    &lt;label className=&quot;search-input&quot;&gt;
+      Buscar por título
+      &lt;input
+        type=&quot;search&quot;
+        value={value}
+        onChange={(event) =&gt; onQueryChange(event.currentTarget.value)}
+      /&gt;
+    &lt;/label&gt;
+  )
+}</code></pre>
+<p>Exporta <code>SearchInput</code>, impórtalo en <code>App</code> y reemplaza el input inline:</p>
+<pre><code class="language-tsx">&lt;SearchInput
+  value={query}
+  onQueryChange={setQuery}
+/&gt;</code></pre>
+<p>Retira el párrafo temporal de diagnóstico.</p>
+<p>App completo después de extraer el control:</p>
+<pre><code class="language-tsx">import { useState } from 'react'
+
+import { AppHeader } from './components/app-header'
+import { MediaGrid } from './components/media-grid'
+import { SearchInput } from './components/search-input'
+import { mediaItems } from './data/media-items'
+
+function App() {
+  const [query, setQuery] = useState('')
+
+  const normalizedQuery = query.trim().toLowerCase()
+  const visibleMedia = mediaItems.filter((media) =&gt;
+    media.title.toLowerCase().includes(normalizedQuery),
+  )
+
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+
+      &lt;main className=&quot;page-container&quot;&gt;
+        &lt;h2&gt;Catálogo destacado&lt;/h2&gt;
+        &lt;SearchInput value={query} onQueryChange={setQuery} /&gt;
+        &lt;MediaGrid items={visibleMedia} /&gt;
+      &lt;/main&gt;
+    &lt;/&gt;
+  )
+}
+
+export default App</code></pre>
+<h3>Checkpoint 5</h3>
+<ul><li>Existe un solo input.</li><li><code>SearchInput</code> recibe <code>value</code> y <code>onQueryChange</code>.</li><li>El evento DOM se lee dentro del hijo.</li><li><code>query</code> permanece en <code>App</code>.</li><li>La búsqueda conserva los cuatro casos anteriores.</li></ul>
+<h2>8. Actividad individual: distinguir la causa del vacío</h2>
+<p>Una consulta inexistente entrega <code>visibleMedia.length === 0</code>. Ese dato no basta para elegir el mensaje: una fuente vacía produce la misma longitud.</p>
+<p>En <code>App</code>, calcula <code>hasNoResults</code> usando estas tres condiciones:</p>
+<ol><li>La fuente original contiene medios.</li><li>La consulta normalizada no está vacía.</li><li>La colección visible no contiene coincidencias.</li></ol>
+<p>Después renderiza:</p>
+<ul><li><code>EmptyState</code> con título <code>Sin resultados</code> cuando se cumplan las tres condiciones;</li><li><code>MediaGrid</code> con <code>visibleMedia</code> en los demás casos.</li></ul>
+<p>Usa esta descripción:</p>
+<pre><code class="language-text">No encontramos medios que coincidan con tu búsqueda.</code></pre>
+<p>No pases <code>query</code> a <code>MediaGrid</code>. <code>App</code> conoce la fuente, la consulta y el resultado.</p>
+<h3>Matriz de comprobación</h3>
+<div class="table-wrap"><table><thead><tr><th>Caso</th><th>Acción</th><th>Resultado esperado</th></tr></thead><tbody><tr><td>Catálogo completo</td><td>Borrar la consulta</td><td>Seis medios.</td></tr><tr><td>Coincidencia parcial</td><td>Escribir <code>bear</code></td><td>The Bear.</td></tr><tr><td>Mayúsculas</td><td>Escribir <code>BEAR</code></td><td>The Bear.</td></tr><tr><td>Espacios</td><td>Escribir <code>  bear  </code></td><td>The Bear.</td></tr><tr><td>Sin coincidencia</td><td>Escribir <code>matrix</code></td><td>“Sin resultados”.</td></tr><tr><td>Fuente vacía</td><td>Usar temporalmente <code>[]</code> y dejar la consulta vacía</td><td>“Catálogo vacío”.</td></tr></tbody></table></div>
+<p>Para probar la fuente vacía, conserva una copia de <code>src/data/media-items.ts</code> y sustitúyelo temporalmente por:</p>
+<pre><code class="language-ts">import type { MediaItem } from '../types/media-item'
+
+export const mediaItems: MediaItem[] = []</code></pre>
+<p>Comprueba consulta vacía y consulta activa: ambas muestran Catálogo vacío. Restaura el archivo original de seis entradas después de la prueba.</p>
+<h3>Checkpoint 6</h3>
+<ul><li>Consulta vacía muestra el catálogo completo.</li><li>Una búsqueda sin coincidencias muestra “Sin resultados”.</li><li>Una fuente vacía muestra “Catálogo vacío”.</li><li><code>EmptyState</code> conserva props <code>title</code> y <code>description</code>.</li><li>Existe un solo estado: <code>query</code>.</li></ul>
+<h2>9. Ejecutar el build</h2>
+<p>Conserva <code>pnpm dev</code> y abre otra terminal:</p>
+<pre><code class="language-bash">pnpm build</code></pre>
+<p>Registra el resultado exacto. Si falla, corrige el primer error antes de cambiar otra parte.</p>
+<h3>Checkpoint final</h3>
+<ul><li><code>App</code> conserva <code>query</code> con <code>useState</code>.</li><li><code>SearchInput</code> es controlado y no declara estado.</li><li><code>visibleMedia</code> se calcula durante el render.</li><li><code>MediaGrid</code> recibe la colección calculada.</li><li>La matriz manual produce los seis resultados esperados.</li><li>Los logs temporales desaparecieron y <code>StrictMode</code> permanece.</li><li>No existen <code>useEffect</code>, <code>useMemo</code>, debounce o stores.</li><li><code>pnpm build</code> termina con código 0.</li></ul>
+<h2>Errores frecuentes</h2>
+<h3>El input no permite escribir</h3>
+<p>Comprueba que <code>value={query}</code> tenga un <code>onChange</code> que ejecute <code>setQuery</code> con el texto del input.</p>
+<h3>El handler se ejecuta al renderizar</h3>
+<p>Pasa una función a la prop. No uses <code>onChange={handleQueryChange()}</code>.</p>
+<h3>useState aparece dentro del handler</h3>
+<p>Muévelo al nivel superior de <code>App</code>, junto con los demás Hooks.</p>
+<h3>SearchInput declara otro query</h3>
+<p>Retira ese estado. <code>App</code> ya posee la consulta que usa el filtro.</p>
+<h3>App recibe el evento completo</h3>
+<p>Haz que <code>SearchInput</code> lea <code>event.currentTarget.value</code> y comunique solo el string.</p>
+<h3>visibleMedia vive en estado</h3>
+<p>Retira el segundo estado. Calcula la colección desde <code>mediaItems</code> y <code>query</code> durante el render.</p>
+<h3>El filtro usa useEffect</h3>
+<p>Retira el Effect. No existe un sistema externo que sincronizar.</p>
+<h3>Toda lista vacía muestra “Sin resultados”</h3>
+<p>Revisa las tres condiciones. La fuente debe contener elementos y la consulta debe estar activa.</p>
+<h3>Eliminaste StrictMode por los logs</h3>
+<p>Restaura <code>&lt;StrictMode&gt;</code>. Los logs temporales se retiran al terminar la comparación.</p>
+<h2>Vocabulario</h2>
+<ul><li><strong>Evento:</strong> información que produce el navegador cuando interactúas.</li><li><strong>Handler:</strong> función que responde al evento.</li><li><strong>Hook:</strong> función de React que permite usar una capacidad como estado.</li><li><strong>Estado:</strong> memoria que React conserva entre renders.</li><li><strong>Snapshot:</strong> valores disponibles durante un render concreto.</li><li><strong>Setter:</strong> función que solicita otro render con un valor nuevo.</li><li><strong>Input controlado:</strong> campo cuyo valor visible proviene de estado React.</li><li><strong>Prop de callback:</strong> función que un componente recibe para comunicar una acción.</li><li><strong>Estado derivado:</strong> dato calculado desde información disponible.</li><li><strong>Normalización:</strong> transformación que prepara dos valores para compararlos.</li><li><strong>Render puro:</strong> cálculo que no muta datos externos.</li></ul>
+<h2>Pausar y retomar</h2>
+<p>Registra el último checkpoint comprobado, archivo guardado, primer paso pendiente y evidencia ausente. Referencias: <code>session-04-step-01-controlled-query</code>, <code>session-04-step-02-derived-search</code>, <code>session-04-step-03-search-input</code> y <code>session-04-end</code>. Retoma tu trabajo guardado y explica su flujo antes de continuar; una referencia no sustituye tu práctica.</p>
+<h2>Evidencia y entrega</h2>
+<p>Conserva:</p>
+<ol><li>Captura del catálogo completo con consulta vacía.</li><li>Captura de una coincidencia por título.</li><li>Captura de “Sin resultados”.</li><li>Resultado de <code>pnpm build</code>.</li><li>Explicación breve de quién posee <code>query</code> y por qué <code>visibleMedia</code> no usa estado.</li></ol>
+<p>No incluyas <code>node_modules/</code>, <code>dist/</code>, tokens, contraseñas o variables de entorno.</p>
+<p>Las capturas demuestran lo observado en tu navegador. El build demuestra que TypeScript y Vite produjeron archivos. Estas evidencias no prueban una API, despliegue o comportamiento de producción.</p></main>
+      <footer>Material de trabajo en clase · Sesión 04</footer>
+    </article>
+  </body>
+</html>

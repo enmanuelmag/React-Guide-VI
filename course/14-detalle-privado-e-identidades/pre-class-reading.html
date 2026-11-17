@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lectura previa de Sesión 14 para React Guide VI">
+    <title>Lectura previa · Sesión 14 · Uniones discriminadas y parámetros de ruta</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Lectura previa</p>
+        <h1>Lectura previa · Sesión 14 · Uniones discriminadas y parámetros de ruta</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Lectura previa · Sesión 14 · Uniones discriminadas y parámetros de ruta</h1>
+<ul><li><strong>Duración estimada:</strong> 20 minutos</li><li><strong>Fuentes:</strong> 3 referencias oficiales</li></ul>
+<h2>Propósito</h2>
+<p>Llegar a clase con dos ideas preparadas:</p>
+<ul><li>Zod puede representar varias formas válidas con <code>z.discriminatedUnion</code>; <code>z.infer</code> conserva el narrowing de TypeScript.</li><li>React Router entrega los parámetros dinámicos de la URL como datos que el componente debe interpretar.</li></ul>
+<p>En clase aplicarás ambas ideas para distinguir una obra de catálogo de un registro personal.</p>
+<h2>Conocimientos previos</h2>
+<p>Antes de leer, recupera:</p>
+<ul><li>una unión como <code>&quot;movie&quot; | &quot;series&quot;</code>;</li><li>objetos tipados con TypeScript;</li><li>rutas declarativas con segmentos <code>:param</code>;</li><li><code>useParams</code> y el adapter nullable de detalle público;</li><li>query keys y queries deshabilitadas mediante <code>enabled</code>.</li></ul>
+<p>No necesitas conocer el contrato privado ni preparar código antes de la sesión.</p>
+<h2>Fuente 1 · Narrowing y uniones discriminadas</h2>
+<p>Lee en el TypeScript Handbook:</p>
+<ul><li><a href="https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions" target="_blank" rel="noreferrer">Discriminated unions</a></li><li><strong>Organización:</strong> Microsoft.</li><li><strong>Versión:</strong> Handbook vigente de TypeScript; esta sección no depende de una versión específica del compilador.</li><li><strong>Verificada:</strong> 7 de septiembre de 2026.</li></ul>
+<p><strong>Tiempo sugerido:</strong> 8 minutos.</p>
+<p>Concéntrate en:</p>
+<ul><li>el campo literal compartido por los miembros de la unión;</li><li>cómo una comparación reduce el tipo a una rama;</li><li>por qué cada miembro conserva solo sus propiedades válidas;</li><li>qué error detecta TypeScript cuando intentas usar una propiedad de otra rama.</li></ul>
+<p>Recupera además la cadena aprendida en la sesión 11:</p>
+<pre><code class="language-text">schema Zod → z.infer → tipo estático
+valor externo → safeParse → dato validado o error</code></pre>
+<p>En clase aplicarás esa cadena al parámetro <code>logId</code> de Router. Definir un schema o inferir su tipo no valida por sí solo el valor de la URL.</p>
+<p>Mientras lees, compara estas formas:</p>
+<pre><code class="language-ts">type Selector =
+  | {
+      kind: &quot;catalog&quot;
+      mediaType: &quot;movie&quot; | &quot;series&quot;
+      externalId: string
+    }
+  | { kind: &quot;log&quot;; logId: string }</code></pre>
+<pre><code class="language-ts">type OptionalSelector = {
+  mediaType?: &quot;movie&quot; | &quot;series&quot;
+  externalId?: string
+  logId?: string
+}</code></pre>
+<p>No decidas todavía cuál usa el proyecto. Identifica qué combinaciones permite cada una.</p>
+<h2>Fuente 2 · Unión discriminada con Zod</h2>
+<p>Lee en la documentación de Zod 4:</p>
+<ul><li><a href="https://zod.dev/api#discriminated-unions" target="_blank" rel="noreferrer"><code>z.discriminatedUnion</code></a></li><li><strong>Organización:</strong> Zod.</li><li><strong>Versión:</strong> Zod <code>4.4.3</code>, versión fijada para la cohorte.</li><li><strong>Verificada:</strong> 7 de septiembre de 2026.</li></ul>
+<p><strong>Tiempo sugerido:</strong> 4 minutos.</p>
+<p>Concéntrate en:</p>
+<ul><li>el nombre del campo discriminante;</li><li>un schema por cada rama permitida;</li><li>la diferencia entre derivar el tipo con <code>z.infer</code> y ejecutar <code>safeParse</code> sobre un valor.</li></ul>
+<h2>Fuente 3 · Parámetros dinámicos con <code>useParams</code></h2>
+<p>Lee en React Router 8.3.1:</p>
+<ul><li><a href="https://reactrouter.com/api/hooks/useParams" target="_blank" rel="noreferrer"><code>useParams</code></a></li><li><strong>Organización:</strong> React Router.</li><li><strong>Versión:</strong> React Router <code>8.3.1</code>, modo declarativo.</li><li><strong>Verificada:</strong> 7 de septiembre de 2026.</li></ul>
+<p><strong>Tiempo sugerido:</strong> 8 minutos.</p>
+<p>Concéntrate en:</p>
+<ul><li>qué objeto devuelve el hook;</li><li>qué valor recibe un parámetro después de hacer match con una ruta;</li><li>cómo una ruta como <code>/posts/:postId</code> expone <code>postId</code>;</li><li>por qué el tipo admite parámetros ausentes.</li></ul>
+<p>No estudies loaders, actions, Data Mode ni Framework Mode. El curso conserva rutas declarativas y TanStack Query como propietario del estado remoto.</p>
+<h2>Vocabulario previo</h2>
+<ul><li><strong>Unión discriminada:</strong> unión de objetos que comparten un campo literal para distinguir sus miembros.</li><li><strong>Discriminante:</strong> campo literal común, como <code>kind</code>.</li><li><strong>Narrowing:</strong> reducción de una unión a una rama después de comprobar el discriminante.</li><li><strong>Parámetro dinámico:</strong> segmento variable de una ruta, declarado con <code>:</code>.</li><li><strong>Entrada externa:</strong> valor que llega desde fuera del dominio del componente y debe validarse antes de usarlo.</li></ul></main>
+      <footer>Material de preparación · Sesión 14</footer>
+    </article>
+  </body>
+</html>

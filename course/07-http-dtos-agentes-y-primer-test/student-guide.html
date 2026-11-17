@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 07 para React Guide VI">
+    <title>Guía estudiantil · Sesión 07 · HTTP, DTOs, agentes y primer test</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 07 · HTTP, DTOs, agentes y primer test</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 07 · HTTP, DTOs, agentes y primer test</h1>
+<h2>Meta</h2>
+<p>La interfaz mantiene el checkpoint 06: modal de Mantine y catálogo con HTML/CSS propios. Hoy no se migran controles ni tarjetas; la adopción más amplia acompaña la búsqueda remota de 08.</p>
+<p>Crear una frontera HTTP tipada para buscar y consultar detalles de Medialog. Al terminar tendrás dos fetchers, un helper común, un adapter puro y dos tests. La interfaz local seguirá funcionando y todavía no mostrará las responses remotas.</p>
+<h2>Una imagen mental antes del código</h2>
+<p>Imagina un restaurante. Tu navegador hace de cliente, el <strong>request</strong> es la comanda, el servidor es la cocina y la <strong>response</strong> es lo que la cocina devuelve junto con un estado. Un DTO es el formato acordado de la comanda: si el campo se llama <code>mediaType</code>, ambos lados deben respetar ese nombre. Una <code>Promise</code> se parece al número de turno: representa un resultado que llegará después.</p>
+<p>La comparación tiene un límite: <code>fetch</code> transporta datos. Además, un status <code>404</code> o <code>500</code> sí es una response HTTP; perder la conexión antes de recibirla es un error de red distinto.</p>
+<h2>Antes de comenzar</h2>
+<p>Tu proyecto debe corresponder al checkpoint de la sesión 06:</p>
+<ul><li>Búsqueda y filtro local funcionan.</li><li>El contador, la limpieza y los vacíos siguen visibles.</li><li>Cada tarjeta abre el modal del medio seleccionado.</li><li><code>MediaGrid</code> recibe <code>items={visibleMedia}</code>.</li><li><code>MediaType</code> y <code>MediaItem</code> viven en <code>src/types/media-item.ts</code>.</li><li>Mantine está configurado.</li></ul>
+<p>Comprueba:</p>
+<ol><li>Buscar <code>bear</code> muestra <code>The Bear</code>.</li><li>Filtrar por película y serie cambia la colección.</li><li>Abrir y cerrar un detalle local funciona.</li><li>Buscar <code>Dune</code> no encuentra resultados porque no pertenece al fixture.</li></ol>
+<p>Si el checkpoint no funciona, registra la diferencia antes de añadir HTTP.</p>
+<h2>Mapa de responsabilidades</h2>
+<pre><code class="language-text">src/types/media-api.ts
+  describe la parte del contrato que usa el frontend
+
+src/adapters/media-input-to-params.ts
+  traduce identidad tipada a query string
+
+src/api/media.ts
+  decide endpoint, método, body y tipo de retorno
+
+src/api/http.ts
+  ejecuta fetch, comprueba status y lee JSON
+
+TanStack Query
+  comienza en la sesión 08</code></pre>
+<p>No guardes responses en <code>useState</code>, Zustand o <code>localStorage</code>. No uses <code>useEffect</code> para ejecutar los fetchers.</p>
+<h2>Contrato de la sesión</h2>
+<h3>Búsqueda</h3>
+<pre><code class="language-text">POST /api/v2/media/search
+Content-Type: application/json
+
+{
+  &quot;query&quot;: &quot;Dune&quot;,
+  &quot;mediaType&quot;: &quot;movie&quot;
+}</code></pre>
+<div class="table-wrap"><table><thead><tr><th>Type</th><th>Campos</th></tr></thead><tbody><tr><td><code>SearchMediaInput</code></td><td><code>query: string</code>, <code>mediaType: MediaType</code></td></tr><tr><td><code>MediaSearchItemDto</code></td><td><code>externalId</code>, <code>title</code>, <code>releaseYear</code>, <code>coverUrl</code>, <code>mediaType</code>, <code>isLogged</code></td></tr></tbody></table></div>
+<h3>Detalle</h3>
+<pre><code class="language-text">GET /api/v2/media/detail?externalId=438631&amp;mediaType=movie</code></pre>
+<div class="table-wrap"><table><thead><tr><th>Type</th><th>Responsabilidad</th></tr></thead><tbody><tr><td><code>GetMediaDetailInput</code></td><td><code>externalId: string</code>, <code>mediaType: MediaType</code></td></tr><tr><td><code>MediaCatalogDetailDto</code></td><td>Datos públicos del catálogo</td></tr><tr><td><code>UserMediaDataDto</code></td><td>Registro personal nullable</td></tr><tr><td><code>MediaDetailDto</code></td><td><code>catalog</code>, <code>entry</code>, <code>isLogged</code></td></tr></tbody></table></div>
+<p>Conserva las formas del transporte. <code>MediaSearchItemDto</code> no es <code>MediaItem</code>: usa identidad externa, <code>coverUrl</code>, <code>releaseYear</code> y no contiene <code>description</code>.</p>
+<h2>Rutina con herramientas asistidas</h2>
+<p>Sigue este orden:</p>
+<pre><code class="language-text">consultar documentación en Context7
+→ revisar skills disponibles
+→ usar AutoSkills solo si falta una skill pertinente
+→ ejecutar la tarea con límites del harness
+→ abrir los archivos y leer el cambio
+→ ejecutar evidencia y explicar su frontera</code></pre>
+<p>Responsabilidades:</p>
+<ul><li>Context7 recupera documentación vigente.</li><li>Una skill conserva instrucciones para una tarea.</li><li>AutoSkills propone skills a partir del repositorio.</li><li>Agent Harness Kit organiza límites, roles y evidencia.</li><li>Tú decides el contrato, lees el código y ejecutas las comprobaciones.</li></ul>
+<p>Una salida generada no cuenta como evidencia ejecutada.</p>
+<h2>Paso 1 · Instalar e inicializar Agent Harness Kit</h2>
+<p>El CLI y el proyecto tienen alcances distintos:</p>
+<pre><code class="language-text">CLI global: permite ejecutar ahk desde la terminal
+Harness local: materializa configuración, instrucciones, roles y skills en este proyecto</code></pre>
+<p>Comprueba el runtime e instala la versión fijada. <code>npm</code> se usa solo para este CLI global; las dependencias de Medialog continúan con pnpm:</p>
+<pre><code class="language-bash">node --version
+npm --version
+npm install --global @cardor/agent-harness-kit@2.11.0
+command -v ahk
+ahk --version</code></pre>
+<p>Node debe cumplir <code>&gt;=22.22.0</code> y <code>ahk --version</code> debe mostrar <code>2.11.0</code>. En PowerShell usa <code>Get-Command ahk</code>. Si la terminal no encuentra el binario, registra la salida de <code>npm prefix -g</code>, confirma qué Node está activo, vuelve a abrir la terminal y repite las comprobaciones. No uses <code>sudo</code> ni instales AHK dentro del proyecto.</p>
+<p>Desde la raíz de Medialog ejecuta:</p>
+<pre><code class="language-bash">ahk init</code></pre>
+<p>Usa estas respuestas:</p>
+<div class="table-wrap"><table><thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead><tbody><tr><td>Project name</td><td><code>medialog-bootcamp</code></td></tr><tr><td>Short description</td><td><code>React frontend for exploring movies and series</code></td></tr><tr><td>AI provider y modelos</td><td>Los indicados por el docente</td></tr><tr><td>Docs folder path</td><td><code>docs</code></td></tr><tr><td>Storage scope</td><td><code>Local</code></td></tr><tr><td>Add your first task now?</td><td><code>No</code></td></tr></tbody></table></div>
+<p>Abre la configuración, las instrucciones del provider, la carpeta de agentes, <code>health.sh</code> y las skills <code>ahk-ask</code> y <code>ahk-test</code>. Explica con tus palabras qué límite aporta cada pieza.</p>
+<p>El <code>health.sh</code> inicial todavía no conoce los checks de Medialog. Reemplázalo por:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+set -euo pipefail
+
+pnpm build</code></pre>
+<p>Comprueba:</p>
+<pre><code class="language-bash">ahk doctor
+ahk health</code></pre>
+<p><code>ahk doctor</code> revisa la configuración y la materialización. <code>ahk health</code> ejecuta el build escrito en <code>health.sh</code>; no prueba la API ni el navegador.</p>
+<h2>Paso 2 · Consultar y explorar sin editar</h2>
+<p>Define primero:</p>
+<pre><code class="language-text">Librería: Vitest
+Versión: 4.1.11
+Concepto: test, expect y ejecución finita con vitest run</code></pre>
+<p>En Context7, resuelve el identificador de Vitest y consulta ese concepto. Si el servicio no responde, usa la documentación oficial indicada por el docente y registra el fallback.</p>
+<p>Revisa las skills disponibles. Abre <code>ahk-ask</code> y confirma que su tarea es de solo lectura.</p>
+<p>AutoSkills se previsualiza con:</p>
+<pre><code class="language-bash">pnpm dlx autoskills@0.3.6 --dry-run</code></pre>
+<p>No ejecutes la instalación sin aprobación docente. Antes de instalar una propuesta tendrías que revisar procedencia, archivos y <code>SKILL.md</code>. AutoSkills no se añade a las dependencias del frontend.</p>
+<p>Usa el prompt de exploración:</p>
+<pre><code class="language-text">Usa la skill ahk-ask para responder esta pregunta de solo lectura:
+
+En este proyecto React con TypeScript, localiza dónde se definen y exportan MediaType y MediaItem, cómo se organizan los types y adapters existentes y qué imports relativos debería usar un nuevo archivo src/types/media-api.ts.
+
+No crees tareas, no modifiques archivos y no propongas todavía la implementación. Devuelve únicamente:
+1. archivos relevantes;
+2. convenciones encontradas;
+3. riesgos de duplicar MediaType o cambiar sus values;
+4. evidencia textual de que el archivo canónico es src/types/media-item.ts.
+
+Si encuentras más de una definición de MediaType o una ruta distinta, detente y reporta la contradicción.</code></pre>
+<p>Comprobación:</p>
+<ul><li>Abre cada archivo citado.</li><li>Confirma <code>src/types/media-item.ts</code>.</li><li>Confirma que <code>MediaType</code> admite solo <code>&quot;movie&quot; | &quot;series&quot;</code>.</li><li>Confirma que la interacción no produjo un diff.</li></ul>
+<p>La exploración no demuestra que el código compile; el build ejecutado por <code>ahk health</code> sí comprueba el checkpoint inicial contra TypeScript y Vite.</p>
+<h2>Paso 3 · Cerrar la tabla de fields</h2>
+<p>Antes de pedir código, copia esta tabla y marca cada fila como revisada:</p>
+<div class="table-wrap"><table><thead><tr><th>Type</th><th>Campo</th><th>Tipo</th></tr></thead><tbody><tr><td><code>SearchMediaInput</code></td><td><code>query</code></td><td><code>string</code></td></tr><tr><td><code>SearchMediaInput</code></td><td><code>mediaType</code></td><td><code>MediaType</code></td></tr><tr><td><code>MediaSearchItemDto</code></td><td><code>externalId</code></td><td><code>string</code></td></tr><tr><td><code>MediaSearchItemDto</code></td><td><code>title</code></td><td><code>string</code></td></tr><tr><td><code>MediaSearchItemDto</code></td><td><code>releaseYear</code></td><td><code>number</code></td></tr><tr><td><code>MediaSearchItemDto</code></td><td><code>coverUrl</code></td><td>`string</td><td>null`</td></tr><tr><td><code>MediaSearchItemDto</code></td><td><code>mediaType</code></td><td><code>MediaType</code></td></tr><tr><td><code>MediaSearchItemDto</code></td><td><code>isLogged</code></td><td><code>boolean</code></td></tr><tr><td><code>GetMediaDetailInput</code></td><td><code>externalId</code></td><td><code>string</code></td></tr><tr><td><code>GetMediaDetailInput</code></td><td><code>mediaType</code></td><td><code>MediaType</code></td></tr><tr><td><code>MediaDetailDto</code></td><td><code>catalog</code></td><td>`MediaCatalogDetailDto</td><td>null`</td></tr><tr><td><code>MediaDetailDto</code></td><td><code>entry</code></td><td>`UserMediaDataDto</td><td>null`</td></tr><tr><td><code>MediaDetailDto</code></td><td><code>isLogged</code></td><td><code>boolean</code></td></tr></tbody></table></div>
+<p>El contrato docente completa los campos de catálogo, status, prioridad y entrada personal. No cambies nombres ni nulabilidad para que el código parezca más parecido al fixture.</p>
+<h2>Paso 4 · Delegar types y adapter</h2>
+<p>El docente entrega el prompt completo. Antes de ejecutarlo, confirma que solo permite:</p>
+<pre><code class="language-text">src/types/media-api.ts
+src/adapters/media-input-to-params.ts</code></pre>
+<p>El adapter debe producir el equivalente a:</p>
+<pre><code class="language-ts">export function toMediaDetailSearchParams(
+  input: GetMediaDetailInput,
+): URLSearchParams {
+  return new URLSearchParams({
+    externalId: input.externalId,
+    mediaType: input.mediaType,
+  })
+}</code></pre>
+<p>Después de la generación:</p>
+<ol><li>Abre <code>media-api.ts</code>.</li><li>Confirma que importa <code>MediaType</code> desde <code>./media-item</code>.</li><li>Elige tres campos y contrástalos con la tabla.</li><li>Explica por qué <code>catalog</code> y <code>entry</code> son nullable.</li><li>Confirma que ningún DTO extiende o usa <code>MediaItem</code>.</li><li>Abre el adapter y confirma que no llama <code>fetch</code>.</li><li>Revisa el listado de archivos cambiados.</li></ol>
+<p>Ejecuta:</p>
+<pre><code class="language-bash">pnpm build</code></pre>
+<p>Registra comando, exit status y error exacto si falla. Un build verde no valida el JSON del backend.</p>
+<h2>Paso 5 · Implementar searchMedia con el docente</h2>
+<p>Crea <code>src/api/media.ts</code>. La firma es:</p>
+<pre><code class="language-ts">export async function searchMedia(
+  input: SearchMediaInput,
+): Promise&lt;MediaSearchItemDto[]&gt;</code></pre>
+<p>La implementación debe:</p>
+<ol><li>Leer <code>import.meta.env.VITE_API_URL</code>.</li><li>Construir <code>/api/v2/media/search</code>.</li><li>Usar método <code>POST</code>.</li><li>Enviar <code>Content-Type: application/json</code>.</li><li>Serializar <code>input</code> con <code>JSON.stringify</code>.</li><li>Consultar <code>response.ok</code>.</li><li>Lanzar <code>Error</code> con el status cuando la response no es exitosa.</li><li>Leer el JSON y devolverlo con el tipo esperado.</li></ol>
+<p>Referencia del request:</p>
+<pre><code class="language-ts">const response = await fetch(`${API_URL}/api/v2/media/search`, {
+  method: &quot;POST&quot;,
+  headers: {
+    &quot;Content-Type&quot;: &quot;application/json&quot;,
+  },
+  body: JSON.stringify(input),
+})</code></pre>
+<p>Detente y explica:</p>
+<ul><li>qué valor recibe <code>input</code>;</li><li>qué representa <code>Promise&lt;MediaSearchItemDto[]&gt;</code>;</li><li>por qué <code>404</code> exige revisar <code>response.ok</code>;</li><li>por qué el cast final no valida runtime.</li></ul>
+<p>No extraigas todavía un helper.</p>
+<h2>Paso 6 · Completar getMediaDetail</h2>
+<p>Importa el adapter y los types. La firma es:</p>
+<pre><code class="language-ts">export async function getMediaDetail(
+  input: GetMediaDetailInput,
+): Promise&lt;MediaDetailDto&gt;</code></pre>
+<p>Completa:</p>
+<ol><li>Construcción de <code>URLSearchParams</code> mediante el adapter.</li><li>URL con <code>/api/v2/media/detail?</code>.</li><li>Request GET sin body.</li><li>Comprobación de <code>response.ok</code>.</li><li>Error con status.</li><li>Lectura del JSON.</li></ol>
+<p>Ejecuta <code>pnpm build</code>. Los dos fetchers deben compilar antes de abstraer.</p>
+<p>Después marca la repetición:</p>
+<pre><code class="language-text">fetch
+response.ok
+response.status
+response.json()</code></pre>
+<p>Método, ruta, body y parámetros no forman parte de esa repetición común.</p>
+<h2>Paso 7 · Extraer requestJson</h2>
+<p>Usa el prompt de refactor entregado por el docente. Solo puede:</p>
+<ul><li>crear <code>src/api/http.ts</code>;</li><li>modificar <code>src/api/media.ts</code>.</li></ul>
+<p><code>requestJson&lt;T&gt;()</code> debe conservar esta forma:</p>
+<pre><code class="language-ts">export async function requestJson&lt;T&gt;(
+  url: string,
+  init?: RequestInit,
+): Promise&lt;T&gt; {
+  const response = await fetch(url, init)
+
+  if (!response.ok) {
+    throw new Error(`La API respondió con status ${response.status}`)
+  }
+
+  return (await response.json()) as T
+}</code></pre>
+<p>Después del cambio, sigue ambos recorridos:</p>
+<pre><code class="language-text">searchMedia
+→ decide POST, headers y body
+→ requestJson&lt;MediaSearchItemDto[]&gt;
+
+getMediaDetail
+→ decide parámetros y URL
+→ requestJson&lt;MediaDetailDto&gt;</code></pre>
+<p>Comprueba:</p>
+<ul><li>Las firmas públicas no cambiaron.</li><li>El helper no conoce endpoints.</li><li><code>T</code> expresa el tipo esperado y no valida JSON.</li><li>Solo cambiaron los dos archivos permitidos.</li></ul>
+<p>Ejecuta <code>pnpm build</code> y registra el resultado.</p>
+<h2>Paso 8 · Definir la matriz del primer test</h2>
+<p>Instala Vitest y crea un script que termine después de ejecutar la suite:</p>
+<pre><code class="language-bash">pnpm add -D vitest@4.1.11
+pnpm pkg set scripts.test=&quot;vitest run&quot;</code></pre>
+<p>Abre <code>package.json</code>. Confirma que Vitest aparece en <code>devDependencies</code> y que <code>test</code> ejecuta <code>vitest run</code>.</p>
+<p>Escribe la matriz antes de generar el archivo:</p>
+<div class="table-wrap"><table><thead><tr><th>Caso</th><th>Input</th><th>Resultado esperado</th></tr></thead><tbody><tr><td>Película</td><td><code>438631</code>, <code>movie</code></td><td>Conserva ambos values</td></tr><tr><td>Serie</td><td><code>1399</code>, <code>series</code></td><td>Conserva ambos values</td></tr></tbody></table></div>
+<p>El test no necesita backend, navegador ni mocks. Su unidad es el adapter puro.</p>
+<p>Invoca <code>ahk-test</code> con el prompt entregado por el docente. La skill solo puede crear:</p>
+<pre><code class="language-text">src/adapters/__tests__/media-input-to-params.test.ts</code></pre>
+<p>No permitas cambios en producción, configuración o dependencias.</p>
+<p>Después:</p>
+<ol><li>Abre el archivo completo.</li><li>Ubica input, llamada al adapter y expectativas.</li><li>Confirma que no existen snapshots, mocks, <code>.only</code>, <code>.skip</code> o <code>.todo</code>.</li><li>Ejecuta:</li></ol>
+<pre><code class="language-bash">pnpm exec vitest run src/adapters/__tests__/media-input-to-params.test.ts</code></pre>
+<p>Registra exit status. Vitest demuestra los dos comportamientos del adapter. No demuestra <code>fetch</code> ni backend.</p>
+<p>Actualiza <code>health.sh</code> para incluir la suite ahora que Vitest y el script existen:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+set -euo pipefail
+
+pnpm test
+pnpm build</code></pre>
+<h2>Paso 9 · Comprobar Network con código temporal</h2>
+<p>Usa el <code>ApiProbe</code> preparado por el docente. Debe ejecutar desde un handler:</p>
+<pre><code class="language-text">searchMedia({ query: &quot;Dune&quot;, mediaType: &quot;movie&quot; })
+→ obtener el primer resultado
+→ getMediaDetail({ externalId, mediaType })</code></pre>
+<p>No agregues <code>useState</code> ni <code>useEffect</code>.</p>
+<h3>Prueba rápida · Ver el JSON que responde el backend</h3>
+<p>Esta comprobación es opcional dentro de este paso; no añade archivos al proyecto. Puedes hacerla también antes de la clase para comprobar que el servicio responde.</p>
+<p><strong>Detalle: enlaces que sí puedes abrir en una pestaña.</strong> El navegador realiza un GET:</p>
+<ul><li><a href="https://bootcamp-medialog.cardor.dev/api/v2/media/detail?externalId=438631&amp;mediaType=movie" target="_blank" rel="noreferrer">Dune (2021) · película</a>.</li><li><a href="https://bootcamp-medialog.cardor.dev/api/v2/media/detail?externalId=1396&amp;mediaType=series" target="_blank" rel="noreferrer">Breaking Bad · serie</a>.</li></ul>
+<p>Abre uno y localiza <code>catalog.title</code>, <code>catalog.mediaType</code>, <code>entry</code> e <code>isLogged</code>. En la comprobación anónima del 3 de octubre de 2026 ambos enlaces respondieron HTTP 200; <code>entry</code> fue <code>null</code> e <code>isLogged</code> fue <code>false</code>. Son respuestas observadas en esa fecha, no un fixture garantizado.</p>
+<p><strong>Búsqueda: usa <code>/api/v2/media/search</code> con POST y body JSON.</strong> No basta con abrirla en una pestaña: eso envía GET. La búsqueda GET con query string devolvió 404 en la comprobación, porque no es la ruta definida para este caso.</p>
+<p>En Terminal de macOS/Linux ejecuta:</p>
+<pre><code class="language-sh">curl -i -X POST 'https://bootcamp-medialog.cardor.dev/api/v2/media/search' \
+  -H 'Content-Type: application/json' \
+  --data '{&quot;query&quot;:&quot;Dune&quot;,&quot;mediaType&quot;:&quot;movie&quot;}'</code></pre>
+<p>Para buscar series, conserva endpoint, método y header; cambia el body. Ejemplo completo:</p>
+<pre><code class="language-sh">curl -i -X POST 'https://bootcamp-medialog.cardor.dev/api/v2/media/search' \
+  -H 'Content-Type: application/json' \
+  --data '{&quot;query&quot;:&quot;Breaking Bad&quot;,&quot;mediaType&quot;:&quot;series&quot;}'</code></pre>
+<p>Si usas Postman u otro cliente HTTP, copia la URL, selecciona <strong>POST</strong>, añade <code>Content-Type: application/json</code> y pega el JSON en el body. No hace falta iniciar sesión para estos ejemplos públicos.</p>
+<p><code>-i</code> muestra el status y los headers antes del JSON; <code>-X POST</code> elige el método; <code>-H</code> declara el formato del body; <code>--data</code> envía los parámetros. La terminal devuelve el JSON como texto: no agrega tarjetas ni estado a React.</p>
+<p>Busca un resultado y señala <code>externalId</code>, <code>title</code>, <code>releaseYear</code>, <code>coverUrl</code> y <code>mediaType</code>. La búsqueda devuelve un <strong>arreglo</strong>; el detalle devuelve un <strong>objeto</strong> con <code>catalog</code>, <code>entry</code> e <code>isLogged</code>. La API puede incluir campos adicionales que no necesitamos modelar todavía.</p>
+<p>Los IDs de los enlaces son accesos rápidos de inspección. En el <code>ApiProbe</code>, sigue usando <code>externalId</code> y <code>mediaType</code> del resultado real de búsqueda. La terminal demuestra una respuesta HTTP; para comprobar el request desde la app y CORS conserva el recorrido de Network de este paso.</p>
+<p>Abre Network antes del click y completa:</p>
+<div class="table-wrap"><table><thead><tr><th>Request</th><th>Método observado</th><th>URL observada</th><th>Payload observado</th><th>Status observado</th></tr></thead><tbody><tr><td>Búsqueda</td><td></td><td></td><td></td><td></td></tr><tr><td>Detalle</td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p>Revisa además la forma del body de cada response.</p>
+<p>Después elimina:</p>
+<ul><li><code>ApiProbe</code>;</li><li>su import;</li><li>su render;</li><li>logs temporales.</li></ul>
+<p>Busca el nombre del componente para confirmar que no quedó una referencia.</p>
+<h2>Paso 10 · Regresión y evidencia final</h2>
+<p>Ejecuta:</p>
+<pre><code class="language-bash">pnpm exec vitest run src/adapters/__tests__/media-input-to-params.test.ts
+ahk health</code></pre>
+<p>Prueba en navegador:</p>
+<ul><li>búsqueda y filtro local;</li><li>contador y limpieza;</li><li>apertura y cierre del modal local;</li><li>ausencia de <code>ApiProbe</code>.</li></ul>
+<p>Completa:</p>
+<div class="table-wrap"><table><thead><tr><th>Evidencia</th><th>Resultado</th><th>Qué demuestra</th><th>Qué no demuestra</th></tr></thead><tbody><tr><td><code>ahk doctor</code></td><td></td><td></td><td></td></tr><tr><td>Vitest</td><td></td><td></td><td></td></tr><tr><td><code>ahk health</code></td><td></td><td></td><td></td></tr><tr><td>Network</td><td></td><td></td><td></td></tr><tr><td>Regresión local</td><td></td><td></td><td></td></tr></tbody></table></div>
+<h2>Checkpoint final</h2>
+<ul><li>[ ] El explorador local permanece funcional.</li><li>[ ] <code>MediaType</code> solo se define en <code>media-item.ts</code>.</li><li>[ ] <code>media-api.ts</code> conserva nombres, tipos y nulabilidad.</li><li>[ ] El adapter solo construye parámetros.</li><li>[ ] <code>searchMedia()</code> conserva el POST y body JSON.</li><li>[ ] <code>getMediaDetail()</code> conserva el GET y query string.</li><li>[ ] <code>requestJson&lt;T&gt;()</code> contiene solo la mecánica compartida.</li><li>[ ] Los dos tests pasan.</li><li>[ ] <code>ahk doctor</code> reconoce configuración y skills.</li><li>[ ] <code>ahk health</code> ejecuta test y build.</li><li>[ ] Network mostró los dos requests.</li><li>[ ] <code>ApiProbe</code> fue retirado.</li><li>[ ] El build pasa.</li><li>[ ] Puedes explicar qué decidiste, delegaste, leíste y verificaste.</li></ul>
+<h2>Comandos de la sesión</h2>
+<pre><code class="language-bash">npm install --global @cardor/agent-harness-kit@2.11.0
+command -v ahk
+ahk --version
+ahk init
+ahk doctor
+ahk health
+pnpm dlx autoskills@0.3.6 --dry-run
+pnpm add -D vitest@4.1.11
+pnpm pkg set scripts.test=&quot;vitest run&quot;
+pnpm exec vitest run src/adapters/__tests__/media-input-to-params.test.ts
+pnpm test
+pnpm build</code></pre>
+<p>Usa npm únicamente para la instalación global de AHK. Dentro del proyecto, usa pnpm y conserva <code>pnpm-lock.yaml</code>; no crees <code>package-lock.json</code>. No ejecutes AutoSkills sin <code>--dry-run</code> salvo aprobación docente después de revisar una propuesta concreta.</p>
+<h2>Vocabulario</h2>
+<ul><li><strong>Endpoint:</strong> método y ruta de una operación HTTP.</li><li><strong>Request:</strong> solicitud del cliente.</li><li><strong>Response:</strong> respuesta con status, headers y body.</li><li><strong>Promise:</strong> representación de un resultado futuro.</li><li><strong>DTO:</strong> forma que cruza la frontera HTTP.</li><li><strong>Adapter:</strong> transformación entre representaciones.</li><li><strong>Fetcher:</strong> función que solicita un endpoint concreto.</li><li><strong>Runtime:</strong> ejecución real de JavaScript.</li><li><strong>Harness:</strong> estructura de límites, tareas y evidencia.</li><li><strong>Skill:</strong> instrucciones reutilizables para una tarea.</li><li><strong>Frontera de evidencia:</strong> límite de lo que una comprobación permite afirmar.</li></ul>
+<h2>Fuera de alcance</h2>
+<p>No añadas:</p>
+<ul><li>TanStack Query o query keys.</li><li>Resultados remotos dentro de componentes.</li><li><code>useEffect</code> para fetching.</li><li><code>MediaSearchCardModel</code>.</li><li>Router o filtros URL.</li><li>Autenticación.</li><li>Zod para validar el JSON.</li><li><code>HttpError</code>, retry, timeout o cancelación.</li><li>React Testing Library, jsdom o MSW.</li><li>Cambios de backend.</li></ul>
+<p>La siguiente sesión usará <code>searchMedia()</code> con TanStack Query y representará estados inicial, carga, error, vacío, éxito y caché.</p>
+<h2>Ruta ejecutable y referencia autosuficiente</h2>
+<p>Esta es la secuencia real de ramas del proyecto progresivo:</p>
+<p><code>session-07-start</code> → <code>session-07-step-01-contracts</code> → <code>session-07-step-02-fetchers</code> → <code>session-07-step-03-request-json</code> → <code>session-07-step-04-first-test</code> → <code>session-07-end</code></p>
+<p>La rama <code>session-07-end</code> es el checkpoint completo. Cada rama intermedia compila y permite retomar la demostración desde una transformación concreta. Los archivos que no aparecen aquí se conservan sin cambios desde la sesión anterior.</p>
+<p>Ejecuta la instalación de esta sesión exactamente así:</p>
+<pre><code class="language-bash">pnpm add --save-dev --save-exact vitest@4.1.11</code></pre>
+<p>El lockfile lo genera pnpm. No lo escribas a mano. A continuación están <strong>completos</strong> todos los archivos que el docente o el estudiante debe crear o reemplazar durante la sesión; no hace falta abrir el repositorio de referencia en otra ventana.</p>
+<h3><code>.env.example</code> · archivo completo</h3>
+<pre><code class="language-dotenv">VITE_API_URL=https://bootcamp-medialog.cardor.dev</code></pre>
+<p>La variable contiene solo la base, sin slash final y sin <code>/api</code>. Cada función de <code>src/api/media.ts</code> agrega la ruta de su endpoint.</p>
+<h3><code>package.json</code> · archivo completo</h3>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;medialog-bootcamp&quot;,
+  &quot;private&quot;: true,
+  &quot;version&quot;: &quot;0.0.0&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;packageManager&quot;: &quot;pnpm@11.17.0&quot;,
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;&gt;=22.22.0&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;dev&quot;: &quot;vite&quot;,
+    &quot;build&quot;: &quot;tsc -b &amp;&amp; vite build&quot;,
+    &quot;lint&quot;: &quot;oxlint&quot;,
+    &quot;test&quot;: &quot;vitest run&quot;,
+    &quot;preview&quot;: &quot;vite preview&quot;
+  },
+  &quot;dependencies&quot;: {
+    &quot;@mantine/core&quot;: &quot;9.4.1&quot;,
+    &quot;@mantine/hooks&quot;: &quot;9.4.1&quot;,
+    &quot;react&quot;: &quot;19.2.8&quot;,
+    &quot;react-dom&quot;: &quot;19.2.8&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@types/node&quot;: &quot;^24.13.3&quot;,
+    &quot;@types/react&quot;: &quot;^19.2.18&quot;,
+    &quot;@types/react-dom&quot;: &quot;^19.2.4&quot;,
+    &quot;@vitejs/plugin-react&quot;: &quot;^6.1.0&quot;,
+    &quot;oxlint&quot;: &quot;^1.79.0&quot;,
+    &quot;postcss&quot;: &quot;8.5.26&quot;,
+    &quot;postcss-preset-mantine&quot;: &quot;1.18.0&quot;,
+    &quot;postcss-simple-vars&quot;: &quot;7.0.1&quot;,
+    &quot;typescript&quot;: &quot;6.0.3&quot;,
+    &quot;vite&quot;: &quot;8.2.2&quot;,
+    &quot;vitest&quot;: &quot;4.1.11&quot;
+  }
+}</code></pre>
+<h3><code>src/types/media-api.ts</code> · archivo completo</h3>
+<pre><code class="language-ts">import type { MediaType } from './media-item'
+
+export type SearchMediaInput = {
+  query: string
+  mediaType: MediaType
+}
+
+export type MediaSearchItemDto = {
+  externalId: string
+  title: string
+  releaseYear: number
+  coverUrl: string | null
+  mediaType: MediaType
+  isLogged: boolean
+}
+
+export type GetMediaDetailInput = {
+  externalId: string
+  mediaType: MediaType
+}
+
+export type MediaCatalogDetailDto = {
+  externalId: number
+  mediaType: MediaType
+  title: string
+  description: string | null
+  coverUrl: string | null
+  releaseYear: number | null
+  releaseMonth: number | null
+  releaseDay: number | null
+  durationMinutes: number | null
+  episodesCount: number | null
+  seasonsCount: number | null
+  genres: string[]
+  reviewScore: number | null
+}
+
+export const MEDIA_STATUS_VALUES = [
+  'pending',
+  'acquired',
+  'watching',
+  'seen',
+  'dropped',
+  'paused',
+] as const
+
+export type MediaStatus = (typeof MEDIA_STATUS_VALUES)[number]
+
+export const MEDIA_PRIORITY_VALUES = ['low', 'medium', 'high'] as const
+
+export type MediaPriority = (typeof MEDIA_PRIORITY_VALUES)[number]
+
+export type UserMediaDataDto = {
+  id: string
+  title: string
+  status: MediaStatus
+  priority: MediaPriority
+  notes: string | null
+}
+
+export type MediaDetailDto = {
+  catalog: MediaCatalogDetailDto | null
+  entry: UserMediaDataDto | null
+  isLogged: boolean
+}</code></pre>
+<h3><code>src/adapters/media-input-to-params.ts</code> · archivo completo</h3>
+<pre><code class="language-ts">import type { GetMediaDetailInput } from '../types/media-api'
+
+export function toMediaDetailSearchParams(
+  input: GetMediaDetailInput,
+): URLSearchParams {
+  return new URLSearchParams({
+    externalId: input.externalId,
+    mediaType: input.mediaType,
+  })
+}</code></pre>
+<h3><code>src/api/http.ts</code> · archivo completo</h3>
+<pre><code class="language-ts">const API_URL = import.meta.env.VITE_API_URL
+
+export async function requestJson&lt;T&gt;(
+  path: string,
+  init?: RequestInit,
+): Promise&lt;T&gt; {
+  const response = await fetch(`${API_URL}${path}`, init)
+
+  if (!response.ok) {
+    throw new Error(`La API respondió con status ${response.status}`)
+  }
+
+  return (await response.json()) as T
+}</code></pre>
+<h3><code>src/api/media.ts</code> · archivo completo</h3>
+<pre><code class="language-ts">import { toMediaDetailSearchParams } from '../adapters/media-input-to-params'
+import type {
+  GetMediaDetailInput,
+  MediaDetailDto,
+  MediaSearchItemDto,
+  SearchMediaInput,
+} from '../types/media-api'
+import { requestJson } from './http'
+
+export async function searchMedia(
+  input: SearchMediaInput,
+): Promise&lt;MediaSearchItemDto[]&gt; {
+  return requestJson&lt;MediaSearchItemDto[]&gt;('/api/v2/media/search', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(input),
+  })
+
+}
+
+export async function getMediaDetail(
+  input: GetMediaDetailInput,
+): Promise&lt;MediaDetailDto&gt; {
+  const params = toMediaDetailSearchParams(input)
+  return requestJson&lt;MediaDetailDto&gt;(
+    `/api/v2/media/detail?${params.toString()}`,
+  )
+}</code></pre>
+<h3><code>src/adapters/__tests__/media-input-to-params.test.ts</code> · archivo completo</h3>
+<pre><code class="language-ts">import { describe, expect, it } from 'vitest'
+
+import { toMediaDetailSearchParams } from '../media-input-to-params'
+
+describe('toMediaDetailSearchParams', () =&gt; {
+  it('conserva la identidad de una película', () =&gt; {
+    const params = toMediaDetailSearchParams({
+      externalId: '438631',
+      mediaType: 'movie',
+    })
+
+    expect(params.toString()).toBe('externalId=438631&amp;mediaType=movie')
+  })
+
+  it('conserva la identidad de una serie', () =&gt; {
+    const params = toMediaDetailSearchParams({
+      externalId: '1399',
+      mediaType: 'series',
+    })
+
+    expect(params.toString()).toBe('externalId=1399&amp;mediaType=series')
+  })
+})</code></pre>
+<h3>Comprobación del checkpoint</h3>
+<pre><code class="language-bash">pnpm test
+pnpm build
+pnpm lint</code></pre>
+<p>Lee la salida completa. Un código de salida 0 comprueba tests, tipos, generación y lint del estado local; no demuestra por sí solo que el backend publicado esté disponible ni que la navegación se haya probado en un navegador.</p></main>
+      <footer>Material de trabajo en clase · Sesión 07</footer>
+    </article>
+  </body>
+</html>

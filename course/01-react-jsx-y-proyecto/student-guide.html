@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 01 para React Guide VI">
+    <title>Guía estudiantil · Sesión 01 · React, Vite y JSX</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 01 · React, Vite y JSX</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 01 · React, Vite y JSX</h1>
+<ul><li><strong>Modalidad:</strong> virtual</li><li><strong>Duración:</strong> 90 minutos</li><li><strong>Preparación:</strong> <strong>lectura previa</strong></li></ul>
+<h2>Objetivo</h2>
+<p>Crearás un proyecto React con Vite y pnpm, seguirás su punto de entrada y construirás este árbol:</p>
+<pre><code class="language-text">App
+├── AppHeader
+└── main
+    └── MediaCard</code></pre>
+<p>Al terminar podrás explicar qué declara un componente, cómo se usa dentro de JSX y qué archivo conecta la aplicación con el navegador.</p>
+<h2>Conocimientos previos</h2>
+<ul><li>Etiquetas HTML básicas.</li><li>Funciones de JavaScript.</li><li>Uso básico de una terminal y un editor.</li><li>Lectura previa completada.</li></ul>
+<p>Esta sesión no requiere props, estado, eventos ni TypeScript avanzado.</p>
+<h2>Referencias para retomar</h2>
+<p>El proyecto se llama <code>MediaLog-Bootcamp</code>; <code>package.json</code> usa <code>medialog-bootcamp</code>. Si debes recuperar un bloque, informa qué comprobaste y cuál fue el último cambio guardado. El docente dispone de estas referencias:</p>
+<div class="table-wrap"><table><thead><tr><th>Bloque terminado</th><th>Referencia</th><th>Qué debería funcionar</th></tr></thead><tbody><tr><td>S01-B03 · Scaffold</td><td><code>session-01-step-01-scaffold</code></td><td>Template instalado y servidor abierto.</td></tr><tr><td>S01-B05 · Pantalla estática</td><td><code>session-01-step-02-static-screen</code></td><td>Encabezado y tarjeta dentro de <code>App</code>.</td></tr><tr><td>S01-B06 · Encabezado</td><td><code>session-01-step-03-app-header</code></td><td><code>AppHeader</code> extraído; tarjeta todavía en <code>App</code>.</td></tr><tr><td>S01-B07 · Tarjeta</td><td><code>session-01-end</code></td><td><code>App</code> compone ambos componentes sin props.</td></tr></tbody></table></div>
+<p>Trabaja sobre tu propia copia. Si no terminaste una extracción, retoma ese cambio antes de comenzar props en la sesión siguiente. Una copia de respaldo permite continuar, pero todavía debes explicar la transformación pendiente. No descartes tus archivos para cambiar de referencia.</p>
+<h2>Punto de partida</h2>
+<p>Comienza en la carpeta donde crearás el proyecto. No debe existir todavía <code>MediaLog-Bootcamp</code>.</p>
+<p>Comprueba tu entorno:</p>
+<pre><code class="language-bash">node --version
+pnpm --version</code></pre>
+<p>Necesitas:</p>
+<ul><li>Node.js <code>22.22.0</code> o superior.</li><li>pnpm <code>11.17.0</code>.</li><li>Un editor.</li><li>React DevTools en el navegador.</li></ul>
+<p>Si una versión no coincide, muestra al docente el comando y su salida antes de instalar dependencias.</p>
+<h2>1. Crear el proyecto</h2>
+<p>Ejecuta un comando por vez:</p>
+<pre><code class="language-bash">pnpm create vite@9.2.0 MediaLog-Bootcamp --template react-ts --no-interactive
+cd MediaLog-Bootcamp
+pnpm pkg set name=medialog-bootcamp packageManager=pnpm@11.17.0
+pnpm pkg set devDependencies.typescript=6.0.3 devDependencies.vite=8.2.2
+pnpm pkg set 'engines.node=&gt;=22.22.0'
+pnpm pkg set dependencies.react=19.2.8 'dependencies[&quot;react-dom&quot;]'=19.2.8
+pnpm install
+pnpm dev</code></pre>
+<p>Abre en el navegador la URL que muestra Vite.</p>
+<p>Comprueba la configuración:</p>
+<pre><code class="language-bash">pnpm pkg get packageManager
+pnpm pkg get dependencies.react 'dependencies[&quot;react-dom&quot;]'</code></pre>
+<p>Resultado esperado:</p>
+<ul><li><code>packageManager</code> indica <code>pnpm@11.17.0</code>.</li><li><code>name</code> indica <code>medialog-bootcamp</code>; Vite usa <code>8.2.2</code> y TypeScript <code>6.0.3</code>.</li><li>React y React DOM indican <code>19.2.8</code>.</li><li>Existe <code>pnpm-lock.yaml</code>.</li><li>No existe <code>package-lock.json</code>, <code>yarn.lock</code> o <code>bun.lock</code>.</li></ul>
+<p>No cierres la terminal donde se ejecuta <code>pnpm dev</code>.</p>
+<h2>2. Reconocer los archivos iniciales</h2>
+<p>Abre estos archivos en orden:</p>
+<ol><li><code>package.json</code>.</li><li><code>index.html</code>.</li><li><code>src/main.tsx</code>.</li><li><code>src/App.tsx</code>.</li></ol>
+<p>Localiza:</p>
+<ul><li>los scripts <code>dev</code> y <code>build</code> en <code>package.json</code>;</li><li><code>&lt;div id=&quot;root&quot;&gt;&lt;/div&gt;</code> en <code>index.html</code>;</li><li><code>createRoot</code>, <code>StrictMode</code> y <code>&lt;App /&gt;</code> en <code>src/main.tsx</code>;</li><li>la pantalla demostrativa en <code>src/App.tsx</code>.</li></ul>
+<p>Completa esta cadena en tus notas:</p>
+<pre><code class="language-text">index.html → __________ → App.tsx</code></pre>
+<h3>Checkpoint 1</h3>
+<p>Puedes señalar el archivo que contiene <code>#root</code>, el archivo que llama <code>createRoot</code> y el componente que describe la pantalla.</p>
+<h2>3. Reemplazar la demostración de Vite</h2>
+<p>La pantalla generada contiene imágenes, enlaces y un contador de ejemplo. Retira de <code>src/App.tsx</code>:</p>
+<ul><li>el import de <code>useState</code>;</li><li>los imports de imágenes;</li><li>el import de <code>App.css</code>;</li><li>el contador y el contenido demostrativo.</li></ul>
+<p>Elimina desde el explorador del editor <code>src/App.css</code> y los archivos de <code>src/assets/</code> que ya no se importan. Conserva <code>src/index.css</code>.</p>
+<p>El template de referencia contiene <code>hero.png</code>, <code>react.svg</code> y <code>vite.svg</code> dentro de <code>src/assets/</code>. Después de retirar el JSX demostrativo, elimina también <code>public/icons.svg</code> y <code>public/favicon.svg</code>. En <code>index.html</code>, retira la línea del favicon, cambia <code>lang</code> a <code>es</code> y escribe <code>MediaLog Bootcamp</code> dentro de <code>title</code>. Conserva <code>#root</code> y el script de entrada.</p>
+<p>Dentro de <code>App</code>, construye primero una sola pantalla con:</p>
+<pre><code class="language-text">Fragment
+├── header
+│   ├── nombre Medialog
+│   ├── título principal
+│   └── descripción
+└── main
+    ├── título Catálogo destacado
+    └── article
+        ├── poster pendiente
+        ├── tipo y año
+        ├── título de una película
+        └── descripción</code></pre>
+<p>Usa estas clases para que el estilo compartido coincida:</p>
+<ul><li><code>app-header</code></li><li><code>app-header__eyebrow</code></li><li><code>page-container</code></li><li><code>media-card</code></li><li><code>media-card__poster</code></li><li><code>media-card__meta</code></li></ul>
+<p>Copia este bloque en <code>src/index.css</code>. Los estilos sostienen el resultado visual; no forman el concepto principal de la sesión.</p>
+<pre><code class="language-css">:root {
+  font-family: Inter, system-ui, sans-serif;
+  color: #f5f1e8;
+  background: #141412;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.app-header,
+.page-container {
+  width: min(960px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.app-header {
+  padding: 64px 0 32px;
+  border-bottom: 1px solid #3b3a34;
+}
+
+.app-header__eyebrow,
+.media-card__meta {
+  color: #d2a84a;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.page-container {
+  padding: 32px 0 64px;
+}
+
+.media-card {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 24px;
+  padding: 24px;
+  border: 1px solid #3b3a34;
+  border-radius: 16px;
+  background: #1d1d1a;
+}
+
+.media-card__poster {
+  display: grid;
+  min-height: 220px;
+  place-items: center;
+  border-radius: 10px;
+  color: #a9a59a;
+  background: #2a2924;
+}
+
+@media (max-width: 600px) {
+  .media-card {
+    grid-template-columns: 1fr;
+  }
+}</code></pre>
+<h3>Checkpoint 2</h3>
+<p>El navegador muestra el encabezado y una tarjeta. Todo el JSX vive todavía dentro de <code>App</code> y el archivo no importa <code>useState</code>.</p>
+<h2>4. Observar la extracción de AppHeader</h2>
+<p>El docente extraerá el encabezado hacia:</p>
+<pre><code class="language-text">src/components/app-header.tsx</code></pre>
+<p>Durante la demostración, identifica:</p>
+<ol><li>La función <code>AppHeader</code>.</li><li>El <code>export</code> del archivo nuevo.</li><li>El <code>import</code> que aparece en <code>App.tsx</code>.</li><li>El elemento <code>&lt;AppHeader /&gt;</code> que reemplaza al bloque anterior.</li></ol>
+<p>Anota con tus palabras:</p>
+<pre><code class="language-text">AppHeader =
+&lt;AppHeader /&gt; =</code></pre>
+<p>Abre React DevTools y localiza <code>AppHeader</code> debajo de <code>App</code>.</p>
+<h3>Checkpoint 3</h3>
+<p>La pantalla conserva el mismo encabezado, pero React DevTools muestra un componente llamado <code>AppHeader</code>.</p>
+<h2>5. Extraer MediaCard con el grupo</h2>
+<p>Antes de crear el archivo, responde:</p>
+<ul><li>¿Qué bloque completo representa un medio?</li><li>¿Qué nombre comunica esa responsabilidad?</li><li>¿Qué parte debe conservar <code>App</code>?</li></ul>
+<p>Crea:</p>
+<pre><code class="language-text">src/components/media-card.tsx</code></pre>
+<p>Mueve el <code>article</code> completo. Declara y exporta una función llamada <code>MediaCard</code>. Después:</p>
+<ol><li>Importa <code>MediaCard</code> en <code>App.tsx</code>.</li><li>Usa <code>&lt;MediaCard /&gt;</code> dentro de <code>main</code>.</li><li>Retira el <code>article</code> antiguo de <code>App</code>.</li><li>Comprueba que la pantalla no duplique la tarjeta.</li></ol>
+<p>El árbol esperado de archivos es:</p>
+<pre><code class="language-text">src/
+├── components/
+│   ├── app-header.tsx
+│   └── media-card.tsx
+├── App.tsx
+├── index.css
+└── main.tsx</code></pre>
+<p>La estructura de <code>App</code> debe quedar así:</p>
+<pre><code class="language-tsx">function App() {
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+
+      &lt;main className=&quot;page-container&quot;&gt;
+        &lt;h2&gt;Catálogo destacado&lt;/h2&gt;
+        &lt;MediaCard /&gt;
+      &lt;/main&gt;
+    &lt;/&gt;
+  )
+}</code></pre>
+<h3>Checkpoint 4</h3>
+<ul><li><code>App</code> compone <code>AppHeader</code> y <code>MediaCard</code>.</li><li>React DevTools muestra ambos componentes.</li><li><code>MediaCard</code> sigue usando datos fijos.</li><li>No existen props, listas ni estado.</li></ul>
+<h2>6. Práctica individual</h2>
+<p>Realiza estas tres acciones sin modificar <code>App.tsx</code>:</p>
+<ol><li>Cambia la descripción secundaria de <code>AppHeader</code>.</li><li>Cambia título, año y descripción dentro de <code>MediaCard</code>.</li><li>Quita el cierre de una etiqueta, lee el error del editor y corrígelo.</li></ol>
+<p>Después escribe el árbol:</p>
+<pre><code class="language-text">App
+├── AppHeader
+└── main
+    └── MediaCard</code></pre>
+<p>Explica a otra persona:</p>
+<ul><li>qué componente es padre de <code>MediaCard</code>;</li><li>por qué <code>MediaCard</code> comienza con mayúscula;</li><li>por qué no creamos un componente separado para el título de sección.</li></ul>
+<h2>7. Comprobar el checkpoint final</h2>
+<p>Conserva <code>pnpm dev</code> en la primera terminal. Abre otra terminal dentro de <code>MediaLog-Bootcamp</code> y ejecuta:</p>
+<pre><code class="language-bash">pnpm build</code></pre>
+<p>Comprueba:</p>
+<ul><li>El comando termina con código de salida 0.</li><li>El navegador sigue mostrando el encabezado y una tarjeta.</li><li>React DevTools muestra <code>App</code>, <code>AppHeader</code> y <code>MediaCard</code>.</li><li>Puedes seguir <code>index.html → main.tsx → App.tsx</code>.</li></ul>
+<p>Estas pruebas tienen límites distintos:</p>
+<ul><li><code>pnpm build</code> comprueba TypeScript y la generación de archivos de producción.</li><li><code>pnpm dev</code> y el navegador comprueban el resultado visual local.</li><li>React DevTools comprueba el árbol de componentes montado.</li></ul>
+<p>Todavía no has comprobado props, estado, una API o un despliegue.</p>
+<h2>Errores frecuentes</h2>
+<h3>El componente comienza en minúscula</h3>
+<p>Las etiquetas del navegador usan minúscula. Los componentes propios comienzan con mayúscula:</p>
+<pre><code class="language-tsx">&lt;MediaCard /&gt;</code></pre>
+<h3>El editor no encuentra el import</h3>
+<p>Comprueba:</p>
+<ul><li>nombre del archivo en <code>kebab-case</code>;</li><li>nombre de la función en <code>PascalCase</code>;</li><li>export en el archivo del componente;</li><li>ruta relativa desde <code>App.tsx</code>.</li></ul>
+<h3>La tarjeta aparece dos veces</h3>
+<p>Revisa si <code>App</code> conserva el <code>article</code> antiguo además de <code>&lt;MediaCard /&gt;</code>. Debe existir una sola representación de la tarjeta.</p>
+<h3>La página queda en blanco</h3>
+<p>Lee el primer error de la terminal o del editor. Busca una etiqueta sin cerrar, un import inválido o un componente sin export antes de cambiar dependencias.</p>
+<h3>Quieres añadir props</h3>
+<p>Conserva la idea para la sesión 02. El checkpoint actual necesita una tarjeta fija para mostrar por qué un componente configurable resuelve un problema real.</p>
+<h2>Vocabulario</h2>
+<ul><li><strong>Componente:</strong> función que devuelve una parte de la interfaz.</li><li><strong>Elemento JSX:</strong> uso de un componente o etiqueta dentro del marcado, como <code>&lt;MediaCard /&gt;</code>.</li><li><strong>Composición:</strong> combinación de componentes dentro de otros componentes.</li><li><strong>Responsabilidad:</strong> parte de la interfaz que puedes reconocer y nombrar.</li><li><strong>Árbol de componentes:</strong> relación entre componentes padres e hijos.</li><li><strong>Scaffold:</strong> conjunto inicial de archivos creado por una herramienta.</li><li><strong>Lockfile:</strong> archivo que registra las versiones resueltas de las dependencias.</li><li><strong><code>StrictMode</code>:</strong> wrapper que activa comprobaciones adicionales durante desarrollo.</li></ul>
+<h2>Evidencia y entrega</h2>
+<p>Entrega en la plataforma institucional:</p>
+<ol><li>Un ZIP de <code>MediaLog-Bootcamp</code> sin <code>node_modules/</code> ni <code>dist/</code>.</li><li>El archivo <code>pnpm-lock.yaml</code> dentro del ZIP.</li><li>Un texto de tres líneas con:</li></ol>
+<p>   - el árbol de componentes;    - la cadena <code>index.html → main.tsx → App.tsx</code>;    - el resultado observado al ejecutar <code>pnpm build</code>.</p>
+<p>No incluyas contraseñas, tokens, variables de entorno ni carpetas de dependencias.</p>
+<h2>Punto de partida de la sesión 02</h2>
+<p><code>MediaCard</code> representa una sola película porque sus datos viven dentro del componente. La siguiente sesión convertirá esa tarjeta en un componente configurable y renderizará una colección sin duplicar su estructura.</p></main>
+      <footer>Material de trabajo en clase · Sesión 01</footer>
+    </article>
+  </body>
+</html>

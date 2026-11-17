@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lectura previa de Sesión 07 para React Guide VI">
+    <title>Lectura previa · Sesión 07 · HTTP, DTOs, agentes y primer test</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Lectura previa</p>
+        <h1>Lectura previa · Sesión 07 · HTTP, DTOs, agentes y primer test</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Lectura previa · Sesión 07 · HTTP, DTOs, agentes y primer test</h1>
+<h2>Propósito</h2>
+<p>Llegar a la sesión con un mapa básico de <code>fetch</code>, response HTTP y prueba automatizada. Usarás ese mapa para leer dos contratos de Medialog y comprobar una transformación pura sin integrar todavía datos remotos en la interfaz.</p>
+<ul><li><strong>Tiempo estimado:</strong> 20 minutos</li><li><strong>Stack de la cohorte:</strong> React <code>19.2.8</code>, TypeScript, Vite, pnpm <code>11.17.0</code> y Vitest <code>4.1.11</code></li><li><strong>Fecha de verificación de fuentes:</strong> 31 de agosto de 2026</li></ul>
+<h2>Conocimientos previos</h2>
+<ul><li>Funciones, objetos y arreglos en JavaScript.</li><li>Props, callbacks y estado local de React.</li><li>Tipos de objetos y uniones en TypeScript.</li><li>Eventos <code>click</code> y handlers.</li><li>Checkpoint completo de la sesión 06.</li></ul>
+<p>No necesitas conocer TanStack Query, Router, autenticación, mocks ni pruebas de componentes.</p>
+<h2>Fuente principal · fetch y respuestas HTTP</h2>
+<p><strong>MDN Web Docs · <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/fetch" target="_blank" rel="noreferrer"><code>Window.fetch()</code></a></strong></p>
+<p>Lee únicamente:</p>
+<ol><li>El resumen situado antes de <code>In this article</code>.</li><li><code>Syntax</code>.</li><li><code>Return value</code>.</li><li>El primer ejemplo de <code>Examples</code>, hasta la comprobación de <code>response.ok</code>.</li></ol>
+<p>Busca respuestas para estas preguntas:</p>
+<ul><li>¿Qué valor devuelve <code>fetch()</code> de inmediato?</li><li>¿Qué objeto recibe el código cuando existe una response?</li><li>¿Un status <code>404</code> rechaza por sí solo la Promise de <code>fetch()</code>?</li><li>¿Qué propiedades permiten comprobar si el status representa éxito?</li></ul>
+<p>No leas todavía autenticación, cancelación, streaming ni CORS. El docente tratará esos temas cuando aparezca un consumidor en el curso.</p>
+<h2>Fuente secundaria · Primer test con Vitest</h2>
+<p><strong>Vitest <code>4.1.11</code> · <a href="https://vitest.dev/guide/" target="_blank" rel="noreferrer">Getting Started</a></strong></p>
+<p>Lee únicamente:</p>
+<ol><li><code>Writing Tests</code>.</li><li><code>Test Scripts</code>.</li><li>El ejemplo que usa <code>expect</code> para comparar un resultado.</li></ol>
+<p>Identifica:</p>
+<ul><li>qué representa un caso escrito con <code>test</code> o <code>it</code>;</li><li>qué expresa <code>expect</code>;</li><li>qué diferencia existe entre escribir un test y ejecutarlo;</li><li>qué script ejecuta una suite finita con <code>vitest run</code>.</li></ul>
+<p>No instales dependencias durante la lectura. La clase parte de un seed preparado y usa pnpm.</p>
+<h2>Recorrido sugerido</h2>
+<ol><li>Dedica 12 minutos a <code>fetch()</code>.</li><li>Dibuja una línea con <code>request → Promise → response</code>.</li><li>Añade una decisión que consulte <code>response.ok</code>.</li><li>Dedica 6 minutos al ejemplo de Vitest.</li><li>Usa los últimos 2 minutos para revisar el vocabulario y anotar una duda.</li></ol>
+<p>No modifiques el proyecto. La clase construirá el contrato y los fetchers de forma guiada.</p>
+<h2>Vocabulario previo</h2>
+<ul><li><strong>Endpoint:</strong> método HTTP y ruta que identifican una operación.</li><li><strong>Request:</strong> solicitud enviada por el cliente.</li><li><strong>Response:</strong> respuesta con status, headers y body.</li><li><strong>Promise:</strong> objeto que representa un resultado disponible después.</li><li><strong>JSON:</strong> formato de texto usado para transportar datos estructurados.</li><li><strong>DTO:</strong> estructura que cruza la frontera entre cliente y servidor.</li><li><strong>Caso de prueba:</strong> comportamiento concreto con entrada y resultado esperado.</li><li><strong>Expectativa:</strong> comparación que debe cumplirse para que un caso pase.</li></ul></main>
+      <footer>Material de preparación · Sesión 07</footer>
+    </article>
+  </body>
+</html>

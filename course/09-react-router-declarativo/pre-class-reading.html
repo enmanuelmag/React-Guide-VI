@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lectura previa de Sesión 09 para React Guide VI">
+    <title>Lectura previa · Sesión 09</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Lectura previa</p>
+        <h1>Lectura previa · Sesión 09</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Lectura previa · Sesión 09</h1>
+<h2>Antes de empezar</h2>
+<ul><li><strong>Tiempo estimado:</strong> 20 minutos.</li><li><strong>Objetivo:</strong> reconocer cómo React Router relaciona una URL con una página y cómo una ruta padre comparte estructura mediante <code>Outlet</code>.</li></ul>
+<h2>Conocimientos previos</h2>
+<p>Necesitas reconocer componentes, props, estado local, DTO, adapter y query key. También debes poder localizar <code>mediaType</code> y <code>externalId</code> dentro del modelo visual construido en la sesión 08.</p>
+<p>No instales Router ni copies ejemplos completos. La clase fijará la versión, el lugar del provider y el árbol de rutas.</p>
+<h2>Fuente 1 · Elegir un modo</h2>
+<p>Lee <a href="https://reactrouter.com/start/modes" target="_blank" rel="noreferrer">Picking a Mode</a> en la documentación oficial de React Router.</p>
+<ul><li><strong>Organización:</strong> Remix Software / React Router.</li><li><strong>Versión:</strong> React Router 8.3.1.</li><li><strong>Verificada:</strong> 31 de agosto de 2026.</li><li><strong>Secciones:</strong> introducción, <strong>Declarative</strong>, <strong>Data</strong> y <strong>Framework</strong>.</li><li><strong>Motivo:</strong> permite reconocer qué añade cada modo y por qué este proyecto puede conservar TanStack Query como propietario de los datos remotos.</li></ul>
+<p>Mientras lees, identifica:</p>
+<ul><li>qué ofrece el modo declarativo;</li><li>qué capacidades adicionales aparecen en Data Mode;</li><li>qué añade Framework Mode sobre Data Mode;</li><li>qué modo permite usar componentes como <code>BrowserRouter</code>, <code>Routes</code> y <code>Route</code>;</li><li>por qué elegir un modo no obliga a reemplazar la librería que ya administra el caché remoto.</li></ul>
+<p>El curso usará <strong>Declarative Mode</strong>. No usará loaders, actions, route modules ni Framework Mode.</p>
+<h2>Fuente 2 · Declarar rutas</h2>
+<p>Lee <a href="https://reactrouter.com/start/declarative/routing" target="_blank" rel="noreferrer">Routing</a> en la documentación oficial.</p>
+<ul><li><strong>Organización:</strong> Remix Software / React Router.</li><li><strong>Versión:</strong> React Router 8.3.1.</li><li><strong>Verificada:</strong> 31 de agosto de 2026.</li><li><strong>Secciones:</strong> <strong>Configuring Routes</strong>, <strong>Nested Routes</strong>, <strong>Layout Routes</strong>, <strong>Index Routes</strong>, <strong>Route Prefixes</strong>, <strong>Dynamic Segments</strong> y <strong>Linking</strong>.</li><li><strong>Motivo:</strong> presenta el árbol que construiremos y el vocabulario de rutas padre, hijas, layouts, segmentos dinámicos y enlaces.</li></ul>
+<p>Mientras lees, localiza:</p>
+<ul><li>dónde se declaran <code>Routes</code> y <code>Route</code>;</li><li>qué componente renderiza el contenido de una ruta hija;</li><li>cómo una layout route comparte interfaz sin añadir un segmento;</li><li>qué significa <code>:externalId</code> dentro de un path;</li><li>qué componente crea navegación declarativa.</li></ul>
+<p>Relaciona la lectura con este destino:</p>
+<pre><code class="language-text">/media/movie/123</code></pre>
+<p>En clase, <code>movie</code> llegará como <code>mediaType</code> y <code>123</code> como <code>externalId</code>. Ambos valores provienen de la URL y deben validarse antes de construir un input del dominio.</p>
+<h2>Vocabulario que debes reconocer</h2>
+<ul><li><strong>SPA:</strong> aplicación que cambia pantallas dentro del navegador sin descargar un documento HTML nuevo en cada navegación.</li><li><strong>Ruta:</strong> relación entre un patrón de URL y un elemento.</li><li><strong>Segmento dinámico:</strong> parte de un path que comienza con <code>:</code> y captura texto.</li><li><strong>Ruta hija:</strong> ruta declarada dentro de otra ruta.</li><li><strong>Layout route:</strong> ruta que comparte estructura con sus hijas.</li><li><strong><code>Outlet</code>:</strong> lugar donde se renderiza la ruta hija coincidente.</li><li><strong><code>Link</code>:</strong> componente para navegación iniciada por la persona.</li><li><strong>Route params:</strong> strings posiblemente ausentes capturados desde la URL.</li></ul>
+<h2>Lleva a clase</h2>
+<ul><li>El checkpoint funcional de la sesión 08.</li><li><code>.env.local</code> con la URL entregada por el docente; no publiques su contenido.</li><li>DevTools del navegador disponibles.</li><li>Una URL escrita en papel con esta forma: <code>/media/&lt;tipo&gt;/&lt;identificador&gt;</code>.</li></ul>
+<p>No instales <code>react-router</code> antes de la clase. El grupo comprobará los requisitos y aplicará una versión exacta.</p></main>
+      <footer>Material de preparación · Sesión 09</footer>
+    </article>
+  </body>
+</html>

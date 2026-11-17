@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 12 para React Guide VI">
+    <title>Guía estudiantil · Sesión 12 · Firebase Auth y rutas privadas</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 12 · Firebase Auth y rutas privadas</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 12 · Firebase Auth y rutas privadas</h1>
+<h2>Qué vas a construir</h2>
+<p><strong>Virtual · 90 minutos.</strong> Crearás una cuenta o iniciarás sesión con Firebase. La aplicación reconocerá esa sesión después de una recarga y decidirá si permite mostrar <code>/app/library</code>. También prepararás una petición que envía un pase temporal al servidor. La biblioteca conserva texto provisional: todavía no guardamos ni consultamos registros personales.</p>
+<p>Lectura previa: <strong>Firebase y restauración</strong>. Control posterior: <strong>preguntas de lectura</strong>.</p>
+<p>Primero veremos las 28 diapositivas completas. Después pasaremos al editor, práctica y comprobación; no necesitas copiar archivos durante la presentación.</p>
+<h2>Punto de partida</h2>
+<p><code>session-12-start</code> coincide con <code>session-11-end</code>. Búsqueda, detalle y formulario local funcionan. Mantine Form controla campos, Zod comprueba reglas y Zustand conserva tipo e ID del medio elegido. Reutiliza <a href="../11-formularios-zod-y-modal-global/student-guide.md#4-conectar-los-campos" target="_blank" rel="noreferrer">la conexión de campos de 11</a>.</p>
+<p>Comprueba ese recorrido antes de editar. Guarda tu trabajo antes de cambiar de rama. Las ramas docentes son respaldos compartidos gradualmente; <code>main</code> conserva el inicio del curso.</p>
+<h2>La ficha, la recepción y el pase</h2>
+<p>Piensa en una recepción. Puedes completar correctamente una ficha de acceso y aun así no tener una cuenta registrada: <strong>Zod comprueba la ficha</strong>, mientras <strong>Firebase comprueba la cuenta</strong>. Al volver, la recepción consulta si todavía existe una sesión; por eso la pantalla empieza diciendo «Comprobando», en lugar de decidir inmediatamente que estás fuera.</p>
+<p>Para solicitar información privada a otro edificio, necesitas llevar un pase. El <strong>ID token</strong> es ese pase temporal. Mostrar una puerta privada en React no envía automáticamente el pase ni obliga al servidor a aceptarlo.</p>
+<div class="table-wrap"><table><thead><tr><th>Trabajo</th><th>Responsable</th></tr></thead><tbody><tr><td>Campos, reglas y errores de formato</td><td>Mantine Form y Zod</td></tr><tr><td>Cuenta, sesión y token</td><td>Firebase Auth</td></tr><tr><td>Datos de sesión que leen los componentes</td><td>AuthProvider y Context</td></tr><tr><td>Carga, redirección o página privada</td><td>PrivateLayout</td></tr><tr><td>Añadir Bearer a una petición concreta</td><td>requestJsonWithAuth</td></tr><tr><td>Comprobar el token y autorizar una operación</td><td>Servidor</td></tr></tbody></table></div>
+<p>Zustand conserva el modal de creación; TanStack Query conserva búsqueda y detalle. No copiamos el usuario ni el token a esos lugares.</p>
+<h2>Ruta de la clase</h2>
+<div class="table-wrap"><table><thead><tr><th>Bloque</th><th>Minutos</th><th>Resultado</th></tr></thead><tbody><tr><td>Presentación continua</td><td>28</td><td>Reconocer los dos recorridos: pantalla y petición.</td></tr><tr><td>Construcción guiada</td><td>44</td><td>Configuración, formularios, observer, guardia, cliente y salida.</td></tr><tr><td>Práctica y prueba dirigida</td><td>10</td><td>Explicar el destino y comprobar sus entradas.</td></tr><tr><td>Comprobación y cierre</td><td>8</td><td>Separar evidencia local, navegador y servidor.</td></tr></tbody></table></div>
+<p>Total: 90 minutos. El docente entrega soporte mecánico dentro de cada paso de código. El presupuesto se ajustará con experiencia real; no implica que debas escribir toda la interfaz desde cero.</p>
+<h2>1. Preparar Firebase después de las diapositivas</h2>
+<p>Confirma el preflight: proyecto propio, Web app registrada y Email/Password habilitado. En la copia de clase, instala solamente la versión acordada:</p>
+<pre><code class="language-bash">pnpm install --frozen-lockfile</code></pre>
+<p>Antes de añadir Firebase, copia la política de scripts entregada por el docente. Son dos scripts inspeccionados que no necesita nuestra inicialización explícita; no aprobamos scripts desconocidos:</p>
+<p><strong><code>pnpm-workspace.yaml</code>:</strong></p>
+<pre><code class="language-yaml">allowBuilds:
+  '@firebase/util': false
+  protobufjs: false</code></pre>
+<p>Después ejecuta:</p>
+<pre><code class="language-bash">pnpm add --save-exact firebase@12.16.0
+pnpm install --frozen-lockfile</code></pre>
+<p>Si intentaste añadir antes de copiar el YAML y pnpm mostró scripts ignorados, conserva los cambios de manifest/lockfile, entrega la política y repite la instalación congelada con el docente.</p>
+<p><code>.env.example</code> enumera la URL pública y seis variables de Firebase. Copia tus valores a <code>.env.local</code> sin sobrescribir una configuración existente. Ese archivo permanece ignorado por Git:</p>
+<pre><code class="language-dotenv">VITE_API_URL=https://bootcamp-medialog.cardor.dev
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=</code></pre>
+<p>Las variables <code>VITE_</code> se incorporan al navegador. Son configuración de la Web app; no agregues contraseñas, cuentas de servicio, claves privadas ni tokens. Reinicia Vite después de cambiar la configuración.</p>
+<p>El módulo <code>src/firebase/firebase.ts</code> inicializa una sola app y exporta Auth. Si falta configuración, la interfaz debe explicar esa ausencia y no fingir una sesión o un error de contraseña. Completa los valores antes de intentar registrarte.</p>
+<p><strong>Comprueba:</strong> búsqueda y detalle continúan disponibles. Una configuración ausente aparece como problema de preparación; una configuración válida permite iniciar Auth.</p>
+<h2>2. Conectar Login y Registro</h2>
+<p>Recorre los archivos que entrega el docente y completa los handlers:</p>
+<ul><li><code>src/schemas/auth.ts</code>: correo, contraseña mínima y confirmación coincidente.</li><li><code>src/pages/login-page.tsx</code>: <code>signInWithEmailAndPassword</code>.</li><li><code>src/pages/register-page.tsx</code>: <code>createUserWithEmailAndPassword</code>.</li></ul>
+<p>Mantine Form reutiliza <code>initialValues</code>, <code>schemaResolver</code>, <code>form.key</code>, <code>getInputProps</code> y <code>form.onSubmit</code>. La confirmación sirve para comparar dos campos; Firebase recibe solamente correo y contraseña.</p>
+<p>El handler espera la promesa, bloquea otro envío y muestra un mensaje general ante fallo. Un error local aparece junto al campo; un fallo remoto aparece como mensaje del intento. No copies el usuario a un estado global desde el submit.</p>
+<p><strong>Comprueba:</strong> correo inválido y contraseñas distintas no envían. Crear una cuenta también inicia sesión. Un fallo de acceso muestra un mensaje general y permite reintentar.</p>
+<h2>3. Escuchar la sesión</h2>
+<p><code>AuthProvider</code> registra <code>onAuthStateChanged</code> una sola vez y cancela esa escucha al desmontarse. El Effect sincroniza React con Firebase, como en 10 sincronizábamos el título con el navegador.</p>
+<p>El contrato distingue tres situaciones:</p>
+<div class="table-wrap"><table><thead><tr><th>Valor de código</th><th>Qué significa</th></tr></thead><tbody><tr><td>checking</td><td>Firebase todavía comprueba la sesión.</td></tr><tr><td>anonymous</td><td>Terminó de comprobar y no existe sesión.</td></tr><tr><td>authenticated</td><td>Existe sesión y hay datos del usuario.</td></tr></tbody></table></div>
+<p>Conserva solo <code>uid</code> y <code>email</code>; valida ese objeto antes de actualizar Context. <code>useAuth</code> permite leerlo. El objeto completo del SDK y el token continúan administrados por Firebase.</p>
+<p><strong>Comprueba:</strong> recargar empieza comprobando y termina en la situación correcta. No retires Strict Mode para ocultar el ciclo adicional de desarrollo: el cleanup cancela la escucha anterior.</p>
+<h2>4. Proteger la pantalla y conservar el destino</h2>
+<p><code>PrivateLayout</code> primero resuelve la comprobación pendiente, después la ausencia de sesión y finalmente muestra su <code>Outlet</code>. Sin sesión redirige a Login y conserva la página solicitada.</p>
+<p><code>toAuthDestination(state: unknown)</code> comprueba el objeto recibido, recorta espacios del destino y usa <code>/app/library</code> cuando falta un string válido. Un cast con <code>as</code> no examinaría ese valor real.</p>
+<p>Login y Registro mantienen ese destino en sus enlaces y regresan allí después del éxito mediante <code>navigate(destination, { replace: true })</code>. La guardia usa <code>Navigate</code> al decidir qué renderizar; el submit navega dentro del evento que conoce el éxito.</p>
+<p><strong>Comprueba:</strong> abre <code>/app/library</code> sin sesión, cambia de Login a Registro y completa el acceso. Debes terminar en el destino solicitado. El contenido de biblioteca sigue siendo provisional.</p>
+<h2>5. Enviar el pase al servidor</h2>
+<p>El helper heredado <code>src/api/http.ts</code> ya añade <code>VITE_API_URL</code> a una ruta. El fetcher recibe <code>/api/v2/auth/check</code>; no duplica el dominio.</p>
+<p><code>ApiError</code> conserva el status. <code>requestJsonWithAuth</code> lee el usuario actual, pide <code>getIdToken</code>, conserva otros headers y añade <code>Authorization: Bearer</code>. El helper público continúa sin credencial para búsqueda y detalle.</p>
+<p>El docente monta temporalmente <code>AuthRequestProbe</code> dentro de <code>LibraryPage</code>. Desde una sesión activa compararás el mismo endpoint con los dos helpers:</p>
+<div class="table-wrap"><table><thead><tr><th>Petición</th><th>Qué comprobar</th></tr></thead><tbody><tr><td>Sin credencial</td><td>El servidor responde 401.</td></tr><tr><td>Con credencial aceptada</td><td>El servidor responde 200 y confirma authenticated.</td></tr></tbody></table></div>
+<p>No expandas, copies, imprimas ni captures el token. Registra status y resultado. Un proyecto Firebase no permitido o un bloqueo CORS es una dependencia externa; un build exitoso no demuestra que el servidor aceptó tu sesión.</p>
+<p><strong>Comprueba:</strong> reconoce cuál helper usa cada botón. Después retira el probe, su import y su consumidor con el docente. El checkpoint final no contiene botones de diagnóstico.</p>
+<h2>6. Cerrar sesión</h2>
+<p><code>PrivateHeader</code> muestra el correo, permite volver a búsqueda y ejecuta <code>signOut(auth)</code> desde el botón. Espera el éxito antes de navegar. Si la operación falla, conserva la sesión y permite otro intento.</p>
+<p><strong>Comprueba:</strong> salir vuelve a Login y otro intento de abrir biblioteca activa la guardia. Búsqueda y detalle públicos siguen funcionando. No limpiamos queries personales porque todavía no existen.</p>
+<h2>7. Trabajo con agente y práctica</h2>
+<p>Antes de delegar, acuerda estos comportamientos del destino. La persona escribe la función; el agente redacta únicamente sus tests:</p>
+<pre><code class="language-text">Lee src/auth/auth-destination.ts, src/schemas/auth.ts y un test puro cercano.
+Usa la skill ahk-test para proponer, redactar y ejecutar pruebas Vitest:
+1. Conserva un from string.
+2. Recorta espacios exteriores.
+3. State undefined usa /app/library.
+4. State null usa /app/library.
+5. From no string usa /app/library.
+6. From vacío o de solo espacios usa /app/library.
+
+Solo puedes modificar src/auth/__tests__/auth-destination.test.ts
+y soporte exclusivo dentro de src/auth/__tests__/fixtures/.
+Producción, Firebase, provider, páginas, rutas, cliente HTTP, configuración,
+dependencias y otros tests permanecen en solo lectura.
+No uses snapshots ni debilites expectativas. Si aparece una contradicción,
+detente y explícala antes de cambiar código.
+
+Ejecuta pnpm exec vitest run src/auth/__tests__/auth-destination.test.ts.
+Entrega matriz, archivos, resultado y exit status; explica entradas,
+salidas, supuestos y límites. No afirmes haber probado Firebase o el navegador.</code></pre>
+<p>Lee cada caso y el diff antes de aceptarlo. Si el agente tarda o no está disponible, usa la referencia del docente después de acordar la matriz; también debes leerla y ejecutarla.</p>
+<pre><code class="language-bash">pnpm exec vitest run src/auth/__tests__/auth-destination.test.ts
+pnpm test
+pnpm lint
+pnpm build</code></pre>
+<p>Practica con una cuenta de prueba propia y conserva un registro del recorrido. Una cuenta de demostración pertenece al entorno de clase y no debe aparecer en Git.</p>
+<h2>Evidencia y palabras del código</h2>
+<p>Entrega código, diff del agente leído, salida de comandos y casos manuales observados: formato inválido, error remoto, acceso anónimo, acceso correcto, recarga, destino conservado, logout y ausencia del probe. Marca pendiente cualquier caso que no ejecutaste.</p>
+<ul><li><strong>Context:</strong> forma de compartir un dato con los componentes que están dentro del provider.</li><li><strong>Provider:</strong> componente que entrega ese dato al árbol.</li><li><strong>Observer:</strong> función registrada para recibir cambios; su cleanup cancela la escucha.</li><li><strong>Guardia:</strong> componente que decide si muestra carga, redirige o permite mostrar una página.</li><li><strong>Bearer:</strong> forma de enviar el token en el header Authorization.</li><li><strong>Autorización:</strong> decisión del servidor sobre lo que permite hacer tras comprobar la credencial.</li></ul>
+<p>Un test puro demuestra la normalización del destino. Lint y build comprueban el código local. El navegador demuestra el recorrido observado. Solo una petición real aceptada demuestra que ese servidor aceptó el token.</p>
+<h2>Si no terminaste</h2>
+<p>Anota último bloque y paso comprobado, cambio guardado, primera acción pendiente y evidencia que falta. Un respaldo recupera archivos; no reemplaza explicar y comprobar el trabajo pendiente. El cierre de referencia es <code>session-12-end</code>.</p>
+<p>En la próxima sesión conectaremos el formulario local con creación y biblioteca remotas. Aquí no añadimos mutaciones, queries privadas, Firestore ni persistencia propia del token.</p></main>
+      <footer>Material de trabajo en clase · Sesión 12</footer>
+    </article>
+  </body>
+</html>
