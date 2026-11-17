@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía estudiantil de Sesión 19 para React Guide VI">
+    <title>Guía estudiantil · Sesión 19 · Presentaciones y cierre</title>
+    <style>
+      :root {
+        --paper: #fbfbfe;
+        --paper-2: #f3f5fb;
+        --ink: #17233f;
+        --ink-2: #45536f;
+        --muted: #66738d;
+        --rule: #d5dced;
+        --accent: #354f9f;
+        --accent-soft: #e7ecfb;
+        --code: #17233f;
+        --code-ink: #f5f7fc;
+        --success: #287d72;
+        --display: Sora, Aptos Display, "Segoe UI", sans-serif;
+        --body: "IBM Plex Sans", Aptos, "Segoe UI", sans-serif;
+        --mono: "JetBrains Mono", Consolas, monospace;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--paper-2); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+      .page { width: min(100% - 32px, 960px); margin: 32px auto; overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); box-shadow: 0 16px 48px rgb(24 36 63 / 10%); }
+      header { padding: 56px 64px 48px; color: var(--paper); background: linear-gradient(135deg, var(--accent), #263b7c); }
+      .label { margin: 0 0 12px; color: #dbe4ff; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+      header h1 { max-width: 18ch; margin: 0; font-family: var(--display); font-size: clamp(34px, 6vw, 58px); letter-spacing: -.045em; line-height: 1.04; }
+      header .rule { width: 80px; height: 4px; margin-top: 28px; background: #8ee0cf; }
+      main { padding: 56px 64px 72px; }
+      main > h1 { display: none; }
+      h2, h3 { font-family: var(--display); letter-spacing: -.03em; line-height: 1.15; }
+      h2 { margin: 56px 0 18px; padding-top: 18px; border-top: 2px solid var(--rule); font-size: 30px; }
+      h2:first-child { margin-top: 0; }
+      h3 { margin: 32px 0 12px; color: var(--accent); font-size: 22px; }
+      p { max-width: 72ch; margin: 0 0 18px; }
+      ul, ol { max-width: 72ch; margin: 0 0 22px; padding-left: 1.4em; }
+      li { margin: 8px 0; padding-left: .25em; }
+      li::marker { color: var(--accent); font-weight: 700; }
+      a { color: var(--accent); font-weight: 600; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      strong { color: var(--ink); }
+      code { padding: .14em .36em; border-radius: 4px; background: var(--accent-soft); color: #263b7c; font-family: var(--mono); font-size: .88em; }
+      pre { margin: 24px 0; padding: 24px; overflow-x: auto; border-radius: 8px; background: var(--code); color: var(--code-ink); box-shadow: inset 4px 0 var(--success); }
+      pre code { padding: 0; background: transparent; color: inherit; font-size: .82em; line-height: 1.55; }
+      blockquote { max-width: 72ch; margin: 24px 0; padding: 16px 20px; border-left: 4px solid var(--success); background: #ecf8f5; color: var(--ink-2); }
+      .table-wrap { max-width: 100%; margin: 24px 0; overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; }
+      table { width: 100%; border-collapse: collapse; font-size: .9em; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+      th { background: var(--accent-soft); color: var(--accent); font-family: var(--display); }
+      tbody tr:last-child td { border-bottom: 0; }
+      footer { display: flex; gap: 12px; align-items: center; padding: 20px 64px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+      footer::before { width: 9px; height: 9px; border-radius: 50%; background: var(--success); content: ""; }
+      @media (max-width: 700px) { .page { width: 100%; margin: 0; border: 0; border-radius: 0; } header, main { padding: 36px 24px; } footer { padding: 18px 24px; } body { font-size: 17px; } }
+      @media print { body { background: white; } .page { width: 100%; margin: 0; border: 0; box-shadow: none; } a { color: inherit; } }
+    </style>
+  </head>
+  <body>
+    <article class="page">
+      <header>
+        <p class="label">React Guide VI · Guía estudiantil</p>
+        <h1>Guía estudiantil · Sesión 19 · Presentaciones y cierre</h1>
+        <div class="rule"></div>
+      </header>
+      <main><h1>Guía estudiantil · Sesión 19 · Presentaciones y cierre</h1>
+<blockquote>Paquete textual aprobado. La presentación visual y el checkpoint docente permanecen pendientes de sus etapas correspondientes.</blockquote>
+<ul><li><strong>Fecha:</strong> sábado 14 de noviembre de 2026</li><li><strong>Semana:</strong> 8</li><li><strong>Modalidad:</strong> presencial</li><li><strong>Duración:</strong> 180 minutos</li><li><strong>Lectura previa:</strong> <strong>pre-class-reading.md</strong></li><li><strong>Rúbrica:</strong> <strong>workshop-rubric.md</strong></li></ul>
+<h2>Objetivo</h2>
+<p>Presentarás y defenderás el producto final. Mostrarás un recorrido real, explicarás una decisión técnica y declararás qué demuestra cada evidencia utilizada.</p>
+<p>No implementarás una feature nueva durante esta sesión.</p>
+<h2>Punto de partida</h2>
+<p>La sesión 18 te entrega el producto publicado y su ficha de evidencia. Llega con:</p>
+<ul><li>URL <code>pages.dev</code>;</li><li>rama de producción;</li><li>revisión local comprobada;</li><li>revisión publicada por Cloudflare Pages y confirmación de que coincide con la revisión local;</li><li>identificador o enlace del deployment;</li><li>ruta pública anidada comprobada;</li><li>acceso a una cuenta de demostración;</li><li>al menos una entrada personal preparada;</li><li>resultados recientes de <code>pnpm test</code> y <code>pnpm build</code>;</li><li>ficha final y orden de presentación confirmados.</li></ul>
+<p>No compartas contraseñas, tokens, variables privadas o credenciales en slides, repositorios o chat.</p>
+<h2>Antes del descanso</h2>
+<h3>1. Observa antes de nombrar</h3>
+<p>Compararemos tres recorridos con un restaurante y después con un diagrama de servidor, red y navegador. En cada caso identifica:</p>
+<ul><li>cuándo se produce el HTML;</li><li>qué viaja por la red;</li><li>qué hace el navegador;</li><li>cuándo aparece la interacción.</li></ul>
+<h3>2. Formaliza el mapa</h3>
+<div class="table-wrap"><table><thead><tr><th>Modelo</th><th>Idea central</th></tr></thead><tbody><tr><td>CSR</td><td>React construye el contenido en el navegador.</td></tr><tr><td>SSR</td><td>Un runtime genera HTML durante la petición y el navegador puede hidratarlo.</td></tr><tr><td>SSG</td><td>Un proceso genera HTML antes de la visita y el hosting sirve ese resultado.</td></tr></tbody></table></div>
+<p>Medialog sigue siendo una SPA CSR. Publicarla como archivos estáticos en Cloudflare Pages no prerenderiza automáticamente el árbol de componentes.</p>
+<p>Este mapa no forma parte de la calificación y no cambia el proyecto.</p>
+<h3>3. Prepara tu defensa</h3>
+<p>Completa una frase por fila:</p>
+<div class="table-wrap"><table><thead><tr><th>Parte</th><th>Tu contenido</th></tr></thead><tbody><tr><td>Problema</td><td>Qué puede lograr una persona con Medialog.</td></tr><tr><td>Arquitectura</td><td>Qué piezas participan en el recorrido.</td></tr><tr><td>Demostración</td><td>Qué acciones ejecutarás.</td></tr><tr><td>Decisión</td><td>Qué decisión técnica explicarás.</td></tr><tr><td>Evidencia</td><td>Qué registro respalda tu afirmación.</td></tr><tr><td>Límite</td><td>Qué no permite concluir esa evidencia.</td></tr></tbody></table></div>
+<h2>Estructura de seis minutos</h2>
+<ol><li><strong>Problema y producto:</strong> aproximadamente 40 segundos.</li><li><strong>Mapa del recorrido:</strong> aproximadamente 50 segundos.</li><li><strong>Demostración:</strong> aproximadamente 3 minutos.</li><li><strong>Decisión técnica:</strong> aproximadamente 50 segundos.</li><li><strong>Evidencia y límite:</strong> aproximadamente 40 segundos.</li></ol>
+<p>Después tendrás dos minutos de preguntas. Si trabajas en equipo, cada integrante debe intervenir y responder una pregunta breve. El docente confirmará antes de clase que el tamaño de la unidad permite hacerlo sin recortar la demostración.</p>
+<h2>Recorrido mínimo</h2>
+<p>Durante la demostración:</p>
+<ol><li>Muestra la URL publicada.</li><li>Abre directamente una ruta pública anidada y recárgala.</li><li>Abre <code>/app/library</code> sin sesión y muestra la redirección a Login.</li><li>Inicia sesión.</li><li>Completa una operación privada ya construida.</li><li>Explica una decisión técnica vinculada con ese recorrido.</li><li>Identifica la rama, las revisiones local y publicada, confirma que coinciden y muestra el deployment.</li></ol>
+<p>Elige una operación breve y segura. No improvises una eliminación si no la ensayaste.</p>
+<h2>Decisiones técnicas posibles</h2>
+<p>Explica una sola con profundidad:</p>
+<ul><li>por qué una query key incluye todos los inputs de su query function;</li><li>por qué <code>logId</code> y <code>mediaType + externalId</code> representan identidades distintas;</li><li>por qué TanStack Query conserva DTOs remotos y Zustand solo la intención del modal;</li><li>por qué logout elimina la familia Media después de <code>signOut</code> exitoso;</li><li>por qué el formulario espera la respuesta del servidor antes de cerrar;</li><li>por qué una ruta privada espera la restauración de Firebase antes de decidir.</li></ul>
+<p>No enumeres conceptos sin conectarlos con un archivo, un flujo o una acción visible.</p>
+<h2>Evidencia requerida</h2>
+<p>Prepara:</p>
+<ul><li>URL pública;</li><li>rama de producción;</li><li>revisión local comprobada;</li><li>revisión publicada por Cloudflare Pages;</li><li>confirmación de que ambas revisiones coinciden;</li><li>deployment de Cloudflare Pages;</li><li>salida reciente de <code>pnpm test</code>;</li><li>salida reciente de <code>pnpm build</code>;</li><li>recorrido real en navegador;</li><li>limitaciones conocidas.</li></ul>
+<p>Recuerda:</p>
+<ul><li>test no demuestra navegador;</li><li>build no demuestra deployment;</li><li>deployment no demuestra login o API;</li><li>una URL que abre no demuestra el recorrido privado completo.</li></ul>
+<h2>Ensayo opcional con agente</h2>
+<p>Antes de invocarlo, decide tu recorrido, tu decisión técnica y tus evidencias.</p>
+<pre><code class="language-text">Actúa como entrevistador técnico para una presentación final de React.
+
+Primero responde únicamente: &quot;Pega tu ficha de presentación&quot;.
+
+Cuando reciba la ficha:
+- formula exactamente cinco preguntas breves;
+- cubre recorrido del usuario, propietario de estado, identidad de ruta, estado remoto y límite de evidencia;
+- señala aparte cualquier afirmación que la ficha no respalde;
+- no escribas respuestas modelo;
+- no propongas features, refactors o cambios de código;
+- no uses herramientas, archivos o servicios externos;
+- termina después de las cinco preguntas y la lista de afirmaciones sin respaldo.</code></pre>
+<p>Responde oralmente con tus palabras. El agente no demuestra que tu producto funcione y no puede responder durante la evaluación.</p>
+<h2>Comprobaciones antes del turno</h2>
+<p>Ejecuta en el proyecto correcto:</p>
+<pre><code class="language-bash">pnpm test
+pnpm build</code></pre>
+<p>Después abre la URL publicada en una ventana nueva y recorre las acciones de tu presentación. Conserva las salidas completas; no presentes solo una captura recortada que oculte el resultado.</p>
+<h2>Durante el turno</h2>
+<ul><li>Empieza con la pestaña pública correcta.</li><li>Mantén Devtools cerrado salvo que forme parte de una evidencia ya ensayada.</li><li>No edites código.</li><li>No muestres valores privados.</li><li>Si algo falla, describe exactamente lo observado. No digas que funcionó antes como sustituto de la evidencia actual.</li><li>Respeta la señal de cierre a los seis minutos.</li></ul>
+<h2>Entrega final</h2>
+<p>Entrega mediante el canal institucional:</p>
+<pre><code class="language-text">Nombre o equipo:
+URL pública:
+Rama de producción:
+Revisión local comprobada:
+Revisión publicada:
+¿Coinciden ambas revisiones?:
+Deployment:
+Operación privada demostrada:
+Decisión técnica explicada:
+Resultado de pnpm test:
+Resultado de pnpm build:
+Limitaciones conocidas:</code></pre>
+<p>No escribas “ninguna” si observaste un bloqueo. Describe el síntoma sin incluir credenciales o datos privados.</p>
+<h2>Criterios de aceptación</h2>
+<ul><li>La presentación termina dentro de seis minutos.</li><li>La ruta pública abre directamente y sobrevive una recarga.</li><li>La ruta privada redirige sin sesión.</li><li>Login y una operación privada quedan demostrados o el bloqueo externo queda declarado.</li><li>La arquitectura coincide con el recorrido construido durante el curso.</li><li>Una decisión técnica tiene propietario, flujo y motivo identificables.</li><li>La evidencia se interpreta dentro de su límite.</li><li>Cada integrante puede responder por el trabajo presentado.</li><li>La ficha final queda entregada.</li></ul>
+<p>Una evidencia anterior puede documentar una dependencia externa registrada, pero no convierte el comportamiento actual en aprobado. El docente calificará por separado los criterios que sí pueda observar.</p>
+<h2>Rúbrica</h2>
+<p>La nota base suma 100 puntos y no existen puntos extra. CSR, SSR, SSG, decoración, animaciones y cantidad de slides no se califican.</p>
+<p>Consulta <strong>workshop-rubric.md</strong> antes de preparar el turno.</p>
+<h2>Cierre</h2>
+<p>Al finalizar podrás explicar qué construiste, cómo lo comprobaste y qué decisión investigarías si otro producto necesitara generar HTML antes de ejecutar React en el navegador.</p></main>
+      <footer>Material de trabajo en clase · Sesión 19</footer>
+    </article>
+  </body>
+</html>
