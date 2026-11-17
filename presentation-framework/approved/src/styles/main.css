@@ -1,0 +1,16 @@
+/* Hallmark · macrostructure: Workbench · pre-emit critique: P5 H5 E5 S5 R5 V5
+ * genre: editorial · theme: custom
+ * vibe: "laboratorio claro, técnico, didáctico, juvenil"
+ * paper: oklch(99.1% 0.004 271) · accent: oklch(38.7% 0.142 267)
+ * display: Sora · body: IBM Plex Sans · axes: light / geometric-sans / cool
+ * enrichment: functional HTML/SVG diagrams + official local logos · studied: no
+ * contrast: pass (40–41) · tokens: pass (48) · slop: pass (applicable gates 1–58)
+ */
+@import "tailwindcss";
+@import "./fonts.css";
+@import "./tokens.css";
+@import "./base.css";
+@import "./layouts.css";
+@import "./components.css";
+@import "./code.css";
+@import "./print.css";

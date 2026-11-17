@@ -1,0 +1,14 @@
+{
+  "date": "2026-09-07",
+  "audience": "Estudiantes de bootcamp que observan una presentación proyectada",
+  "useCase": "Introducir conceptos antes de abrir el editor",
+  "tone": "Técnico, editorial y didáctico",
+  "preserved": {
+    "designSystem": "Laboratorio claro",
+    "accent": "#223B8F",
+    "fonts": ["Sora", "IBM Plex Sans", "JetBrains Mono"],
+    "spacing": "Escala de 8 px",
+    "motion": "Mínimo"
+  },
+  "framework": "HTML semántico, Reveal.js, Vite y Tailwind CSS compilado"
+}

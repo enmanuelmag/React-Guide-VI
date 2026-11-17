@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-09-07",
+  "assets": [
+    {
+      "file": "brand/espol-bootcamp.png",
+      "name": "ESPol Bootcamp",
+      "kind": "brand-logo",
+      "source": "User-supplied reference image",
+      "sourceUrl": null,
+      "transformation": "Copied without visual modification",
+      "usage": "Covers, major separators and closing slides"
+    },
+    {
+      "file": "logos/react.png",
+      "name": "React",
+      "kind": "technology-logo",
+      "source": "Simple Icons React mark",
+      "sourceUrl": "https://cdn.simpleicons.org/react/61DAFB",
+      "license": "MIT",
+      "transformation": "Official vector mark rasterized to transparent PNG",
+      "usage": "First introduction or stack relationship"
+    },
+    {
+      "file": "logos/react-official.png",
+      "name": "React",
+      "kind": "technology-logo",
+      "source": "React official brand asset",
+      "sourceUrl": "https://react.dev/images/brand/logo_light.svg",
+      "transformation": "Official vector asset rasterized to transparent PNG",
+      "usage": "First introduction in Session 01"
+    },
+    {
+      "file": "logos/vite.png",
+      "name": "Vite",
+      "kind": "technology-logo",
+      "source": "Vite official repository asset",
+      "sourceUrl": "https://raw.githubusercontent.com/vitejs/vite/main/docs/public/logo.svg",
+      "transformation": "Official vector asset rasterized to transparent PNG",
+      "usage": "First introduction in Session 01"
+    },
+    {
+      "file": "logos/pnpm.png",
+      "name": "pnpm",
+      "kind": "technology-logo",
+      "source": "pnpm official website repository asset",
+      "sourceUrl": "https://raw.githubusercontent.com/pnpm/pnpm.io/main/static/img/pnpm-no-name-with-frame.svg",
+      "transformation": "Official vector asset rasterized to PNG",
+      "usage": "First introduction in Session 01"
+    },
+    {
+      "file": "logos/typescript.png",
+      "name": "TypeScript",
+      "kind": "technology-logo",
+      "source": "TypeScript official website repository asset",
+      "sourceUrl": "https://raw.githubusercontent.com/microsoft/TypeScript-Website/v2/packages/typescriptlang-org/static/branding/ts-logo-512.svg",
+      "transformation": "Official vector asset rasterized to transparent PNG",
+      "usage": "First introduction in Session 01"
+    },
+    {
+      "file": "logos/tanstack.png",
+      "name": "TanStack",
+      "kind": "technology-logo",
+      "source": "TanStack official brand asset",
+      "sourceUrl": "https://tanstack.com/images/brand/tanstack-landscape-black.svg",
+      "transformation": "Official vector mark rasterized to transparent PNG",
+      "usage": "First introduction or stack relationship"
+    },
+    {
+      "file": "logos/mantine.png",
+      "name": "Mantine",
+      "kind": "technology-logo",
+      "source": "SeekLogo Mantine PNG asset",
+      "sourceUrl": "https://seeklogo.com/vector-logo/443588/mantine",
+      "transformation": "Downloaded as PNG and cropped to the horizontal brand lockup",
+      "usage": "First introduction in Session 06"
+    },
+    {
+      "file": "logos/context7.png",
+      "name": "Context7",
+      "kind": "technology-logo",
+      "source": "Context7 official website favicon",
+      "sourceUrl": "https://context7.com/favicon.ico",
+      "transformation": "Downloaded from the official website as a PNG favicon",
+      "usage": "First introduction in Session 07"
+    },
+    {
+      "file": "logos/vitest.png",
+      "name": "Vitest",
+      "kind": "technology-logo",
+      "source": "Vitest official website wordmark",
+      "sourceUrl": "https://vitest.dev/vitest-dark.svg",
+      "transformation": "Official SVG rasterized and cropped to a horizontal PNG",
+      "usage": "First introduction and finite test run in Session 07"
+    },
+    {
+      "file": "logos/react-router.png",
+      "name": "React Router",
+      "kind": "technology-logo",
+      "source": "React Router official brand asset",
+      "sourceUrl": "https://reactrouter.com/_brand/react-router-brand-assets/logo/Light.png",
+      "transformation": "Official transparent PNG used without visual modification",
+      "usage": "Cover and responsibility comparison in Session 09"
+    }
+  ]
+}

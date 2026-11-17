@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sesión 03: composición, responsabilidades y catálogo estático" />
+    <title>Sesión 03 · Composición y catálogo estático</title>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-slide-id="session-03-00-cover" data-geometry="G02" data-semantic="S02" data-chrome="none">
+          <div class="slide-frame" data-layout="G02">
+            <div class="slide-heading">
+              <p class="slide-label">Sesión 03 · React Guide VI</p>
+              <h1 class="slide-display">Composición y catálogo estático</h1>
+              <p class="slide-lede">Reorganizar sin cambiar lo que ya funciona</p>
+            </div>
+            <figure class="brand-lockup">
+              <img src="/assets/brand/espol-bootcamp.png" alt="Logo de ESPOL Bootcamp" />
+              <span>Medialog · Taller presencial</span>
+            </figure>
+            <aside class="notes">Presentar la meta sin abrir todavía el editor: hoy no añadiremos datos ni interacción. Redistribuiremos responsabilidades y comprobaremos que los seis casos siguen funcionando.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-01-route" data-geometry="G10" data-semantic="S03 S04">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">Ruta de la jornada</p><h2 class="slide-title">Del checkpoint al taller</h2></header>
+            <div class="journey-track" aria-label="Cuatro momentos de la sesión presencial">
+              <article><b>01</b><strong>Recuperar</strong><span>Los casos que ya funcionan.</span></article>
+              <article><b>02</b><strong>Redistribuir</strong><span>Una responsabilidad completa.</span></article>
+              <article><b>03</b><strong>Aplicar</strong><span>Dos componentes de presentación.</span></article>
+              <article><b>04</b><strong>Comprobar</strong><span>Resultado, build y explicación.</span></article>
+            </div>
+            <p class="flow-question">75 min de preparación → 30 min de descanso → 60 min de taller → 15 min de revisión</p>
+            <aside class="notes">Aclarar que el bloque previo al descanso construye MediaGrid. El taller aplica decisiones ya explicadas y no introduce una API, hook o librería nueva.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-02-recap-flow" data-geometry="G10" data-semantic="S05 S28">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/react-official.png" alt="Logo de React" /></div><h2 class="slide-title">El flujo ya produce seis tarjetas</h2></header>
+            <div class="flow" data-steps="4" aria-label="Flujo actual desde el fixture hasta cada tarjeta">
+              <div class="flow-step"><strong>Fixture</strong><span>declara seis medios</span></div>
+              <div class="flow-step"><strong>App</strong><span>elige la colección</span></div>
+              <div class="flow-step"><strong>map</strong><span>recorre cada objeto</span></div>
+              <div class="flow-step"><strong>MediaCard</strong><span>presenta cada medio</span></div>
+            </div>
+            <p class="flow-question">¿Qué responsabilidad concentra todavía <code>App</code>?</p>
+            <aside class="notes">Pedir al grupo completar el recorrido de memoria. La respuesta que abre la sesión es que App todavía conserva el wrapper, map y key de la colección.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-03-regression-baseline" data-geometry="G08" data-semantic="S25 S47">
+          <div class="slide-frame" data-layout="G08">
+            <header class="slide-heading"><p class="slide-label">Línea base</p><h2 class="slide-title">Cuatro casos que no podemos perder</h2><p class="slide-lede"><strong>Regresión:</strong> algo que funcionaba deja de hacerlo después de un cambio.</p></header>
+            <div class="regression-grid" aria-label="Matriz de cuatro casos visuales que deben conservarse">
+              <article data-state="success"><span>01 · Tipo</span><strong>Película</strong><code>mediaType: 'movie'</code></article>
+              <article data-state="success"><span>02 · Tipo</span><strong>Serie</strong><code>mediaType: 'series'</code></article>
+              <article data-state="empty"><span>03 · Ausencia</span><strong>Poster no disponible</strong><code>posterUrl: null</code></article>
+              <article data-state="empty"><span>04 · Ausencia</span><strong>Sin descripción disponible</strong><code>description: null</code></article>
+            </div>
+            <aside class="notes">Confirmar estos cuatro casos en el navegador antes de tocar la estructura. Es una regresión manual: todavía no se introducen tests automatizados.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-04-app-concentrates" data-geometry="G16" data-semantic="S37 S38">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Estado inicial</p><h2 class="slide-title">App concentra el bloque de colección</h2></header>
+            <figure class="file-snippet" data-role="parent">
+              <figcaption><span>Padre</span><code>src/App.tsx</code></figcaption>
+              <pre><code class="language-tsx">&lt;div className="media-list"&gt;
+  {mediaItems.map((media) =&gt; (
+    &lt;MediaCard
+      key={media.id}
+      data={media}
+    /&gt;
+  ))}
+&lt;/div&gt;</code></pre>
+            </figure>
+            <aside class="code-aside"><div class="role-legend" data-role="parent"><strong>App elige</strong><span>Conserva la fuente de datos.</span></div><div class="move-set"><strong>Bloque que se mueve</strong><span>contenedor</span><span>map</span><span>key</span><span>MediaCard</span></div></aside>
+            <aside class="notes">Marcar las líneas que pertenecen a presentar la colección. No usar el tamaño de App como argumento; la razón es que wrapper, recorrido y tarjeta forman una responsabilidad reconocible.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-05-composition" data-geometry="G06" data-semantic="S13 S16">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/react-official.png" alt="Logo de React" /></div><h2 class="slide-title">Componer es asignar responsabilidades</h2></header>
+            <div class="definition-grid">
+              <article><span>Composición</span><strong>Construir una interfaz con componentes anidados.</strong><p>El árbol muestra quién contiene a quién.</p></article>
+              <article><span>Responsabilidad</span><strong>La parte de presentación o decisión que un componente posee.</strong><p>Un nombre útil describe esa parte.</p></article>
+              <article><span>Límite</span><strong>Qué código vive dentro y qué datos llegan mediante props.</strong><p>El límite evita importar una fuente innecesaria.</p></article>
+            </div>
+            <aside class="notes">Conectar los tres términos: composición describe la estructura; responsabilidad justifica el componente; límite separa lo que posee de lo que recibe. PageContainer queda fuera porque hoy solo envolvería contenido.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-06-tree-change" data-geometry="G06" data-semantic="S23 S29">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Antes → después</p><h2 class="slide-title">La colección gana un límite propio</h2></header>
+            <div class="tree-comparison">
+              <article data-stage="before"><span>Ahora</span><div class="component-tree"><strong>App</strong><i>└──</i><strong>MediaCard × 6</strong><small>App contiene wrapper, map y key.</small></div></article>
+              <div class="tree-arrow" aria-hidden="true">⟶</div>
+              <article data-stage="after"><span>Objetivo previo al taller</span><div class="component-tree"><strong>App</strong><i>└──</i><strong>MediaGrid</strong><i>    └──</i><strong>MediaCard × 6</strong><small>MediaGrid presenta la colección.</small></div></article>
+            </div>
+            <aside class="notes">Pedir que nombren la nueva responsabilidad antes de revelar MediaGrid. El comportamiento visual no cambia; cambia el lugar que posee el recorrido.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-07-grid-contract" data-geometry="G10" data-semantic="S26 S28">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/typescript.png" alt="Logo de TypeScript" /></div><h2 class="slide-title">App elige; MediaGrid recibe</h2><p class="slide-lede"><strong>Contrato de props:</strong> nombre y tipo de los datos que un componente espera.</p></header>
+            <div class="ownership-flow" aria-label="App entrega items a MediaGrid">
+              <article class="ownership-node"><code>App</code><strong>Elige</strong><span>Puede entregar el fixture completo o cualquier colección compatible.</span></article>
+              <div class="ownership-transfer"><span>items: MediaItem[]</span></div>
+              <article class="ownership-node"><code>MediaGrid</code><strong>Recibe</strong><span>No importa el fixture; presenta los items que le entregan.</span></article>
+            </div>
+            <p class="flow-question">La fuente puede cambiar sin reescribir el componente que presenta la colección.</p>
+            <aside class="notes">Contrastar recibir items con importar mediaItems. Si MediaGrid importa el fixture, queda unido a una sola fuente y no puede representar fácilmente una colección vacía o filtrada.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-08-move-map-key" data-geometry="G16" data-semantic="S39 S43">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Movimiento entre archivos</p><h2 class="slide-title">Map y key viajan con la colección</h2></header>
+            <div class="file-snippet-stack">
+              <figure class="file-snippet" data-role="child"><figcaption><span>Hijo</span><code>src/components/media-grid.tsx</code></figcaption><pre><code class="language-tsx">type MediaGridProps = {
+  items: MediaItem[]
+}
+
+export function MediaGrid(props: MediaGridProps) {
+  const { items } = props
+  return (
+    &lt;div className="media-list"&gt;
+      {items.map((media) =&gt; (
+        &lt;MediaCard key={media.id} data={media} /&gt;
+      ))}
+    &lt;/div&gt;
+  )
+}</code></pre></figure>
+              <figure class="file-snippet" data-role="parent"><figcaption><span>Padre</span><code>src/App.tsx</code></figcaption><pre><code class="language-tsx">import { MediaGrid } from './components/media-grid'
+&lt;MediaGrid items={mediaItems} /&gt;</code></pre></figure>
+            </div>
+            <aside class="code-aside"><div class="role-legend" data-role="child"><strong>MediaGrid</strong><span>Ejecuta el recorrido y conserva la key.</span></div><div class="role-legend" data-role="parent"><strong>App</strong><span>Importa el componente y entrega items.</span></div></aside>
+            <aside class="notes">Este snippet muestra la conexión conceptual; en el editor se conservará también el wrapper media-list. Señalar que key permanece en MediaCard porque es el elemento directo creado por map.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-09-empty-branch" data-geometry="G14" data-semantic="S35 S47">
+          <div class="slide-frame" data-layout="G03">
+            <header class="slide-heading"><p class="slide-label">Una colección también puede tener cero elementos</p><h2 class="slide-title">La longitud decide qué camino mostrar</h2><p class="slide-lede"><strong>Estado vacío:</strong> interfaz que explica que una colección válida no contiene elementos.</p></header>
+            <div class="branch-board" aria-label="Dos resultados según la longitud de items">
+              <div class="branch-source"><code>items.length</code><span>valor derivado de la colección recibida</span></div><div class="branch-arrow" aria-hidden="true">↙</div>
+              <article data-branch="empty"><b>0 elementos</b><strong>Mensaje necesario</strong><span>El espacio en blanco no explica qué ocurrió.</span></article><div class="branch-arrow" aria-hidden="true">↘</div>
+              <article data-branch="list"><b>Más de 0</b><strong>Lista de tarjetas</strong><span>El recorrido presenta cada medio.</span></article>
+            </div>
+            <aside class="notes">Probar items=[] en vivo más adelante. Todavía no mostrar el retorno temprano ni el JSX de EmptyState. Explicar valor derivado: se calcula desde items y no necesita estado propio.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-10-decide-present" data-geometry="G06" data-semantic="S20 S31">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Dos responsabilidades</p><h2 class="slide-title">Decidir no es presentar</h2></header>
+            <div class="role-pair">
+              <article data-role="parent"><span>Decide</span><h3>MediaGrid</h3><p>Conoce <code>items.length</code> y elige entre mensaje o lista.</p><strong>Entrada: items</strong></article><div class="role-pair__arrow" aria-hidden="true">⟶</div>
+              <article data-role="child"><span>Presenta</span><h3>EmptyState</h3><p>Muestra el título y la descripción que recibe.</p><strong>Entrada: title + description</strong></article>
+            </div>
+            <p class="flow-question"><strong>Retorno temprano:</strong> salida de una función antes del retorno principal cuando se cumple una condición.</p>
+            <aside class="notes">Preguntar quién conoce la colección. MediaGrid decide porque posee items. EmptyState no necesita inspeccionar el arreglo; su trabajo es presentar texto recibido.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-11-badge-contract" data-geometry="G05" data-semantic="S13 S27">
+          <div class="slide-frame" data-layout="G05">
+            <div class="badge-transform" aria-label="MediaTypeBadge transforma un tipo en una etiqueta visible">
+              <div><small>Dato recibido</small><code>'movie'</code></div><b aria-hidden="true">→</b><span>Película</span>
+              <div><small>Dato recibido</small><code>'series'</code></div><b aria-hidden="true">→</b><span>Serie</span>
+            </div>
+            <div class="definition-stack"><p class="slide-label">Contrato pequeño</p><h2 class="slide-title">La etiqueta solo necesita el tipo</h2><p class="slide-lede"><code>MediaTypeBadge(mediaType)</code></p><p class="body-copy"><strong>Badge:</strong> etiqueta visual breve. <code>MediaCard</code> conserva el medio completo y delega solo esa etiqueta.</p></div>
+            <aside class="notes">No mostrar la implementación del componente. Preguntar por qué MediaTypeBadge no necesita recibir MediaItem completo. Respuesta: solo utiliza mediaType para producir el label.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-12-regression-plan" data-geometry="G09" data-semantic="S52 S53">
+          <div class="slide-frame" data-layout="G09">
+            <header class="slide-heading"><p class="slide-label">Refactorización</p><h2 class="slide-title">La estructura cambia; el resultado se conserva</h2><p class="slide-lede"><strong>Refactorizar:</strong> reorganizar el código sin cambiar su comportamiento observable.</p></header>
+            <table class="matrix" data-density="compact"><thead><tr><th>Probamos</th><th>Queremos ver</th><th>Esto nos confirma</th></tr></thead><tbody>
+              <tr><td>Los seis medios</td><td>Seis tarjetas</td><td>El catálogo sigue completo</td></tr><tr><td>Una lista vacía</td><td>Un mensaje claro</td><td>La pantalla explica que no hay elementos</td></tr><tr><td>Película y serie</td><td>“Película” y “Serie”</td><td>Cada tipo conserva su nombre</td></tr><tr><td>Datos con null</td><td>Reemplazos visibles</td><td>Las ausencias siguen explicadas</td></tr><tr><td>Consola + build</td><td>Sin warning · código 0</td><td>No rompimos la lista ni sus tipos</td></tr>
+            </tbody></table>
+            <aside class="notes">Distinguir evidencia: build comprueba TypeScript y producción; navegador comprueba los casos visuales; consola comprueba el warning de key. Ninguna comprobación sustituye a las otras.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-13-editor-bridge" data-geometry="G01" data-semantic="S07 S14">
+          <div class="slide-frame" data-layout="G01">
+            <p class="slide-label">Puente hacia el editor</p><h2 class="slide-concept">¿Qué debemos mover desde App hacia MediaGrid?</h2>
+            <p class="bridge-context">Queremos que <code>MediaGrid</code> presente la lista, mientras <code>App</code> continúa eligiendo los datos.</p>
+            <div class="question-answer fragment"><strong>Movemos el contenedor, map y cada MediaCard.</strong><span><code>mediaItems</code> permanece en App; la <code>key</code> acompaña a cada tarjeta.</span></div>
+            <aside class="notes">Dar tiempo para que el grupo señale las líneas en App.tsx antes de revelar la respuesta. Confirmar que el fixture no se mueve: App elige la fuente y MediaGrid recibe items.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-14-workshop" data-geometry="G18" data-semantic="S56 S57">
+          <div class="slide-frame" data-layout="G18">
+            <div class="workshop-brief"><p class="slide-label">Taller · 60 minutos</p><h2 class="slide-title">Completar el catálogo compuesto</h2><p>El punto de partida ya contiene <code>MediaGrid</code> y las seis tarjetas.</p><div class="workshop-contracts"><code>EmptyState(title, description)</code><code>MediaTypeBadge(mediaType)</code></div></div>
+            <div class="workshop-checklist"><article><b>01</b><span><strong>Construir</strong> estado vacío y etiqueta de tipo sin estado local.</span></article><article><b>02</b><span><strong>Conservar</strong> map, key, casos nulos y ambos tipos.</span></article><article><b>03</b><span><strong>Evitar</strong> importar el fixture desde MediaGrid.</span></article><article><b>04</b><span><strong>Entregar</strong> repositorio, evidencia visual y explicación.</span></article></div>
+            <aside class="notes">Distribuir la rúbrica completa. No escribir los componentes del taller ni mostrar su JSX. Recordar que existe un checkpoint alternativo para quien no alcanzó MediaGrid.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-15-break" data-geometry="G01" data-semantic="S09" data-tone="dark" data-chrome="none">
+          <div class="slide-frame" data-layout="G01">
+            <p class="slide-label">Descanso · 30 minutos</p><h2 class="slide-display">Volvemos para construir</h2><p class="slide-lede">Punto de retorno: <code>MediaGrid</code> muestra las seis tarjetas y recibe <code>items</code>.</p>
+            <aside class="notes">Indicar la hora exacta de retorno. Durante el descanso no introducir contenido ni mostrar la solución del taller.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-03-16-close" data-geometry="G18" data-semantic="S10 S53 S59">
+          <div class="slide-frame" data-layout="G18">
+            <div class="checkpoint-limit"><p class="slide-label">Cierre conceptual</p><h2 class="slide-title">Cada componente puede explicar su trabajo</h2><p><strong>App</strong> elige la colección.</p><p><strong>MediaGrid</strong> decide entre lista o vacío.</p><p><strong>MediaCard</strong> y sus hijos presentan un medio.</p></div>
+            <ol class="closing-questions"><li><b>01</b><span>¿Por qué MediaGrid recibe items en vez de importar el fixture?</span></li><li><b>02</b><span>¿Dónde vive la key después de mover el recorrido?</span></li><li><b>03</b><span>¿Quién decide el vacío y quién presenta su texto?</span></li><li><b>04</b><span>¿Qué dato tendría que cambiar para mostrar menos tarjetas?</span></li></ol>
+            <aside class="notes">Recuperar respuestas desde el código construido. La cuarta pregunta abre la sesión 04: una interacción cambiará query y App calculará la colección visible antes de entregarla a MediaGrid.</aside>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/framework/deck.js"></script>
+  </body>
+</html>

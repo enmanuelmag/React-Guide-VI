@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Galería mínima del framework Laboratorio claro" />
+    <title>Laboratorio claro · Galería mínima</title>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-slide-id="gallery-00-cover" data-geometry="G02" data-semantic="S02" data-chrome="none">
+          <div class="slide-frame" data-layout="G02">
+            <div class="slide-heading">
+              <p class="slide-label">React Guide VI</p>
+              <h1 class="slide-display">Framework de presentaciones</h1>
+              <p class="slide-lede">Conceptos visibles antes de abrir el editor</p>
+            </div>
+            <figure class="brand-lockup">
+              <img src="/assets/brand/espol-bootcamp.png" alt="Logo de ESPOL Bootcamp" />
+              <span>Laboratorio claro · FHD</span>
+            </figure>
+            <aside class="notes">
+              Esta portada prueba la presencia moderada de marca: fondo claro, identidad visible y azul reservado para el logo y los acentos.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="gallery-01-concept" data-geometry="G04" data-semantic="S13 S31">
+          <div class="slide-frame" data-layout="G04">
+            <div class="definition-stack">
+              <p class="slide-label">Definición situada</p>
+              <h2 class="slide-title">Cada estado necesita un propietario</h2>
+              <p class="slide-lede">El propietario decide cuándo cambia el dato y quién puede leerlo.</p>
+            </div>
+            <div class="owner-map" aria-label="Mapa de propietarios de estado">
+              <div class="owner-row"><strong>React</strong><span>Borrador del formulario</span></div>
+              <div class="owner-row"><strong>Query</strong><span>Response remota y caché</span></div>
+              <div class="owner-row"><strong>Adapter</strong><span>Forma visual derivada</span></div>
+            </div>
+            <aside class="notes">
+              Preguntar dónde guardarían la response antes de revelar los tres propietarios. La slide explica vocabulario, no implementación.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="gallery-02-contrast" data-geometry="G06" data-semantic="S22 S41">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading">
+              <h2 class="slide-title">Response remota y estado local</h2>
+              <p class="slide-lede">Dos snippets comparables bajo la misma pregunta</p>
+            </header>
+            <div class="split-stage">
+              <article class="comparison-column" data-verdict="avoid">
+                <h3><span class="comparison-symbol">!</span> Copia innecesaria</h3>
+                <pre><code class="language-ts">const [items, setItems] = useState([])
+
+useEffect(() =&gt; {
+  searchMedia(input).then(setItems)
+}, [input])</code></pre>
+                <p class="comparison-note">React termina administrando una response que ya tiene otro propietario.</p>
+              </article>
+              <article class="comparison-column" data-verdict="preferred">
+                <h3><span class="comparison-symbol">✓</span> Fuente única</h3>
+                <pre><code class="language-ts">const mediaSearch = useQuery({
+  queryKey: mediaKeys.search(input),
+  queryFn: () =&gt; searchMedia(input),
+})</code></pre>
+                <p class="comparison-note">Query conserva la response y expone su estado observable.</p>
+              </article>
+            </div>
+            <aside class="notes">
+              El símbolo y el texto mantienen el contraste aunque una persona no distinga rojo y verde.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="gallery-03-matrix" data-geometry="G09" data-semantic="S25">
+          <div class="slide-frame" data-layout="G09">
+            <header class="slide-heading">
+              <h2 class="slide-title">Estado de la primera petición</h2>
+              <p class="slide-lede">`status` y `fetchStatus` responden preguntas distintas</p>
+            </header>
+            <table class="matrix">
+              <thead>
+                <tr><th>`status`</th><th>`fetchStatus`</th><th>Qué ocurre</th><th>Qué muestra la interfaz</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>pending</td><td><span class="status-cell" data-state="wait">idle</span></td><td>Aún no se envió la búsqueda</td><td>Instrucción inicial</td></tr>
+                <tr><td>pending</td><td><span class="status-cell" data-state="active">fetching</span></td><td>La primera petición está activa</td><td>Loading visible</td></tr>
+                <tr><td>success</td><td><span class="status-cell" data-state="wait">idle</span></td><td>La caché contiene datos</td><td>Resultados o vacío</td></tr>
+                <tr><td>error</td><td><span class="status-cell" data-state="wait">idle</span></td><td>La petición terminó con error</td><td>Mensaje recuperable</td></tr>
+              </tbody>
+            </table>
+            <aside class="notes">
+              Pedir al grupo que encuentre la fila que representa una query deshabilitada antes de nombrar `isLoading`.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="gallery-04-flow" data-geometry="G10" data-semantic="S28 S33">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading">
+              <div class="logo-row">
+                <img class="tech-logo" src="/assets/logos/react.png" alt="Logo de React" />
+                <img class="tech-logo" src="/assets/logos/tanstack.png" alt="Logo de TanStack" />
+              </div>
+              <h2 class="slide-title">Recorrido de una búsqueda</h2>
+            </header>
+            <div class="flow" aria-label="Flujo desde el submit hasta la interfaz">
+              <div class="flow-step"><strong>Submit</strong><span>captura texto y tipo</span></div>
+              <div class="flow-step"><strong>Query key</strong><span>identifica la búsqueda</span></div>
+              <div class="flow-step"><strong>Fetcher</strong><span>ejecuta el request</span></div>
+              <div class="flow-step"><strong>Cache</strong><span>conserva el DTO</span></div>
+              <div class="flow-step"><strong>Adapter</strong><span>deriva el modelo visual</span></div>
+            </div>
+            <p class="flow-question">¿En qué paso aparece por primera vez un dato remoto?</p>
+            <aside class="notes">
+              Los logos aparecen porque esta slide presenta la relación entre React y TanStack Query. No deben repetirse en las slides siguientes.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="gallery-05-code-light" data-geometry="G16" data-semantic="S37 S38">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading">
+              <h2 class="slide-title">Una key describe la identidad</h2>
+            </header>
+            <pre><code class="language-ts">export const mediaKeys = {
+  all: ["media"] as const,
+  searches: () =&gt; [...mediaKeys.all, "search"] as const,
+  search: (input: SearchMediaInput) =&gt;
+    [...mediaKeys.searches(), input] as const,
+}</code></pre>
+            <aside class="code-aside">
+              <div class="concept-mark"><strong>Dato</strong></div>
+              <p>La key contiene todo lo que puede cambiar la response.</p>
+              <p>El borrador sin enviar queda fuera.</p>
+            </aside>
+            <aside class="notes">
+              Leer de afuera hacia adentro: familia, búsquedas y búsqueda concreta. El editor conserva la implementación completa.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="gallery-06-code-dark" data-geometry="G15" data-semantic="S38 S40" data-tone="dark">
+          <div class="slide-frame" data-layout="G15">
+            <header class="slide-heading">
+              <p class="slide-label">Código dominante</p>
+              <h2 class="slide-title">La petición empieza después del submit</h2>
+            </header>
+            <div class="split-stage code-dominant-stage">
+              <pre><code class="language-ts" data-line-numbers="1-11|1-4|6-7|9-11">const submittedSearch =
+  form.values.query.trim()
+    ? form.values
+    : null
+
+const mediaSearch =
+  useMediaSearch(submittedSearch)
+
+const items =
+  (mediaSearch.data ?? [])
+    .map(toMediaSearchCardModel)</code></pre>
+              <ol class="annotation-list">
+                <li><b>1</b><span>El submit crea una búsqueda válida o `null`.</span></li>
+                <li><b>2</b><span>El hook recibe la identidad enviada.</span></li>
+                <li><b>3</b><span>El modelo visual se deriva durante el render.</span></li>
+              </ol>
+            </div>
+            <aside class="notes">
+              Avanzar por los tres focos. En PDF deben verse todas las líneas y las anotaciones sin depender del resaltado progresivo.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="gallery-07-states" data-geometry="G08" data-semantic="S47">
+          <div class="slide-frame" data-layout="G08">
+            <header class="slide-heading">
+              <h2 class="slide-title">Cinco estados visibles</h2>
+              <p class="slide-lede">El mismo espacio responde a cinco situaciones observables</p>
+            </header>
+            <div class="state-gallery">
+              <article class="state-sample" data-state="initial"><span class="state-index">01</span><h3>Inicio</h3><div class="state-visual">Escribe y envía</div><p>Todavía no existe una búsqueda.</p></article>
+              <article class="state-sample" data-state="loading"><span class="state-index">02</span><h3>Carga</h3><div class="state-visual">Consultando…</div><p>La primera petición está activa.</p></article>
+              <article class="state-sample" data-state="error"><span class="state-index">03</span><h3>Error</h3><div class="state-visual">No se pudo buscar</div><p>La persona puede intentarlo otra vez.</p></article>
+              <article class="state-sample" data-state="empty"><span class="state-index">04</span><h3>Vacío</h3><div class="state-visual">0 coincidencias</div><p>La petición terminó sin resultados.</p></article>
+              <article class="state-sample" data-state="success"><span class="state-index">05</span><h3>Éxito</h3><div class="state-visual">12 resultados</div><p>La interfaz muestra modelos visuales.</p></article>
+            </div>
+            <aside class="notes">
+              Esta geometría prueba la densidad más alta del piloto. Si se pierde legibilidad desde lejos, dividirla en dos slides.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="gallery-08-mockup" data-geometry="G17" data-semantic="S46 S49">
+          <div class="slide-frame" data-layout="G17">
+            <header class="slide-heading">
+              <h2 class="slide-title">La búsqueda separa entrada y resultado</h2>
+            </header>
+            <figure class="search-mock">
+              <div class="search-controls">
+                <label class="search-field"><span>Búsqueda</span><span class="search-input">Dune</span></label>
+                <label class="search-field"><span>Tipo</span><span class="search-input">Película</span></label>
+                <span class="search-submit">Buscar</span>
+              </div>
+              <div class="search-results">
+                <div class="result-row"><span class="poster-shape"></span><div><strong>Dune</strong><span>Película · 2021</span></div></div>
+                <div class="result-row"><span class="poster-shape"></span><div><strong>Dune: Part Two</strong><span>Película · 2024</span></div></div>
+                <div class="result-row"><span class="poster-shape"></span><div><strong>Children of Dune</strong><span>Serie · 2003</span></div></div>
+              </div>
+              <span class="callout-pin" data-pin="1">1</span>
+              <span class="callout-pin" data-pin="2">2</span>
+            </figure>
+            <figcaption class="evidence-caption"><strong>Mockup conceptual, no captura ejecutada</strong><span>1 · valores enviados&nbsp;&nbsp; 2 · resultado derivado</span></figcaption>
+            <aside class="notes">
+              No presentar este mockup como evidencia de una aplicación funcionando. Sirve para anticipar la separación entre valores enviados y resultados.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="gallery-09-question" data-geometry="G01" data-semantic="S14 S15">
+          <div class="slide-frame" data-layout="G01">
+            <h2 class="slide-display">¿Escribir “Dune” debería enviar un request?</h2>
+            <p class="question-answer fragment fade-up"><strong>No.</strong> La búsqueda cambia cuando la persona envía el formulario.</p>
+            <aside class="notes">
+              Dejar cinco segundos para predicción. Abrir Presenter View con la tecla S para comprobar que esta nota permanece privada.
+            </aside>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="../src/framework/deck.js"></script>
+  </body>
+</html>

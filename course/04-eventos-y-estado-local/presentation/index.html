@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sesión 04: eventos, estado local, input controlado y búsqueda derivada" />
+    <title>Sesión 04 · Eventos y useState</title>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-slide-id="session-04-00-cover" data-geometry="G02" data-semantic="S02" data-chrome="none">
+          <div class="slide-frame" data-layout="G02">
+            <div class="slide-heading">
+              <p class="slide-label">Sesión 04 · React Guide VI</p>
+              <h1 class="slide-display">Eventos y <code>useState</code></h1>
+              <p class="slide-lede">La primera interfaz que responde al usuario</p>
+            </div>
+            <figure class="brand-lockup">
+              <img src="/assets/brand/espol-bootcamp.png" alt="Logo de ESPOL Bootcamp" />
+              <span>Medialog · Búsqueda local</span>
+            </figure>
+            <aside class="notes">Presentar la meta con una acción concreta: el usuario escribirá un título y el catálogo responderá. Todavía no habrá API, debounce ni filtro por tipo.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-01-checkpoint" data-geometry="G10" data-semantic="S05 S14">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">Checkpoint de la sesión 03</p><h2 class="slide-title">El catálogo presenta datos, pero todavía no responde al usuario</h2></header>
+            <div class="flow" data-steps="3" aria-label="Flujo actual desde App hasta las tarjetas">
+              <div class="flow-step"><strong>App</strong><span>elige los seis medios</span></div>
+              <div class="flow-step"><strong>MediaGrid</strong><span>decide lista o vacío</span></div>
+              <div class="flow-step"><strong>MediaCard</strong><span>presenta cada medio</span></div>
+            </div>
+            <p class="flow-question">Para mostrar menos tarjetas, <strong>¿qué dato debe cambiar y quién debe recordarlo?</strong></p>
+            <aside class="notes">Recuperar el flujo sin reconstruir componentes. Aceptar como intuición “el texto de búsqueda”. La sesión responderá quién lo recuerda y cómo provoca otra interfaz.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-02-browser-event" data-geometry="G10" data-semantic="S13 S28">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">Primera interacción</p><h2 class="slide-title">Cuando el usuario escribe, el navegador produce un evento</h2><p class="slide-lede"><strong>Evento:</strong> información que el navegador crea cuando ocurre una interacción.</p></header>
+            <div class="interaction-flow" aria-label="Secuencia desde el teclado hasta el handler">
+              <article><b>1</b><strong>Usuario</strong><span>escribe “a”</span></article><i>realiza</i>
+              <article><b>2</b><strong>Input</strong><span>recibe la escritura</span></article><i>produce</i>
+              <article><b>3</b><strong>Evento</strong><span>contiene el nuevo texto</span></article><i>activa</i>
+              <article><b>4</b><strong>Handler</strong><span>decide cómo responder</span></article>
+            </div>
+            <p class="flow-question">El evento describe lo ocurrido; la aplicación decide qué hacer con esa información.</p>
+            <aside class="notes">Señalar que React no inventa la escritura. El navegador produce el evento del input y React ejecuta la función que entregamos en onChange.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-03-event-handler" data-geometry="G06" data-semantic="S20 S41">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/react-official.png" alt="Logo de React" /></div><h2 class="slide-title">Evento y handler cumplen trabajos diferentes</h2></header>
+            <div class="role-pair">
+              <article data-role="parent"><span>El navegador produce</span><h3>Evento</h3><p>Describe qué ocurrió en el input y cuál es su valor actual.</p><strong>Dato leído: event.currentTarget.value</strong></article>
+              <div class="role-pair__arrow" aria-hidden="true">⟶</div>
+              <article data-role="child"><span>La aplicación ejecuta</span><h3>Handler</h3><p>Recibe el evento y decide qué actualización solicitar.</p><strong>Acción: setQuery(nuevoTexto)</strong></article>
+            </div>
+            <aside class="notes">Definir handler como función de respuesta. Preguntar quién produce cada pieza. Respuesta completa: el navegador produce el evento; React ejecuta el handler que la aplicación entregó a onChange.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-04-local-variable" data-geometry="G06" data-semantic="S22 S45">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Intento que no resuelve la interfaz</p><h2 class="slide-title">Cambiar una variable local no solicita otro render</h2></header>
+            <div class="split-stage">
+              <article class="comparison-column" data-verdict="avoid"><h3><span class="comparison-symbol">1</span> La variable cambia</h3><pre><code class="language-tsx">function App() {
+  let query = ''
+
+  function handleChange(event) {
+    query = event.currentTarget.value
+  }
+}</code></pre><p class="comparison-note">JavaScript guarda el texto solo dentro de esa ejecución de App.</p></article>
+              <article class="comparison-column" data-verdict="preferred"><h3><span class="comparison-symbol">2</span> La interfaz no cambia</h3><div class="stale-ui"><label>Buscar <input value="arrival" readonly aria-label="Búsqueda de ejemplo" /></label><p>Texto que React conoce: <strong>vacío</strong></p></div><p class="comparison-note">Nadie solicitó otro render y la siguiente ejecución volvería a crear la variable.</p></article>
+            </div>
+            <aside class="notes">Escribir en el input nativo puede cambiar lo que se ve dentro del campo, pero el párrafo y la colección de React no reciben una nueva versión de query. Esta variable temporal no queda en el checkpoint.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-05-state-memory" data-geometry="G04" data-semantic="S13 S23">
+          <div class="slide-frame" data-layout="G04">
+            <div class="definition-stack">
+              <p class="slide-label">La necesidad visible</p><h2 class="slide-title">React necesita recordar la consulta</h2>
+              <p class="slide-lede"><strong>Estado:</strong> memoria que React conserva para una posición del árbol entre renders.</p>
+              <p class="body-copy"><code>query</code> necesita estado porque debe sobrevivir a la ejecución actual y producir otra interfaz.</p>
+            </div>
+            <div class="memory-board" aria-label="Comparación entre variable local y estado">
+              <article><span>Variable local</span><strong>Se crea durante una ejecución</strong><small>No solicita otra interfaz.</small></article>
+              <div aria-hidden="true">⟶</div>
+              <article data-memory="state"><span>Estado de React</span><strong>Conserva el nuevo valor</strong><small>Permite preparar el siguiente render.</small></article>
+            </div>
+            <aside class="notes">No definir estado como cualquier variable. Ligar la definición al problema: React debe recordar query entre renders para que otras partes de la interfaz puedan usarla.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-06-usestate" data-geometry="G16" data-semantic="S13 S38">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/react-official.png" alt="Logo de React" /></div><h2 class="slide-title"><code>useState</code> entrega el valor actual y una forma de actualizarlo</h2></header>
+            <figure class="file-snippet" data-role="parent"><figcaption><span>Componente propietario</span><code>src/App.tsx</code></figcaption><pre><code class="language-tsx">import { useState } from 'react'
+
+const [query, setQuery] = useState('')</code></pre></figure>
+            <aside class="hook-anatomy">
+              <div><code>query</code><strong>Valor actual</strong><span>Texto disponible durante este render.</span></div>
+              <div><code>setQuery</code><strong>Setter</strong><span>Solicita un render con otro valor.</span></div>
+              <div><code>''</code><strong>Valor inicial</strong><span>La búsqueda empieza vacía.</span></div>
+            </aside>
+            <aside class="notes">Definir Hook como función de React cuyo nombre comienza con use y permite usar capacidades como estado. Definir setter sin decir que cambia query de inmediato: solicita un render con el nuevo valor.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-07-snapshot" data-geometry="G13" data-semantic="S13 S34">
+          <div class="slide-frame" data-layout="G13">
+            <header class="slide-heading"><p class="slide-label">Estado como snapshot</p><h2 class="slide-title">Cada render trabaja con una versión concreta de query</h2><p class="slide-lede"><strong>Snapshot:</strong> valores de props y estado disponibles durante un render concreto.</p></header>
+            <div class="snapshot-track" aria-label="Dos renders y el setter entre ellos">
+              <article><b>Render 1</b><code>query === ''</code><span>La interfaz muestra la búsqueda vacía.</span></article>
+              <div><strong>setQuery('a')</strong><span>solicita el siguiente render</span></div>
+              <article data-current="true"><b>Render 2</b><code>query === 'a'</code><span>La nueva interfaz usa “a”.</span></article>
+            </div>
+            <aside class="notes">Seguir el orden de izquierda a derecha. El setter no reescribe el snapshot del render 1; prepara el render 2, que recibe otra versión de query.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-08-hook-order" data-geometry="G06" data-semantic="S22 S41">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/react-official.png" alt="Logo de React" /></div><h2 class="slide-title">Los Hooks se declaran siempre en el nivel superior</h2><p class="slide-lede">React necesita encontrar los Hooks en el mismo orden durante cada render.</p></header>
+            <div class="split-stage">
+              <article class="comparison-column" data-verdict="preferred"><h3><span class="comparison-symbol">✓</span> Orden estable</h3><pre><code class="language-tsx">function App() {
+  const [query, setQuery] = useState('')
+
+  return &lt;main&gt;...&lt;/main&gt;
+}</code></pre><p class="comparison-note">El Hook se ejecuta en cada render de App.</p></article>
+              <article class="comparison-column" data-verdict="avoid"><h3><span class="comparison-symbol">!</span> Orden variable</h3><pre><code class="language-tsx">if (showSearch) {
+  const [query, setQuery] = useState('')
+}</code></pre><p class="comparison-note">La condición puede omitir el Hook y cambiar el orden.</p></article>
+            </div>
+            <aside class="notes">No abrir todavía reglas avanzadas. La regla operativa de hoy es declarar useState directamente dentro de App, antes de condiciones, handlers o recorridos.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-09-controlled-input" data-geometry="G10" data-semantic="S28 S34">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">Input controlado</p><h2 class="slide-title">React muestra el valor y recibe cada cambio</h2><p class="slide-lede"><strong>Input controlado:</strong> campo cuyo valor viene de React y cuyo cambio actualiza ese valor.</p></header>
+            <div class="control-loop" aria-label="Circuito completo de un input controlado">
+              <article><strong>query</strong><span>valor actual</span></article><i><b>value</b> muestra</i>
+              <article><strong>Input</strong><span>usuario escribe</span></article><i><b>onChange</b> informa</i>
+              <article><strong>Handler</strong><span>lee el string</span></article><i><b>setQuery</b> solicita</i>
+              <article><strong>Nuevo render</strong><span>recibe otro query</span></article>
+            </div>
+            <p class="flow-question">El circuito funciona porque <code>value</code> y <code>onChange</code> apuntan a la misma fuente de verdad.</p>
+            <aside class="notes">Definir fuente de verdad como el componente que conserva la versión autoritativa del dato. En esta sesión es App. No decir que onChange actualiza de forma síncrona el DOM de React; solicita la actualización.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-10-search-input-contract" data-geometry="G16" data-semantic="S26 S43">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/typescript.png" alt="Logo de TypeScript" /></div><h2 class="slide-title">App conserva query; SearchInput comunica un nuevo texto</h2></header>
+            <div class="file-snippet-stack">
+              <figure class="file-snippet" data-role="child"><figcaption><span>Hijo</span><code>src/components/search-input.tsx</code></figcaption><pre><code class="language-tsx">type SearchInputProps = {
+  value: string
+  onQueryChange: (value: string) =&gt; void
+}
+
+function SearchInput(props: SearchInputProps) {
+  const { value, onQueryChange } = props
+
+  return &lt;input value={value} onChange={(event) =&gt;
+    onQueryChange(event.currentTarget.value)} /&gt;
+}</code></pre></figure>
+              <figure class="file-snippet" data-role="parent"><figcaption><span>Padre</span><code>src/App.tsx</code></figcaption><pre><code class="language-tsx">import { SearchInput } from './components/search-input'
+
+&lt;SearchInput value={query} onQueryChange={setQuery} /&gt;</code></pre></figure>
+            </div>
+            <aside class="code-aside">
+              <div class="role-legend" data-role="child"><strong>SearchInput</strong><span>Lee el evento y entrega un string.</span></div>
+              <div class="role-legend" data-role="parent"><strong>App</strong><span>Conserva query y entrega el setter.</span></div>
+              <p><strong>Prop de callback:</strong> función que un padre entrega para que un hijo comunique una acción.</p>
+            </aside>
+            <aside class="notes">Seguir la ruta del string: el hijo lee currentTarget.value y llama onQueryChange; App entregó setQuery como esa función. El evento DOM no cruza el límite del componente.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-11-strict-mode" data-geometry="G06" data-semantic="S20 S34">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/react-official.png" alt="Logo de React" /></div><h2 class="slide-title">Un evento y una ejecución del componente no son lo mismo</h2></header>
+            <div class="strict-lanes">
+              <article><span>Cuando el usuario escribe una vez</span><strong>El handler responde al evento</strong><code>console.log('evento')</code><p>La comprobación de StrictMode no inventa otra escritura.</p></article>
+              <article data-lane="render"><span>Cuando React prepara la interfaz</span><strong>El cuerpo de App se ejecuta</strong><code>console.log('render')</code><p>En desarrollo, StrictMode puede ejecutar otra vez el cuerpo para revelar código impuro.</p></article>
+            </div>
+            <p class="flow-question"><strong>StrictMode:</strong> componente que activa comprobaciones adicionales durante desarrollo; no añade esas repeticiones a producción.</p>
+            <aside class="notes">Mostrar un log con nombres distintos durante la demostración y retirarlos después. Aclarar: el handler no se repite por StrictMode; el cuerpo del componente sí puede ejecutarse otra vez en desarrollo.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-12-derived-list" data-geometry="G06" data-semantic="S20 S27">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Estado y cálculo</p><h2 class="slide-title">React recuerda query; JavaScript calcula la lista visible</h2></header>
+            <div class="remember-calculate">
+              <article data-kind="memory"><span>React recuerda</span><code>query</code><p>Debe persistir entre renders y cambiar cuando escribe el usuario.</p><strong>Estado</strong></article>
+              <div aria-hidden="true">+</div>
+              <article data-kind="input"><span>Datos disponibles</span><code>mediaItems</code><p>El fixture original permanece sin cambios.</p><strong>Fuente</strong></article>
+              <div aria-hidden="true">⟶</div>
+              <article data-kind="result"><span>JavaScript calcula</span><code>visibleMedia</code><p><code>trim</code>, <code>toLowerCase</code> y <code>filter</code> producen la lista del render actual.</p><strong>Estado derivado</strong></article>
+            </div>
+            <p class="flow-question"><strong>Normalización:</strong> transformar textos a una forma común antes de compararlos.</p>
+            <aside class="notes">Definir estado derivado como valor calculado desde datos disponibles. Guardar visibleMedia en otro useState duplicaría información y podría dejar query y lista fuera de sincronía.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-13-empty-causes" data-geometry="G06" data-semantic="S25 S35 S47">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Dos resultados vacíos</p><h2 class="slide-title">La pantalla debe explicar por qué no hay tarjetas</h2><p class="slide-lede">Una longitud de cero no explica por sí sola qué ocurrió.</p></header>
+            <div class="empty-causes">
+              <article data-cause="source"><span>Causa 1 · La fuente está vacía</span><code>mediaItems.length === 0</code><strong>Catálogo vacío</strong><p>No hay películas o series disponibles.</p><small><b>MediaGrid</b> conoce la fuente que recibió.</small></article>
+              <article data-cause="search"><span>Causa 2 · La búsqueda no coincide</span><code class="condition-code"><span>mediaItems.length &gt; 0</span><span>&amp;&amp; visibleMedia.length === 0</span></code><strong>Sin resultados</strong><p>No encontramos medios que coincidan con tu búsqueda.</p><small><b>App</b> conoce fuente, consulta y resultado.</small></article>
+            </div>
+            <aside class="notes">Preguntar quién tiene información suficiente para distinguir cada causa. Respuesta completa: MediaGrid explica una fuente vacía; App explica una búsqueda sin coincidencias porque conoce los tres datos.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-04-14-close" data-geometry="G18" data-semantic="S10 S53 S59">
+          <div class="slide-frame" data-layout="G18">
+            <div class="checkpoint-limit"><p class="slide-label">Cierre conceptual</p><h2 class="slide-title">Una escritura recorre todo el circuito</h2><p><strong>React recuerda</strong> la consulta en App.</p><p><strong>SearchInput comunica</strong> un string mediante callback.</p><p><strong>JavaScript calcula</strong> la colección visible.</p></div>
+            <ol class="closing-questions explicit-answers">
+              <li><b>01</b><span><strong>¿Por qué una variable local no actualiza la interfaz?</strong><small>No solicita otro render ni conserva el valor para el siguiente.</small></span></li>
+              <li><b>02</b><span><strong>¿Por qué query vive en App?</strong><small>App entrega el valor al input y usa la consulta para calcular la lista.</small></span></li>
+              <li><b>03</b><span><strong>¿Por qué visibleMedia no es otro estado?</strong><small>Puede calcularse desde mediaItems y query durante cada render.</small></span></li>
+              <li><b>04</b><span><strong>¿Qué deberá recordar React para filtrar por tipo?</strong><small>Un valor adicional que represente el tipo elegido; lo construiremos en la sesión 05.</small></span></li>
+            </ol>
+            <aside class="notes">Pedir primero las respuestas al grupo y revelarlas después. La cuarta respuesta abre la sesión 05 sin construir todavía el segundo control.</aside>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/framework/deck.js"></script>
+  </body>
+</html>

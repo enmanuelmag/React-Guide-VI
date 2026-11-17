@@ -1,0 +1,117 @@
+/* Sesión 12: extensiones locales de Laboratorio claro. */
+.s12 .slide-frame[data-layout] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-items: stretch;
+  align-content: stretch;
+  gap: 28px;
+  padding-top: 64px;
+}
+.s12 .slide-frame.s12-no-journey { padding-top: 0; }
+.s12 .slide-heading { grid-column: 1; gap: 16px; }
+.s12 .reveal h2.slide-title { max-width: 100%; font-size: 56px; line-height: 1.12; }
+.s12 .slide-signature { bottom: -20px; }
+.s12 .slide-label { font-size: 22px; }
+.s12 .s12-stage { display: grid; align-content: center; min-height: 0; min-width: 0; }
+.s12 .s12-foot { margin: 0 56px 0 0; padding: 18px 0 0; border-top: 2px solid #d8dfee; color: #3e4e6d; font-size: 26px; line-height: 1.35; }
+.s12 .s12-foot:empty { border: none; padding: 0; height: 0; }
+.s12-journey { position: absolute; left: 0; right: 0; top: 0; display: flex; gap: 20px; align-items: center; border-bottom: 2px solid #d8dfee; padding-bottom: 10px; }
+.s12-journey span { color: #536382; font: 500 22px var(--font-body); padding: 2px 10px; }
+.s12-journey span.is-active { background: #e7ecfa; color: #223b8f; font-weight: 700; }
+.s12-journey i { color: #7784a1; font: normal 24px var(--font-body); }
+.s12-columns { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); align-items: stretch; gap: 36px; }
+.s12-columns:has(> .s12-code) { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); grid-auto-flow: row; }
+.s12-box { padding: 32px; border-top: 5px solid #223b8f; background: #f0f3fa; min-width: 0; }
+.s12-box h3, .s12-form-sample h3 { font: 700 33px/1.2 var(--font-display); letter-spacing: -.025em; margin: 0 0 30px; }
+.s12-box p { font-size: 29px; line-height: 1.45; margin: 22px 0 0; }
+.s12-box p:first-of-type { margin-top: 0; }
+.s12-box code { font-size: .9em; overflow-wrap: anywhere; }
+.s12-box.s12-good { border-color: #2e6e5e; background: #e2f3ed; }
+.s12-box.s12-bad { border-color: #a13c4b; background: #fde9ec; }
+.s12-token { padding: 16px 20px; margin: 20px 0; background: #fff; color: #223b8f; font: 500 28px/1.4 var(--font-code); }
+.s12-button { display: inline-block; padding: 15px 24px; background: #223b8f; color: #fff; font-size: 28px; font-weight: 600; margin-top: 20px; }
+.s12-flow { display: flex; align-items: center; gap: 20px; }
+.s12-flow > .s12-box { flex: 1; align-self: stretch; display: flex; flex-direction: column; justify-content: center; min-height: 290px; }
+.s12-arrow { display: flex; flex-direction: column; align-items: center; color: #223b8f; flex: 0 0 108px; }
+.s12-arrow span { font-size: 20px; text-align: center; }
+.s12-arrow b { font-size: 48px; line-height: 1; }
+[data-slide-id$="-problem"] .s12-arrow:nth-of-type(2) b { transform: rotate(180deg); }
+.s12 .s12-code { margin: 0; min-width: 0; align-self: center; }
+.s12 .s12-code figcaption { font-size: 20px; color: #536382; margin-bottom: 15px; overflow-wrap: anywhere; line-height: 1.3; }
+.s12 .s12-code pre { font-size: 26px; line-height: 1.5; }
+.s12 .s12-code pre code { padding: 24px; font-size: 26px; line-height: 1.5; border-radius: 0; background: #edf1f9; }
+.s12 .s12-box .s12-code pre code { padding: 20px; }
+.s12 .s12-columns > .s12-code pre code { background: #121b33; color: #edf1fb; border-color: #344461; }
+.s12 .s12-columns > .s12-code .hljs-keyword { color: #b8a2f3; }
+.s12 .s12-columns > .s12-code .hljs-string { color: #a8ddc0; }
+.s12 .s12-columns > .s12-code .hljs-title { color: #f3ce7b; }
+.s12 .s12-columns > .s12-code .hljs-function,
+.s12 .s12-columns > .s12-code .hljs-params { color: #edf1fb; }
+.s12 .s12-columns > .s12-code .hljs-attr,
+.s12 .s12-columns > .s12-code .hljs-property,
+.s12 .s12-columns > .s12-code .hljs-variable { color: #91c8f7; }
+.s12 .s12-columns > .s12-code .hljs-comment { color: #b0bfd7; }
+.s12 .s12-columns > .s12-code .hljs-literal,
+.s12 .s12-columns > .s12-code .hljs-number { color: #ecc08b; }
+.s12 .s12-columns > .s12-code .hljs-name { color: #efa79a; }
+.s12 .s12-bad .s12-code pre code { background: #fbdde3; border-color: #e7b4bd; }
+.s12 .s12-good .s12-code pre code { background: #d3ebe2; border-color: #afd7c7; }
+.s12 .s12-table { width: 100%; border-collapse: collapse; font-size: 28px; line-height: 1.4; margin: 0; }
+.s12 .s12-table th { background: #223b8f; color: #fff; font-weight: 600; text-align: left; padding: 22px 26px; }
+.s12 .s12-table td { padding: 25px 26px; border-bottom: 2px solid #d8dfee; background: #f1f4fa; vertical-align: middle; }
+.s12 .s12-table code { font-size: 25px; }
+.s12-success { color: #27624f; font-weight: 600; }
+.s12-error { color: #a13c4b; font-weight: 600; }
+.s12-logo { width: 125px; height: 90px; object-fit: contain; object-position: left center; margin-bottom: 18px; }
+.s12-cover { display: grid; grid-template-columns: 1fr; gap: 36px; align-items: center; }
+.s12-cover p { font-size: 32px; margin: 20px 0; }
+.s12-cover .s12-intro { font: 600 38px/1.3 var(--font-display); }
+.s12-subtle { color: #536382; }
+.s12-brands { display: flex; gap: 64px; align-items: center; justify-content: space-between; }
+.s12-brands figure { margin: 0; text-align: center; flex: 1; }
+.s12-brands img { display: block; margin-inline: auto; width: 300px; height: 230px; object-fit: contain; }
+.s12-brands figure:first-child img { width: 360px; height: 230px; }
+.s12-brands figure:last-child img { width: 175px; height: 230px; }
+.s12-brands figcaption { font-size: 28px; margin-top: 10px; white-space: nowrap; }
+.s12 [data-slide-id$="-cover"] .slide-title { font-size: 84px; max-width: 21ch; }
+.s12-form-sample { background: #f0f3fa; padding: 28px 38px; border-left: 5px solid #223b8f; }
+.s12-caption { display: block; font-size: 20px; color: #536382; margin-bottom: 18px; }
+.s12-form-sample h3 { margin-bottom: 20px; }
+.s12-form-sample label { font-size: 23px; display: block; margin-top: 14px; }
+.s12-field { background: white; border: 1px solid #c7d1e4; padding: 12px 18px; font-size: 26px; }
+.s12-field span { float: right; }
+.s12-agent { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.s12-agent article { border-left: 5px solid #223b8f; background: #f0f3fa; padding: 26px 32px; }
+.s12-agent span { font-size: 23px; font-weight: 600; color: #223b8f; }
+.s12-agent p { font-size: 30px; line-height: 1.4; margin: 12px 0 0; }
+.s12-checkpoints { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
+.s12-checkpoints article { border-top: 4px solid #223b8f; padding-top: 28px; }
+.s12-checkpoints b { font: 600 64px var(--font-display); color: #223b8f; }
+.s12-checkpoints h3 { font-size: 34px; margin: 24px 0; }
+.s12-checkpoints p { font-size: 30px; line-height: 1.4; margin: 0; }
+@media print { .s12 .s12-stage { break-inside: avoid; } }
+.s12-library-map { position: relative; width: 1680px; height: 560px; }
+.s12-library-map > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.s12-map-node { position: absolute; top: 30px; height: 280px; padding: 26px; background: #f0f3fa; border-top: 5px solid #223b8f; }
+.s12-map-node h3 { font-size: 31px; margin: 0 0 18px; }
+.s12-map-node p { font-size: 27px; line-height: 1.3; margin: 12px 0; }
+.s12-map-node .s12-token { font-size: 23px; padding: 12px; margin: 16px 0; }
+.s12-map-store { left: 0; width: 400px; }
+.s12-map-form { left: 600px; width: 450px; }
+.s12-map-zod { left: 1280px; width: 400px; }
+.s12-map-body { left: 600px; top: 415px; width: 640px; height: 140px; background: #e2f3ed; border-color: #2e6e5e; }
+
+.s12-map { display: grid; gap: 24px; }
+.s12-map .s12-flow > .s12-box { min-height: 215px; padding: 26px; }
+.s12-map .s12-box h3 { margin-bottom: 20px; font-size: 31px; }
+.s12-map .s12-box p { font-size: 27px; line-height: 1.35; }
+.s12-map-divider { color: #223b8f; font-size: 25px; font-weight: 600; border-bottom: 2px solid #d8dfee; padding-bottom: 12px; }
+.s12-tree { display: grid; gap: 14px; }
+.s12-tree-root { justify-self: center; background: #e7ecfa; padding: 18px 60px; color: #223b8f; font-size: 32px; font-weight: 600; }
+.s12-tree-arrow { text-align: center; font-size: 25px; color: #536382; }
+.s12-tree .s12-box { padding: 25px; }
+.s12-tree .s12-box h3 { margin-bottom: 18px; }
+.s12-tree .s12-box p { font-size: 27px; }
+.s12 [data-slide-id$="-cover"] .slide-title { font-size: 88px; }
+

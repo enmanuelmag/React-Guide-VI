@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sesión 05: estado derivado y filtros locales combinados" />
+    <title>Sesión 05 · Estado derivado y filtros locales</title>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-slide-id="session-05-00-cover" data-geometry="G02" data-semantic="S02" data-chrome="none">
+          <div class="slide-frame" data-layout="G02">
+            <div class="slide-heading">
+              <p class="slide-label">Sesión 05 · React Guide VI</p>
+              <h1 class="slide-display">Dos controles, una colección visible</h1>
+              <p class="slide-lede">Estado mínimo y filtros locales combinados</p>
+            </div>
+            <figure class="brand-lockup">
+              <img src="/assets/brand/espol-bootcamp.png" alt="Logo de ESPOL Bootcamp" />
+              <span>Medialog · Búsqueda + tipo</span>
+            </figure>
+            <aside class="notes">Presentar la meta con una frase observable: al terminar, la búsqueda y el tipo decidirán juntos qué tarjetas aparecen. Todavía no habrá selección, modal, API ni Mantine.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-01-checkpoint" data-geometry="G10" data-semantic="S05 S28">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">Checkpoint de la sesión 04</p><h2 class="slide-title">Una consulta ya recorre todo el circuito</h2></header>
+            <div class="flow" data-steps="5" aria-label="Flujo de búsqueda del checkpoint anterior">
+              <div class="flow-step"><strong>query</strong><span>React recuerda el texto</span></div>
+              <div class="flow-step"><strong>normalize</strong><span>JavaScript prepara la comparación</span></div>
+              <div class="flow-step"><strong>filter</strong><span>revisa cada título</span></div>
+              <div class="flow-step"><strong>visibleMedia</strong><span>contiene las coincidencias</span></div>
+              <div class="flow-step"><strong>MediaGrid</strong><span>presenta las tarjetas</span></div>
+            </div>
+            <p class="flow-question">La consulta <code>bear</code> muestra <strong>The Bear</strong>. Ahora necesitamos responder otra pregunta: <strong>¿qué tipo quiere ver la persona?</strong></p>
+            <aside class="notes">Recuperar el checkpoint con bear sin reconstruir SearchInput. Pedir que una persona nombre el valor recordado y el calculado antes de presentar el segundo control.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-02-new-need" data-geometry="G06" data-semantic="S06 S23 S46">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Nueva necesidad visible</p><h2 class="slide-title">Buscar por título no permite elegir películas o series</h2></header>
+            <div class="split-stage filter-need">
+              <article><span>Hoy</span><div class="filter-ui"><label>Buscar<input value="" readonly aria-label="Consulta vacía de ejemplo" /></label><p>Mostrando películas y series</p></div><strong>Un criterio: título</strong></article>
+              <article data-target="true"><span>Necesidad</span><div class="filter-ui"><label>Buscar<input value="" readonly aria-label="Consulta vacía de ejemplo" /></label><div class="type-buttons" aria-label="Filtro de tipo de ejemplo"><button type="button">Todos</button><button type="button" aria-pressed="true">Películas</button><button type="button">Series</button></div></div><strong>Dos criterios: título y tipo</strong></article>
+            </div>
+            <aside class="notes">Señalar que no reemplazaremos la búsqueda. Añadiremos un segundo control y ambos valores llegarán al mismo cálculo.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-03-remember-calculate" data-geometry="G06" data-semantic="S13 S24 S31">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/react-official.png" alt="Logo de React" /></div><h2 class="slide-title">React recuerda dos decisiones; JavaScript calcula sus resultados</h2></header>
+            <div class="state-classification">
+              <article data-owner="react"><span>React recuerda</span><strong>Valores que cambian por una acción</strong><code>query</code><code>mediaTypeFilter</code></article>
+              <article data-owner="javascript"><span>JavaScript calcula</span><strong>Valores obtenidos durante cada render</strong><code>normalizedQuery</code><code>visibleMedia</code><code>hasActiveFilters</code><code>hasNoResults</code><code>resultCount</code></article>
+            </div>
+            <aside class="notes">Definir estado mínimo como el conjunto más pequeño de valores que la interfaz necesita recordar. Pedir una justificación para cada lado, no solo una clasificación.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-04-minimal-redundant" data-geometry="G06" data-semantic="S20 S22 S45">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Estructura del estado</p><h2 class="slide-title">Guardar un resultado calculable crea otra fuente de verdad</h2><p class="slide-lede"><strong>Estado redundante:</strong> dato almacenado que puede calcularse desde valores existentes.</p></header>
+            <div class="split-stage truth-sources">
+              <article data-verdict="preferred"><span>Estado mínimo</span><div class="truth-equation"><div><code>query</code><b>+</b><code>mediaTypeFilter</code></div><div><b>⟶</b><code>visibleMedia</code></div></div><strong>Un solo cálculo produce la lista actual.</strong></article>
+              <article data-verdict="avoid"><span>Estado duplicado</span><div class="truth-equation"><div><code>query</code><b>+</b><code>mediaTypeFilter</code></div><div><b>+</b><code>visibleMedia guardado</code></div></div><strong>Una actualización olvidada puede dejar la lista desactualizada.</strong></article>
+            </div>
+            <aside class="notes">Presentar el fallo concreto: si cambia el tipo y olvidamos sincronizar una copia guardada de visibleMedia, los controles y las tarjetas cuentan historias distintas.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-05-interface-value" data-geometry="G16" data-semantic="S13 S26 S27">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/typescript.png" alt="Logo de TypeScript" /></div><h2 class="slide-title"><code>"all"</code> pertenece al control, no al tipo de un medio</h2></header>
+            <figure class="file-snippet" data-role="data"><figcaption><span>Contrato de interfaz</span><code>src/components/media-type-filter.tsx</code></figcaption><pre><code class="language-tsx">import type { MediaType } from '../types/media-item'
+
+export type MediaTypeFilterValue =
+  MediaType | 'all'</code></pre></figure>
+            <aside class="domain-interface">
+              <article><span>Dominio</span><code>MediaType</code><strong><code>'movie'</code> o <code>'series'</code></strong><p>Describe el tipo real de un medio.</p></article>
+              <article data-kind="interface"><span>Interfaz</span><code>'all'</code><strong>Mostrar ambos tipos</strong><p>Describe una opción del filtro.</p></article>
+            </aside>
+            <aside class="notes">Preguntar si existe un medio cuyo tipo real sea all. Respuesta: no. All permite operar el control sin alterar el contrato del dominio.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-06-controlled-filter" data-geometry="G16" data-semantic="S26 S29 S43">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/typescript.png" alt="Logo de TypeScript" /></div><h2 class="slide-title">App guarda el filtro; el hijo recibe sus props</h2></header>
+            <div class="file-snippet-stack">
+              <figure class="file-snippet" data-role="child"><figcaption><span>Hijo</span><code>src/components/media-type-filter.tsx</code></figcaption><pre><code class="language-tsx">type MediaTypeFilterProps = {
+  value: MediaTypeFilterValue
+  onFilterChange: (value: MediaTypeFilterValue) =&gt; void
+}
+function MediaTypeFilter(props: MediaTypeFilterProps) {
+  const { value, onFilterChange } = props
+  // presenta el valor y comunica una opción nueva
+}</code></pre></figure>
+              <figure class="file-snippet" data-role="parent"><figcaption><span>Padre</span><code>src/App.tsx</code></figcaption><pre><code class="language-tsx">const [mediaTypeFilter, setMediaTypeFilter] =
+  useState&lt;MediaTypeFilterValue&gt;('all')
+&lt;MediaTypeFilter
+  value={mediaTypeFilter}
+  onFilterChange={setMediaTypeFilter}
+/&gt;</code></pre></figure>
+            </div>
+            <aside class="code-aside">
+              <div class="role-legend" data-role="child"><strong>MediaTypeFilter</strong><span>Muestra el valor recibido y comunica una opción.</span></div>
+              <div class="role-legend" data-role="parent"><strong>App</strong><span>Conserva la única versión autoritativa del filtro.</span></div>
+              <p><strong>Controlado:</strong> el valor llega mediante props y los cambios salen mediante un callback.</p>
+            </aside>
+            <aside class="notes">Seguir las dos direcciones: value baja desde App; la intención de cambio se comunica con onFilterChange. El hijo no guarda una copia interna.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-07-button-anatomy" data-geometry="G16" data-semantic="S13 S38 S46">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Botón de alternancia</p><h2 class="slide-title">El texto nombra la opción; <code class="nowrap">aria-pressed</code> comunica si está activa</h2></header>
+            <figure class="file-snippet" data-role="child"><figcaption><span>JSX interno</span><code>src/components/media-type-filter.tsx</code></figcaption><pre><code class="language-tsx">&lt;button
+  key={option.value}
+  type="button"
+  aria-pressed={value === option.value}
+  onClick={() =&gt; onFilterChange(option.value)}
+&gt;
+  {option.label}
+&lt;/button&gt;</code></pre></figure>
+            <aside class="button-anatomy">
+              <div class="type-buttons" aria-label="Estado visible de los botones"><button type="button">Todos</button><button type="button" aria-pressed="true">Películas</button><button type="button">Series</button></div>
+              <dl><div><dt><code>key</code></dt><dd>Identifica la opción creada por <code>map</code>.</dd></div><div><dt><code>type</code></dt><dd>Declara que el botón no envía un formulario.</dd></div><div><dt><code>aria-pressed</code></dt><dd>Comunica que “Películas” está activa.</dd></div></dl>
+            </aside>
+            <aside class="notes">Mantener fija la etiqueta Películas. No cambiarla por Activado. El texto dice qué opción es; aria-pressed comunica su estado a tecnologías de asistencia.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-08-click-flow" data-geometry="G10" data-semantic="S28 S34">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">Flujo del segundo control</p><h2 class="slide-title">Un click comunica una opción y prepara otro render</h2></header>
+            <div class="filter-click-flow" aria-label="Flujo desde el click hasta el nuevo botón activo">
+              <article><b>1</b><strong>Click en Películas</strong><span>la persona elige una opción</span></article><i>ejecuta</i>
+              <article><b>2</b><strong>onFilterChange</strong><span>comunica <code>'movie'</code></span></article><i>llama</i>
+              <article><b>3</b><strong>Setter de App</strong><span><code>setMediaTypeFilter</code> solicita otro render</span></article><i>produce</i>
+              <article><b>4</b><strong>Nuevo snapshot</strong><span><code>mediaTypeFilter === 'movie'</code></span></article><i>muestra</i>
+              <article><b>5</b><strong>Películas activo</strong><span><code>aria-pressed</code> recibe <code>true</code></span></article>
+            </div>
+            <p class="flow-question">El callback comunica un valor simple; el evento del botón no necesita llegar hasta App.</p>
+            <aside class="notes">Pedir al grupo que narre el recorrido usando sujeto y acción. Corregir la idea de que la función sube: App entrega el callback y el hijo lo ejecuta con movie.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-09-two-questions" data-geometry="G06" data-semantic="S20 S27">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Evaluación de un medio</p><h2 class="slide-title">Cada medio debe responder dos preguntas</h2><p class="slide-lede">Caso observado: <strong>The Bear</strong> con consulta <code>bear</code> y tipo <code>series</code>.</p></header>
+            <div class="predicate-questions">
+              <article><span>Pregunta 1 · Título</span><strong>¿“The Bear” contiene “bear”?</strong><div><code>matchesQuery</code><b>true</b></div><p>La comparación ignora mayúsculas.</p></article>
+              <article><span>Pregunta 2 · Tipo</span><strong>¿“series” coincide con “series”?</strong><div><code>matchesType</code><b>true</b></div><p>La opción elegida acepta este medio.</p></article>
+            </div>
+            <aside class="notes">Resolver una pregunta a la vez. No presentar todavía && como fórmula abstracta; primero asegurar que el grupo comprende de dónde sale cada booleano.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-10-combined-predicate" data-geometry="G16" data-semantic="S27 S37 S38">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Filtro combinado</p><h2 class="slide-title">El medio permanece solo cuando cumple ambos criterios</h2><p class="slide-lede"><strong>Predicado:</strong> expresión que decide si un elemento permanece en una colección filtrada.</p></header>
+            <figure class="file-snippet" data-role="parent"><figcaption><span>Cálculo durante el render</span><code>src/App.tsx</code></figcaption><pre><code class="language-tsx">const visibleMedia = mediaItems.filter((media) =&gt; {
+  const matchesQuery = /* coincide el título */
+  const matchesType = /* coincide el tipo */
+
+  return matchesQuery &amp;&amp; matchesType
+})</code></pre></figure>
+            <aside class="and-gate">
+              <article><code>true</code><span>y</span><code>true</code><strong>permanece</strong></article>
+              <article><code>true</code><span>y</span><code>false</code><strong>sale de la lista</strong></article>
+              <p><strong>Filtro combinado:</strong> exige que el título y el tipo coincidan al mismo tiempo.</p>
+            </aside>
+            <aside class="notes">Leer && como “y”. Comparar con || oralmente: usar “o” permitiría que The Bear aparezca al pedir Películas solo porque coincide el título.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-11-predictions" data-geometry="G08" data-semantic="S14 S25 S47">
+          <div class="slide-frame" data-layout="G08">
+            <header class="slide-heading"><p class="slide-label">Predicción antes del editor</p><h2 class="slide-title">La consulta y el tipo deciden juntos el resultado</h2></header>
+            <div class="prediction-cases">
+              <article data-result="match"><span>Caso 01</span><div><code>bear</code><b>+</b><code>Series</code></div><strong>The Bear</strong><p>El título y el tipo coinciden.</p></article>
+              <article data-result="empty"><span>Caso 02</span><div><code>bear</code><b>+</b><code>Películas</code></div><strong>Sin resultados</strong><p>El título coincide, pero el tipo no.</p></article>
+              <article data-result="three"><span>Caso 03</span><div><code>consulta vacía</code><b>+</b><code>Películas</code></div><strong>3 medios</strong><p>La consulta acepta todos los títulos y el tipo conserva películas.</p></article>
+            </div>
+            <p class="flow-question">Cada resultado puede explicarse leyendo las dos condiciones; no depende de una lista guardada aparte.</p>
+            <aside class="notes">Ocultar verbalmente el resultado hasta recibir predicciones. Pedir que cada respuesta incluya qué condición fue verdadera o falsa.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-12-derived-values" data-geometry="G08" data-semantic="S24 S31 S35">
+          <div class="slide-frame" data-layout="G08">
+            <header class="slide-heading"><p class="slide-label">Resultados derivados</p><h2 class="slide-title">App calcula la explicación de la interfaz desde los valores disponibles</h2></header>
+            <div class="derived-gallery">
+              <article><span>¿Hay algo que limpiar?</span><code>hasActiveFilters</code><strong>consulta efectiva o tipo distinto de Todos</strong></article>
+              <article><span>¿Cuántos se muestran?</span><code>resultCount</code><strong><code>visibleMedia.length</code></strong></article>
+              <article><span>¿Por qué no hay tarjetas?</span><code>hasNoResults</code><strong>hay fuente y filtros, pero cero coincidencias</strong></article>
+            </div>
+            <div class="empty-cause-strip"><span>Fuente <code>[]</code></span><strong>Catálogo vacío</strong><i>≠</i><span>Fuente con datos + filtros sin coincidencias</span><strong>Sin resultados</strong></div>
+            <aside class="notes">Subrayar que los tres valores responden preguntas de la interfaz. Ninguno necesita un setter porque todos se obtienen desde valores que ya existen.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-13-clear-filters" data-geometry="G13" data-semantic="S23 S34 S53">
+          <div class="slide-frame" data-layout="G13">
+            <header class="slide-heading"><p class="slide-label">Una acción, dos fuentes de verdad</p><h2 class="slide-title">Limpiar restablece la consulta y el tipo</h2></header>
+            <div class="clear-timeline" aria-label="Estado antes y después de limpiar filtros">
+              <article><span>Antes del click</span><div><code>query = 'bear'</code><code>mediaTypeFilter = 'movie'</code></div><strong>0 resultados</strong><small>El botón está habilitado porque hay filtros activos.</small></article>
+              <div><strong>Limpiar filtros</strong><span>restablece ambos valores</span></div>
+              <article data-state="cleared"><span>Después del render</span><div><code>query = ''</code><code>mediaTypeFilter = 'all'</code></div><strong>6 medios</strong><small>El botón queda deshabilitado porque ya no hay filtros efectivos.</small></article>
+            </div>
+            <aside class="notes">No mostrar todavía el handler completo de la práctica. Pedir que el grupo nombre los dos setters necesarios y explicar por qué el botón deshabilitado refleja hasActiveFilters.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-05-14-close" data-geometry="G18" data-semantic="S10 S53 S59">
+          <div class="slide-frame" data-layout="G18">
+            <div class="checkpoint-limit"><p class="slide-label">Cierre conceptual</p><h2 class="slide-title">Dos controles conservan un solo resultado coherente</h2><p><strong>React recuerda</strong> la consulta y el tipo.</p><p><strong>JavaScript calcula</strong> lista, conteo y mensajes.</p><p><strong>Limpiar filtros</strong> restablece las dos decisiones.</p></div>
+            <ol class="closing-questions explicit-answers">
+              <li><b>01</b><span><strong>¿Por qué visibleMedia no es estado?</strong><small>App puede calcularla desde mediaItems, query y mediaTypeFilter durante cada render.</small></span></li>
+              <li><b>02</b><span><strong>¿Por qué “all” no pertenece a MediaType?</strong><small>“all” opera el filtro; ningún medio real tiene ese tipo.</small></span></li>
+              <li><b>03</b><span><strong>¿Quién conserva el tipo seleccionado?</strong><small>App conserva mediaTypeFilter y MediaTypeFilter comunica cambios mediante su callback.</small></span></li>
+              <li><b>04</b><span><strong>¿Qué dato deberá recordar React para abrir un detalle?</strong><small>La identidad del medio elegido; la usaremos en la sesión 06 para calcular qué detalle mostrar.</small></span></li>
+            </ol>
+            <aside class="notes">Pedir primero las respuestas al grupo. La cuarta pregunta abre selección por identidad sin mostrar todavía el callback que atravesará MediaGrid y MediaCard.</aside>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/framework/deck.js"></script>
+  </body>
+</html>

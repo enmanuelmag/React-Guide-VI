@@ -1,0 +1,66 @@
+:root {
+  --color-paper: oklch(99.1% 0.004 271);
+  --color-paper-2: oklch(96.4% 0.009 265);
+  --color-paper-3: oklch(94.3% 0.017 268);
+  --color-ink: oklch(22.7% 0.051 266);
+  --color-ink-2: oklch(38.8% 0.049 266);
+  --color-muted: oklch(50.5% 0.043 263);
+  --color-rule: oklch(86.8% 0.024 262);
+  --color-accent: oklch(38.7% 0.142 267);
+  --color-accent-strong: oklch(32.3% 0.126 267);
+  --color-accent-soft: oklch(91.8% 0.035 267);
+  --color-code-dark: oklch(22.7% 0.049 267);
+  --color-code-ink: oklch(96.4% 0.009 265);
+  --color-code-muted: oklch(78% 0.032 263);
+  --color-success: oklch(49.5% 0.072 173);
+  --color-success-soft: oklch(94% 0.026 173);
+  --color-warning: oklch(52.2% 0.108 80);
+  --color-warning-soft: oklch(95% 0.034 80);
+  --color-danger: oklch(50.6% 0.136 16);
+  --color-danger-soft: oklch(95% 0.028 16);
+  --color-focus: oklch(54% 0.18 267);
+
+  --font-display: "Sora", ui-sans-serif, sans-serif;
+  --font-body: "IBM Plex Sans", ui-sans-serif, sans-serif;
+  --font-code: "JetBrains Mono", ui-monospace, monospace;
+
+  --text-caption: 20px;
+  --text-label: 22px;
+  --text-code: 27px;
+  --text-body: 32px;
+  --text-body-lg: 36px;
+  --text-title: 60px;
+  --text-display: 92px;
+  --text-concept: 112px;
+
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+  --space-4xl: 128px;
+
+  --canvas-width: 1920px;
+  --canvas-height: 1080px;
+  --safe-inline: 120px;
+  --safe-block: 88px;
+  --grid-gutter: 32px;
+  --rule-thin: 1px;
+  --rule-strong: 2px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --z-base: 1;
+  --z-raised: 10;
+  --z-controls: 100;
+}

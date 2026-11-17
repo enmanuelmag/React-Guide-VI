@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sesión 07: HTTP, DTOs, agentes y primer test" />
+    <title>Sesión 07 · HTTP, DTOs y primer test</title>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-slide-id="session-07-00-cover" data-geometry="G02" data-semantic="S02" data-chrome="none">
+          <div class="slide-frame" data-layout="G02">
+            <div class="slide-heading">
+              <p class="slide-label">Sesión 07 · React Guide VI</p>
+              <h1 class="slide-display">La aplicación consulta otro sistema</h1>
+              <p class="slide-lede">HTTP, DTOs, trabajo con agentes y primer test</p>
+            </div>
+            <figure class="brand-lockup"><img src="/assets/brand/espol-bootcamp.png" alt="Logo de ESPOL Bootcamp" /><span>Medialog · Fundamentos</span></figure>
+            <aside class="notes">Presentar el cambio de frontera: la interfaz local permanece, pero hoy aprenderemos a pedir datos a una API. El recorrido termina con evidencia ejecutable, no con una integración visual nueva.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-01-route" data-geometry="G10" data-semantic="S04 S28">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">Ruta de la sesión</p><h2 class="slide-title">De una búsqueda local a una petición comprobada</h2></header>
+            <div class="session-route" aria-label="Secuencia de la sesión">
+              <article><b>01</b><strong>Detectar</strong><span>Buscamos Dune y confirmamos que el fixture local no puede encontrarla.</span></article><i>nos lleva a</i>
+              <article><b>02</b><strong>Entender</strong><span>Leemos qué envía el navegador y qué devuelve el servidor.</span></article><i>entonces podemos</i>
+              <article><b>03</b><strong>Delegar</strong><span>Con el contrato decidido, pedimos ayuda para una tarea concreta.</span></article><i>y finalmente</i>
+              <article><b>04</b><strong>Comprobar</strong><span>Test, build y Network responden preguntas diferentes.</span></article>
+            </div>
+            <p class="flow-question">Seguiremos la búsqueda de Dune: primero aparece una limitación local, después aprendemos a solicitar datos al backend y al final comprobamos qué partes funcionan.</p>
+            <aside class="notes">Explicar que no son cuatro temas independientes. “Delegar” significa pedir a una herramienta asistida que escriba una parte concreta después de que el equipo ya decidió el contrato. La búsqueda de Dune funciona como hilo conductor.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-02-checkpoint" data-geometry="G06" data-semantic="S05 S46">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Checkpoint de la sesión 06</p><h2 class="slide-title">El explorador funciona con seis medios ya cargados</h2></header>
+            <div class="s07-local-checkpoint">
+              <article><p class="slide-label">Sí puede</p><strong>Buscar “bear”</strong><span>Filtra los objetos que ya existen.</span></article>
+              <article><p class="slide-label">Sí puede</p><strong>Abrir Arrival</strong><span>El modal usa la selección local.</span></article>
+              <article data-verdict="avoid"><p class="slide-label">Todavía no puede</p><strong>Encontrar Dune</strong><span>El fixture no contiene ese título.</span></article>
+            </div>
+            <aside class="notes">Ejecutar solo una regresión breve. Preguntar qué archivo habría que editar para que Dune aparezca. La respuesta esperada es el fixture.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-03-problem" data-geometry="G01" data-semantic="S07 S14">
+          <div class="slide-frame" data-layout="G01">
+            <p class="slide-label">Limitación visible</p>
+            <h2 class="slide-concept">Si Dune vive en otro sistema, ¿cómo la solicita el navegador?</h2>
+            <p class="bridge-context">Editar el fixture añade otra copia local. Necesitamos conocer el contrato que permite pedir datos al servidor.</p>
+            <div class="question-answer fragment"><strong>El navegador envía un request a un endpoint.</strong><span>El servidor responde según el contrato de la API.</span></div>
+            <aside class="notes">Dejar que el grupo nombre “API” o “request” antes de revelar. La pregunta busca el mecanismo, no una librería de React.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-04-http-actors" data-geometry="G03" data-semantic="S28 S33">
+          <div class="slide-frame" data-layout="G03">
+            <header class="slide-heading"><p class="slide-label">Primera frontera HTTP</p><h2 class="slide-title">El cliente solicita; el servidor responde</h2></header>
+            <div class="s07-http-roundtrip" aria-label="Recorrido de request y response">
+              <article><b>Cliente</b><span>El navegador inicia la solicitud.</span></article>
+              <div class="s07-wire" data-direction="out"><strong>Request</strong><span>método, URL, headers y body</span></div>
+              <article><b>Servidor</b><span>Recibe el request y ejecuta la operación.</span></article>
+              <div class="s07-wire" data-direction="back"><strong>Response</strong><span>status, headers y body</span></div>
+            </div>
+            <p class="flow-question"><strong>API:</strong> contrato que indica qué puede solicitar otro programa y qué respuesta puede recibir.</p>
+            <aside class="notes">Leer el recorrido en ambos sentidos. Definir cliente, servidor, API, request y response en la propia slide porque es la primera exposición.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-05-endpoint" data-geometry="G01" data-semantic="S11 S20">
+          <div class="slide-frame" data-layout="G01">
+            <p class="slide-label">Anatomía de un endpoint</p>
+            <h2 class="slide-concept"><span class="s07-method">POST</span> <code>/api/v2/media/search</code></h2>
+            <div class="s07-equation"><span><strong>Método</strong> indica la acción</span><b>+</b><span><strong>Ruta</strong> identifica el recurso</span><b>=</b><span><strong>Endpoint</strong> combina ambos</span></div>
+            <aside class="notes">Pedir que el grupo diga el endpoint completo. Aclarar que la ruta sola no distingue una lectura de una creación o búsqueda por POST.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-06-two-requests" data-geometry="G06" data-semantic="S12 S33">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Dos requests, dos ubicaciones</p><h2 class="slide-title">La búsqueda envía JSON; el detalle usa la URL</h2></header>
+            <div class="s07-request-pair">
+              <article data-method="post"><header><strong>POST</strong><code>/api/v2/media/search</code></header><pre><code class="language-json">{
+  "query": "Dune",
+  "mediaType": "movie"
+}</code></pre><p><strong>Body:</strong> contenido transportado dentro del request.</p></article>
+              <article data-method="get"><header><strong>GET</strong><code>/api/v2/media/detail</code></header><pre><code class="language-text">?externalId=438631
+&amp;mediaType=movie</code></pre><p><strong>Query string:</strong> parámetros escritos después de <code>?</code>.</p></article>
+            </div>
+            <aside class="notes">Pedir ubicar query y mediaType en ambos casos. No entrar todavía en fetch. Mostrar que el mismo dato puede viajar en lugares diferentes según el contrato.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-07-response" data-geometry="G08" data-semantic="S12 S34">
+          <div class="slide-frame" data-layout="G08">
+            <header class="slide-heading"><p class="slide-label">La response también tiene partes</p><h2 class="slide-title">El status explica el resultado antes de leer el body</h2></header>
+            <div class="s07-response-anatomy">
+              <article><b>200</b><strong>Status</strong><span>La solicitud tuvo un resultado exitoso.</span></article>
+              <article><code>content-type</code><strong>Headers</strong><span>Describen cómo interpretar la respuesta.</span></article>
+              <article><code>[{...}]</code><strong>Body</strong><span>Contiene los datos transportados.</span></article>
+              <article><code>response.ok</code><strong>Comprobación</strong><span>Es verdadero cuando el status está entre 200 y 299.</span></article>
+            </div>
+            <aside class="notes">No presentar response.json como si validara datos. Primero se comprueba status; después se interpreta el body según el contrato esperado.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-08-errors" data-geometry="G07" data-semantic="S15 S45">
+          <div class="slide-frame" data-layout="G07">
+            <header class="slide-heading"><p class="slide-label">Dos fallos distintos</p><h2 class="slide-title">Un 404 sí trae response; un fallo de red puede no traerla</h2></header>
+            <div class="s07-error-branches">
+              <article data-verdict="avoid"><strong>Error HTTP</strong><code>status: 404</code><p>El servidor respondió. <code>fetch()</code> entrega una <code>Response</code> y debemos revisar <code>response.ok</code>.</p></article>
+              <article data-verdict="avoid"><strong>Error de red</strong><code>TypeError</code><p>La solicitud no obtuvo una response utilizable. La Promise de <code>fetch()</code> se rechaza.</p></article>
+            </div>
+            <p class="flow-question">Ambos terminan en error para la aplicación, pero dejan evidencia diferente.</p>
+            <aside class="notes">Contraste respaldado por MDN Fetch. Evitar decir que fetch lanza por cualquier status no exitoso. La aplicación debe crear explícitamente el error HTTP.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-09-promise" data-geometry="G10" data-semantic="S24 S34">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">La respuesta llega después</p><h2 class="slide-title">Una Promise representa un resultado que todavía no está disponible</h2></header>
+            <div class="s07-promise-line">
+              <article><b>01</b><strong>Iniciar</strong><span><code>fetch(url)</code></span></article>
+              <i>devuelve</i>
+              <article><b>02</b><strong>Esperar</strong><span><code>Promise&lt;Response&gt;</code></span></article>
+              <i>cuando resuelve</i>
+              <article><b>03</b><strong>Comprobar</strong><span><code>response.ok</code></span></article>
+              <i>después</i>
+              <article><b>04</b><strong>Leer</strong><span><code>response.json()</code></span></article>
+            </div>
+            <p class="flow-question"><code>await</code> pausa la continuación de esa función; no congela toda la página.</p>
+            <aside class="notes">Recorrer el tiempo, no la sintaxis. La Promise representa disponibilidad futura. response.json también produce una Promise.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-10-dto" data-geometry="G16" data-semantic="S20 S42">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Contrato de transporte</p><h2 class="slide-title">Un DTO conserva la forma que cruza la frontera HTTP</h2><p class="slide-lede"><strong>DTO:</strong> estructura de datos que viaja entre cliente y servidor.</p></header>
+            <figure class="file-snippet" data-role="contract"><figcaption><span>Contrato esperado</span><code>src/types/media-api.ts</code></figcaption><pre><code class="language-ts">type MediaSearchItemDto = {
+  externalId: string
+  title: string
+  releaseYear: number
+  coverUrl: string | null
+  mediaType: MediaType
+  isLogged: boolean
+}</code></pre></figure>
+            <aside class="code-aside"><p><strong>Conserva nombres</strong> del transporte.</p><p><strong>Conserva nulabilidad</strong> del contrato.</p><p><strong>No decide la UI:</strong> no define qué datos mostraremos ni cómo los distribuiremos en una tarjeta.</p></aside>
+            <aside class="notes">Leer dos campos concretos. DTO no significa componente ni modelo visual. La interfaz remota se construirá en la sesión 08.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-11-runtime" data-geometry="G07" data-semantic="S15 S45">
+          <div class="slide-frame" data-layout="G07">
+            <header class="slide-heading"><p class="slide-label">Límite de TypeScript</p><h2 class="slide-title">El tipo ayuda al escribir código; el servidor entrega JSON en runtime</h2></header>
+            <div class="s07-runtime-contrast">
+              <article><strong>Compile time</strong><span><b>Antes de ejecutar:</b> TypeScript comprueba que nuestro código respete el type declarado.</span><code>pnpm build</code></article>
+              <article data-verdict="avoid"><strong>Runtime</strong><span><b>Mientras se ejecuta:</b> el navegador recibe el JSON real. TypeScript ya no lo inspecciona.</span><code>json as MediaSearchItemDto</code><p>El cast puede ocultar campos incompatibles.</p></article>
+            </div>
+            <aside class="notes">Hacer una pausa en esta diferencia. Compile time es cuando TypeScript revisa nuestro código antes de ejecutarlo. Runtime es cuando JavaScript ya está funcionando y llega la respuesta real. Aunque el proyecto compile, TypeScript no inspecciona el JSON enviado por el backend. La validación runtime con Zod queda fuera de esta sesión.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-11-runtime-example" data-geometry="G10" data-semantic="S15 S27 S45">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">Un cambio fuera de nuestro código</p><h2 class="slide-title">Compilar bien no garantiza que el JSON tenga la forma esperada</h2></header>
+            <div class="s07-runtime-example">
+              <article>
+                <span>01 · Nuestro type espera</span>
+                <pre><code class="language-ts">type MediaSearchItemDto = {
+  title: string
+  coverUrl: string | null
+}</code></pre>
+                <p>TypeScript conoce esta declaración local.</p>
+              </article>
+              <i>pero el backend responde</i>
+              <article data-verdict="avoid">
+                <span>02 · El JSON real trae</span>
+                <pre><code class="language-json">{
+  "title": "Dune",
+  "cover": "/dune.jpg"
+}</code></pre>
+                <p><code>coverUrl</code> no existe en la respuesta.</p>
+              </article>
+            </div>
+            <p class="flow-question"><code>as MediaSearchItemDto</code> no agrega ni transforma <code>coverUrl</code>: durante la ejecución su valor seguirá siendo <code>undefined</code>.</p>
+            <aside class="notes">Leer el ejemplo de izquierda a derecha. Nuestro type puede estar bien escrito y el build puede pasar; el backend es otro sistema y puede cambiar su response. Un cast solo cambia lo que TypeScript cree sobre el valor. No revisa el JSON, no renombra cover y no crea coverUrl.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-12-three-shapes" data-geometry="G08" data-semantic="S12 S27">
+          <div class="slide-frame" data-layout="G08">
+            <header class="slide-heading"><p class="slide-label">Tres formas de Media</p><h2 class="slide-title">Nombres parecidos no significan contratos intercambiables</h2></header>
+            <table class="s07-shape-table">
+              <thead><tr><th>Forma</th><th>Identidad</th><th>Imagen</th><th>Fecha</th><th>Uso actual</th></tr></thead>
+              <tbody>
+                <tr><th><code>MediaItem</code></th><td><code>id: number</code></td><td><code>posterUrl</code></td><td><code>releaseDate</code></td><td>Catálogo local</td></tr>
+                <tr><th><code>MediaSearchItemDto</code></th><td><code>externalId: string</code></td><td><code>coverUrl</code></td><td><code>releaseYear</code></td><td>Response de búsqueda</td></tr>
+                <tr><th><code>MediaCatalogDetailDto</code></th><td><code>externalId: number</code></td><td><code>coverUrl</code></td><td>año, mes y día</td><td>Response de detalle</td></tr>
+              </tbody>
+            </table>
+            <p class="flow-question">Cambiar el nombre del type no convierte campos ni agrega los que faltan.</p>
+            <aside class="notes">Pedir encontrar dos diferencias antes de mostrar el pie. No explicar aún el adapter visual de la sesión 08.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-13-layers" data-geometry="G03" data-semantic="S31 S32">
+          <div class="slide-frame" data-layout="G03">
+            <header class="slide-heading"><p class="slide-label">Responsabilidades de la frontera</p><h2 class="slide-title">Cada capa decide una parte diferente del request</h2></header>
+            <div class="s07-layers">
+              <article><b>Componente de búsqueda</b><span>Pide buscar un texto. No conoce el método HTTP, los headers ni cómo se prepara el body.</span></article>
+              <i>llama</i>
+              <article><b>Fetcher de endpoint</b><span>Decide ruta, método, body o parámetros y tipo de retorno.</span></article>
+              <i>delega mecánica</i>
+              <article><b><code>requestJson&lt;T&gt;</code></b><span>Ejecuta fetch, comprueba <code>response.ok</code> y lee JSON.</span></article>
+              <i>cruza la frontera</i>
+              <article><b>API de Medialog <small>(servidor backend)</small></b><span>Recibe el request, implementa el contrato y conserva los datos remotos.</span></article>
+            </div>
+            <aside class="notes">Nombrar “componente de búsqueda” para evitar que el grupo piense en cualquier componente. Fetcher: función que construye y ejecuta un request para un caso concreto. Backend: programa del servidor que recibe solicitudes y trabaja con los datos. No introducir requestJson antes de que los dos fetchers muestren repetición en el editor.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-14-ahk-scope" data-geometry="G06" data-semantic="S17 S30 S55">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Dos alcances diferentes</p><h2 class="slide-title">Instalar el CLI expone ahk; inicializarlo crea límites en Medialog</h2></header>
+            <div class="s07-scope-pair">
+              <article><div class="s07-tool-mark">npm</div><strong>Instalación global</strong><code>npm install --global<br />@cardor/agent-harness-kit@2.11.0</code><p>Expone el comando <code>ahk</code> en la terminal.</p></article>
+              <article><div class="s07-tool-mark" data-tool="ahk">ahk</div><strong>Inicialización local</strong><code>ahk init</code><p>Crea configuración, instrucciones, roles, skills y health dentro del proyecto.</p></article>
+            </div>
+            <p class="flow-question">El frontend continúa usando pnpm. npm aparece solo para instalar este CLI global.</p>
+            <aside class="notes">CLI: programa que se usa desde la terminal. Harness: estructura que limita roles, tareas, memoria y evidencia. No presentar la herramienta como garantía de corrección.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-15-harness-tree" data-geometry="G16" data-semantic="S30 S55">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Qué materializa el harness</p><h2 class="slide-title">Los límites quedan visibles dentro del proyecto</h2></header>
+            <pre class="s07-tree"><code class="language-text">medialog/
+├── agent-harness-kit.config.json
+├── health.sh
+├── instrucciones del provider
+├── agentes y roles
+└── skills/
+    ├── ahk-ask/
+    └── ahk-test/</code></pre>
+            <div class="s07-tree-meanings">
+              <p><strong>Configuración</strong><span>da contexto al proyecto</span></p>
+              <p><strong>Roles</strong><span>acotan responsabilidades</span></p>
+              <p><strong>Skill</strong><span>guarda instrucciones reutilizables</span></p>
+              <p><strong>health.sh</strong><span>ejecuta checks conocidos</span></p>
+            </div>
+            <aside class="notes">Abrir después dos SKILL.md reales. El harness reduce libertad mediante reglas y evidencia; una persona todavía revisa decisiones, diff y resultados.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-16-docs-skills" data-geometry="G08" data-semantic="S17 S20 S55">
+          <div class="slide-frame" data-layout="G08">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/context7.png" alt="Logo de Context7" /></div><p class="slide-label">Antes de pedir código</p><h2 class="slide-title">Documentación vigente y skills revisadas reducen supuestos</h2></header>
+            <div class="s07-agent-preflight">
+              <article><b>01</b><strong>Context7</strong><span>Consultar Vitest 4, el concepto y el comando exacto.</span></article>
+              <article><b>02</b><strong>Skills disponibles</strong><span>Leer alcance, escritura permitida y salida esperada.</span></article>
+              <article><b>03</b><strong>AutoSkills en dry-run</strong><span>Previsualizar propuestas solo si falta una skill pertinente.</span></article>
+            </div>
+            <p class="flow-question"><strong>dry-run:</strong> vista previa que muestra cambios propuestos sin instalarlos.</p>
+            <aside class="notes">Context7 aporta documentación; una skill conserva instrucciones; AutoSkills propone material. Ninguna pieza garantiza que el resultado sea correcto. Fuente del logo: favicon oficial de context7.com.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-17-bounded-prompt" data-geometry="G07" data-semantic="S15 S55">
+          <div class="slide-frame" data-layout="G07">
+            <header class="slide-heading"><p class="slide-label">Limitar la tarea</p><h2 class="slide-title">El grupo decide el contrato antes de delegar la escritura</h2></header>
+            <div class="s07-prompt-contrast">
+              <article class="verdict-surface" data-verdict="avoid"><strong>Pedido abierto</strong><p>“Crea la capa de API completa.”</p><span>El agente tendría que inventar alcance, archivos y decisiones.</span></article>
+              <article data-verdict="preferred"><strong>Pedido delimitado</strong><dl><div><dt>Objetivo</dt><dd>types y adapter</dd></div><div><dt>Archivos</dt><dd>solo dos rutas</dd></div><div><dt>Prohibido</dt><dd>fetchers, hooks y estado</dd></div><div><dt>Evidencia</dt><dd>diff y build</dd></div></dl></article>
+            </div>
+            <aside class="notes">La diferencia principal no es longitud. El segundo pedido contiene decisiones humanas ya cerradas y una condición de parada verificable.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-18-agent-loop" data-geometry="G10" data-semantic="S28 S52 S55">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">Trabajo asistido verificable</p><h2 class="slide-title">Generar código es un paso; comprobarlo cierra el trabajo</h2></header>
+            <div class="flow" data-steps="5">
+              <div class="flow-step"><strong>Decidir</strong><span>contrato y alcance</span></div>
+              <div class="flow-step"><strong>Delegar</strong><span>prompt delimitado</span></div>
+              <div class="flow-step"><strong>Leer</strong><span>archivos y diff</span></div>
+              <div class="flow-step"><strong>Ejecutar</strong><span>test y build</span></div>
+              <div class="flow-step"><strong>Explicar</strong><span>qué demuestran</span></div>
+            </div>
+            <p class="flow-question">Si el contrato contradice el código existente, el agente se detiene antes de editar.</p>
+            <aside class="notes">No describir al agente como autor autónomo del contrato. La persona decide los campos, revisa el resultado y ejecuta evidencia.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-19-adapter" data-geometry="G16" data-semantic="S27 S38">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Transformación pura</p><h2 class="slide-title">El adapter convierte identidad tipada en parámetros de URL</h2><p class="slide-lede"><strong>Adapter:</strong> función que traduce una representación a otra.</p></header>
+            <div class="s07-adapter-flow">
+              <article data-role="input"><span>Entrada</span><pre><code class="language-ts">{
+  externalId: "438631",
+  mediaType: "movie"
+}</code></pre></article>
+              <i>toMediaDetailSearchParams</i>
+              <article data-role="output"><span>Salida</span><pre><code class="language-text">externalId=438631
+&amp;mediaType=movie</code></pre></article>
+            </div>
+            <aside class="code-aside"><p><strong>Pura</strong><br />La misma entrada produce la misma salida.</p><p><strong>Sin red</strong><br />No ejecuta <code>fetch</code>.</p><p><strong>Fácil de probar</strong><br />No necesita DOM ni backend.</p></aside>
+            <aside class="notes">Distinguir este adapter de la transformación visual futura. Hoy solo prepara URLSearchParams para el endpoint de detalle.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-20-first-test" data-geometry="G16" data-semantic="S38 S52">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo s07-vitest-logo" src="/assets/logos/vitest.png" alt="Logo de Vitest" /></div><p class="slide-label">Primer test</p><h2 class="slide-title">El test compara una entrada conocida con sus parámetros</h2></header>
+            <figure class="file-snippet" data-role="test"><figcaption><span>Un comportamiento</span><code>media-input-to-params.test.ts</code></figcaption><pre><code class="language-ts">test("conserva la identidad de una película", () =&gt; {
+  const input = {
+    externalId: "438631",
+    mediaType: "movie",
+  } as const
+
+  const params = toMediaDetailSearchParams(input)
+
+  expect(params.get("externalId")).toBe("438631")
+  expect(params.get("mediaType")).toBe("movie")
+})</code></pre></figure>
+            <aside class="s07-aaa"><p><b>A</b><strong>Arrange</strong><span>prepara la entrada</span></p><p><b>A</b><strong>Act</strong><span>ejecuta el adapter</span></p><p><b>A</b><strong>Assert</strong><span>compara el resultado</span></p></aside>
+            <aside class="notes">AAA nombra tres momentos del test: preparar, ejecutar y comprobar. La versión final incluye película y serie. Fuente del logo: asset oficial de vitest.dev rasterizado a PNG.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-21-vitest-run" data-geometry="G01" data-semantic="S20 S44">
+          <div class="slide-frame" data-layout="G01">
+            <img class="s07-vitest-command-logo" src="/assets/logos/vitest.png" alt="Logo de Vitest" />
+            <p class="slide-label">Una ejecución finita</p>
+            <h2 class="slide-concept"><code>vitest run</code></h2>
+            <div class="s07-run-result"><strong>2 tests passed</strong><span>El proceso termina y devuelve un código de salida.</span></div>
+            <p class="bridge-context"><code>vitest</code> sin <code>run</code> puede quedar observando cambios. La evidencia de esta clase debe terminar.</p>
+            <aside class="notes">La documentación de Vitest 4 distingue run de watch. El proyecto registra el script test como vitest run para que health y agentes reciban un resultado finito.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-22-evidence" data-geometry="G08" data-semantic="S52 S53">
+          <div class="slide-frame" data-layout="G08">
+            <header class="slide-heading"><p class="slide-label">Fronteras de evidencia</p><h2 class="slide-title">Cada comprobación responde una pregunta diferente</h2></header>
+            <table class="s07-evidence-table">
+              <thead><tr><th>Comprobación</th><th>Qué demuestra</th><th>Qué todavía no demuestra</th></tr></thead>
+              <tbody>
+                <tr><th>Vitest</th><td>El adapter conserva ambos parámetros en dos casos conocidos.</td><td>Que el backend responda.</td></tr>
+                <tr><th>Build</th><td>TypeScript y Vite procesan el proyecto.</td><td>Que la interfaz funcione en navegador.</td></tr>
+                <tr><th>Network</th><td>Los requests observados tienen método, URL, payload y status esperados.</td><td>Disponibilidad futura de la API.</td></tr>
+                <tr><th>Lectura del diff</th><td>Los cambios respetan archivos y alcance permitidos.</td><td>El comportamiento en ejecución.</td></tr>
+              </tbody>
+            </table>
+            <aside class="notes">Frontera de evidencia: límite de lo que una comprobación permite afirmar. Pedir un ejemplo de afirmación incorrecta, como “el build prueba que la API funciona”.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-07-23-close" data-geometry="G18" data-semantic="S10 S36 S59">
+          <div class="slide-frame" data-layout="G18">
+            <div class="checkpoint-limit"><p class="slide-label">Cierre y puente</p><h2 class="slide-title">Los fetchers funcionan, pero React todavía no representa datos remotos</h2><p><strong>Hoy queda listo</strong> el contrato, el request y una prueba pura.</p><p><strong>La interfaz conserva</strong> el catálogo y modal locales.</p><p><strong>En la sesión 08</strong> TanStack Query administrará carga, error, vacío, respuesta y caché.</p></div>
+            <ol class="closing-questions explicit-answers">
+              <li><b>01</b><span><strong>¿Por qué decidimos los campos antes de delegar?</strong><small>El contrato pertenece al equipo; el agente ejecuta una tarea ya delimitada.</small></span></li>
+              <li><b>02</b><span><strong>¿Qué diferencia un 404 de un error de red?</strong><small>El 404 incluye una response; el error de red puede rechazar la Promise sin response.</small></span></li>
+              <li><b>03</b><span><strong>¿Qué comprueba el test del adapter?</strong><small>Que una identidad conocida se convierte en los parámetros esperados.</small></span></li>
+              <li><b>04</b><span><strong>¿Qué responsabilidad queda pendiente?</strong><small>Representar el ciclo de vida de datos remotos dentro de la interfaz.</small></span></li>
+            </ol>
+            <aside class="notes">Pedir primero las respuestas y revelar después. La cuarta pregunta abre TanStack Query sin enseñar aún query keys ni hooks.</aside>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/framework/deck.js"></script>
+  </body>
+</html>

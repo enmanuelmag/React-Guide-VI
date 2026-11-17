@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sesión 02: props, listas, keys estables y contratos con TypeScript" />
+    <title>Sesión 02 · Props, listas y TypeScript</title>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-slide-id="session-02-00-cover" data-geometry="G02" data-semantic="S02" data-chrome="none">
+          <div class="slide-frame" data-layout="G02">
+            <div class="slide-heading">
+              <p class="slide-label">Sesión 02 · React Guide VI</p>
+              <h1 class="slide-display">Props, listas y TypeScript</h1>
+              <p class="slide-lede">Una tarjeta configurable para cada medio</p>
+            </div>
+            <figure class="brand-lockup">
+              <img src="/assets/brand/espol-bootcamp.png" alt="Logo de ESPOL Bootcamp" />
+              <span>Medialog · Datos locales</span>
+            </figure>
+            <aside class="notes">
+              Recuperar la última pregunta de la sesión 01: ¿qué limita a una tarjeta cuyos datos están escritos directamente? Hoy el dato cambiará sin duplicar el componente.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-01-fixed-card" data-geometry="G06" data-semantic="S05 S14">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading">
+              <p class="slide-label">Checkpoint anterior</p>
+              <h2 class="slide-title">Una tarjeta, un solo contenido</h2>
+              <p class="slide-lede">Dos usos ejecutan la misma definición con los mismos datos fijos.</p>
+            </header>
+            <div class="duplicate-stage" aria-label="Dos tarjetas que repiten Arrival">
+              <article class="duplicate-card"><span class="duplicate-card__poster" aria-hidden="true"></span><div><strong>Arrival</strong><span>Película · 2016</span></div></article>
+              <article class="duplicate-card"><span class="duplicate-card__poster" aria-hidden="true"></span><div><strong>Arrival</strong><span>Película · 2016</span></div></article>
+            </div>
+            <aside class="notes">
+              Preguntar dónde viven hoy el título y la descripción. Después preguntar por qué dos usos de MediaCard repiten Arrival. Respuesta esperada: el contenido vive dentro del componente.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-02-owner" data-geometry="G10" data-semantic="S29 S31">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading">
+              <p class="slide-label">Flujo descendente</p>
+              <h2 class="slide-title">El padre posee, el hijo presenta</h2>
+            </header>
+            <div class="ownership-flow" aria-label="App entrega data a MediaCard">
+              <article class="ownership-node"><code>App</code><strong>Elige</strong><span>Conserva el dato que quiere mostrar.</span></article>
+              <div class="ownership-transfer"><span>data</span></div>
+              <article class="ownership-node"><code>MediaCard</code><strong>Presenta</strong><span>Lee el dato recibido y produce JSX.</span></article>
+            </div>
+            <p class="flow-question">El dato viaja del padre hacia el hijo; cada parte conserva una responsabilidad.</p>
+            <aside class="notes">
+              Preguntar qué componente elige el valor y cuál lo presenta. Mantener la dirección padre a hijo. No explicar todavía cambios interactivos ni useState.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-03-prop-input" data-geometry="G16" data-semantic="S13 S38">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading">
+              <p class="slide-label">Prop</p>
+              <h2 class="slide-title">Una entrada escrita en JSX</h2>
+            </header>
+            <div class="file-snippet-stack">
+              <figure class="file-snippet" data-role="child">
+                <figcaption><span>Hijo</span><code>src/components/media-card.tsx</code></figcaption>
+                <pre><code class="language-tsx">type MediaCardProps = {
+  title: string
+}
+
+export function MediaCard(props: MediaCardProps) {
+  const { title } = props
+  return &lt;article&gt;{title}&lt;/article&gt;
+}</code></pre>
+              </figure>
+              <figure class="file-snippet" data-role="parent">
+                <figcaption><span>Padre</span><code>src/App.tsx</code></figcaption>
+                <pre><code class="language-tsx">import { MediaCard } from './components/media-card'
+
+&lt;MediaCard title="Arrival" /&gt;</code></pre>
+              </figure>
+            </div>
+            <aside class="code-aside">
+              <p><strong>Prop:</strong> dato que un componente recibe de su padre.</p>
+              <div class="role-legend" data-role="child"><strong>Hijo</strong><span>Declara qué recibe y cómo lo presenta.</span></div>
+              <div class="role-legend" data-role="parent"><strong>Padre</strong><span>Importa el componente y entrega el valor.</span></div>
+            </aside>
+            <aside class="notes">
+              Recorrer primero la ruta del hijo y su contrato. Después señalar que App importa MediaCard y entrega title="Arrival". Los colores acompañan las etiquetas, pero no las sustituyen. Fuente conceptual: React, Passing Props to a Component, https://react.dev/learn/passing-props-to-a-component.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-04-readonly" data-geometry="G06" data-semantic="S20 S22">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading">
+              <p class="slide-label">Contrato de lectura</p>
+              <h2 class="slide-title">Las props son de solo lectura</h2>
+            </header>
+            <div class="split-stage">
+              <article class="comparison-column" data-verdict="preferred">
+                <h3><span class="comparison-symbol">✓</span> Usar</h3>
+                <pre><code class="language-tsx">return (
+  &lt;h3&gt;{title}&lt;/h3&gt;
+)</code></pre>
+                <p class="comparison-note">El hijo presenta el valor que recibió.</p>
+              </article>
+              <article class="comparison-column" data-verdict="avoid">
+                <h3><span class="comparison-symbol">!</span> Reasignar</h3>
+                <pre><code class="language-tsx">title = 'Otro título'</code></pre>
+                <p class="comparison-note">El hijo no modifica la entrada entregada por el padre.</p>
+              </article>
+            </div>
+            <aside class="notes">
+              La asignación es deliberadamente incorrecta y no se conserva. Si otro render necesita un valor distinto, el padre entrega otro dato. No introducir snapshots de estado.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-05-media-contract" data-geometry="G09" data-semantic="S26 S42">
+          <div class="slide-frame" data-layout="G09">
+            <header class="slide-heading">
+              <div class="logo-row"><img class="tech-logo" src="/assets/logos/typescript.png" alt="Logo de TypeScript" /></div>
+              <h2 class="slide-title">El contrato de MediaItem</h2>
+              <p class="slide-lede"><strong>Runtime:</strong> el momento en que la aplicación está ejecutándose.</p>
+            </header>
+            <table class="matrix" data-density="compact">
+              <thead><tr><th>Propiedad</th><th>Tipo</th><th>Uso visible</th></tr></thead>
+              <tbody>
+                <tr><td>id</td><td><code>number</code></td><td>Identidad estable</td></tr>
+                <tr><td>title</td><td><code>string</code></td><td>Título de la tarjeta</td></tr>
+                <tr><td>description</td><td><code>string | null</code></td><td>Texto o reemplazo local</td></tr>
+                <tr><td>mediaType</td><td><code>MediaType</code></td><td>Película o serie</td></tr>
+                <tr><td>releaseDate</td><td><code>string</code></td><td>Fecha mostrada</td></tr>
+                <tr><td>posterUrl</td><td><code>string | null</code></td><td>Imagen o reemplazo local</td></tr>
+              </tbody>
+            </table>
+            <aside class="notes">
+              Leer el contrato desde su uso visible. TypeScript comprueba los objetos escritos en el proyecto durante desarrollo y build; no valida por sí solo una respuesta HTTP futura. El logo es un asset oficial local.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-06-domain" data-geometry="G06" data-semantic="S25 S26">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading">
+              <p class="slide-label">Dominio y ausencia</p>
+              <h2 class="slide-title">Opciones cerradas y ausencia explícita</h2>
+            </header>
+            <div class="type-contract">
+              <article class="type-contract__column">
+                <h3><code>MediaType</code></h3>
+                <div class="type-choice"><code>'movie'</code><span>Valor permitido</span></div>
+                <div class="type-choice"><code>'series'</code><span>Valor permitido</span></div>
+                <div class="type-choice"><code>'anime'</code><span>Valor rechazado</span></div>
+              </article>
+              <article class="type-contract__column">
+                <h3><code>string | null</code></h3>
+                <div class="type-choice"><code>string</code><span>Existe contenido</span></div>
+                <div class="type-choice"><code>null</code><span>La ausencia está declarada</span></div>
+                <div class="type-choice"><code>description?</code><span>No es el contrato de hoy</span></div>
+              </article>
+            </div>
+            <aside class="notes">
+              Contrastar dos decisiones: la unión literal limita los valores del dominio y null obliga a reconocer una ausencia. No abrir la comparación entre type e interface ni props opcionales.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-07-fixture" data-geometry="G09" data-semantic="S25 S51">
+          <div class="slide-frame" data-layout="G09">
+            <header class="slide-heading">
+              <p class="slide-label">Datos controlados</p>
+              <h2 class="slide-title">Casos conocidos antes de la API</h2>
+              <p class="slide-lede"><strong>Fixture:</strong> colección de datos locales preparada para desarrollar y comprobar.</p>
+            </header>
+            <table class="matrix" data-density="compact">
+              <thead><tr><th>id</th><th>Medio</th><th>Tipo</th><th>Caso comprobado</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Arrival</td><td>movie</td><td>Datos completos</td></tr>
+                <tr><td>2</td><td>Severance</td><td>series</td><td>Datos completos</td></tr>
+                <tr><td>3</td><td>Aftersun</td><td>movie</td><td>Poster nulo</td></tr>
+                <tr><td>4</td><td>The Bear</td><td>series</td><td>Descripción nula</td></tr>
+                <tr><td>5</td><td>Past Lives</td><td>movie</td><td>Segunda película</td></tr>
+                <tr><td>6</td><td>Blue Eye Samurai</td><td>series</td><td>Entrada del estudiante</td></tr>
+              </tbody>
+            </table>
+            <aside class="notes">
+              El fixture permite desarrollar con casos intencionales antes de una API. No presentarlo como validación de datos remotos. El sexto objeto pertenece a la práctica individual.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-08-map" data-geometry="G10" data-semantic="S27 S28">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading">
+              <p class="slide-label">Transformación</p>
+              <h2 class="slide-title">De arreglo a elementos</h2>
+            </header>
+            <div class="collection-flow" aria-label="map transforma objetos en MediaCard">
+              <div class="collection-stack">
+                <div class="collection-item"><code>1</code> Arrival</div>
+                <div class="collection-item"><code>2</code> Severance</div>
+                <div class="collection-item"><code>…</code> cuatro medios más</div>
+              </div>
+              <div class="collection-map"><span>map</span></div>
+              <div class="card-stack">
+                <div class="card-line"><b>1</b><span>&lt;MediaCard data={media} /&gt;</span></div>
+                <div class="card-line"><b>2</b><span>&lt;MediaCard data={media} /&gt;</span></div>
+                <div class="card-line"><b>…</b><span>una tarjeta por objeto</span></div>
+              </div>
+            </div>
+            <p class="flow-question"><code>map</code> recibe cada medio y devuelve un elemento React.</p>
+            <aside class="notes">
+              Preguntar qué debe producir la transformación por cada elemento. Respuesta esperada: una MediaCard configurada con ese medio. Fuente: React, Rendering Lists, https://react.dev/learn/rendering-lists.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-09-key" data-geometry="G16" data-semantic="S38 S54">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading">
+              <p class="slide-label">Identidad entre hermanos</p>
+              <h2 class="slide-title">La key identifica al elemento</h2>
+            </header>
+            <div class="file-snippet-stack">
+              <figure class="file-snippet" data-role="data">
+                <figcaption><span>Datos</span><code>src/data/media-items.ts</code></figcaption>
+                <pre><code class="language-ts">export const mediaItems: MediaItem[] = [
+  { id: 1, title: 'Arrival', mediaType: 'movie' },
+  // { ... } más objetos
+]</code></pre>
+              </figure>
+              <figure class="file-snippet" data-role="parent">
+                <figcaption><span>Padre</span><code>src/App.tsx</code></figcaption>
+                <pre><code class="language-tsx">{mediaItems.map((media) =&gt; (
+  &lt;MediaCard
+    key={media.id}
+    data={media}
+  /&gt;
+))}</code></pre>
+              </figure>
+            </div>
+            <aside class="identity-note">
+              <img src="/assets/logos/react-official.png" alt="Logo de React" />
+              <p><strong>media.id</strong> permanece estable para ese medio.</p>
+              <p><code>key</code> guía a React, pero no llega dentro de <code>MediaCardProps</code>.</p>
+            </aside>
+            <aside class="notes">
+              Señalar primero el objeto concreto del fixture y su id. Después seguir media.id hasta key en App. La línea comentada { ... } representa los demás objetos y no es código que se copiará. Explicar que una lista sin key estable produce un warning. La documentación oficial indica que las keys deben ser estables y que key no llega como prop normal: https://react.dev/learn/rendering-lists.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-10-cases" data-geometry="G08" data-semantic="S25 S47">
+          <div class="slide-frame" data-layout="G08">
+            <header class="slide-heading">
+              <p class="slide-label">Renderizado condicional</p>
+              <h2 class="slide-title">Cada dato produce un resultado visible</h2>
+              <p class="slide-lede">La misma <code>MediaCard</code> recibe un objeto y su JSX decide qué mostrar.</p>
+            </header>
+            <div class="data-decision-grid" aria-label="Cuatro ejemplos de dato recibido y resultado visible">
+              <article class="data-decision" data-state="success">
+                <span class="state-index">01 · Dentro de MediaCard</span>
+                <div class="data-decision__pair"><div><small>Dato recibido</small><code>mediaType: 'movie'</code></div><b aria-hidden="true">→</b><div><small>Resultado visible</small><strong>Película</strong></div></div>
+              </article>
+              <article class="data-decision" data-state="success">
+                <span class="state-index">02 · Dentro de MediaCard</span>
+                <div class="data-decision__pair"><div><small>Dato recibido</small><code>mediaType: 'series'</code></div><b aria-hidden="true">→</b><div><small>Resultado visible</small><strong>Serie</strong></div></div>
+              </article>
+              <article class="data-decision" data-state="empty">
+                <span class="state-index">03 · Dentro de MediaCard</span>
+                <div class="data-decision__pair"><div><small>Dato recibido</small><code>posterUrl: null</code></div><b aria-hidden="true">→</b><div><small>Resultado visible</small><strong>Poster no disponible</strong></div></div>
+              </article>
+              <article class="data-decision" data-state="empty">
+                <span class="state-index">04 · Dentro de MediaCard</span>
+                <div class="data-decision__pair"><div><small>Dato recibido</small><code>description: null</code></div><b aria-hidden="true">→</b><div><small>Resultado visible</small><strong>Sin descripción disponible</strong></div></div>
+              </article>
+            </div>
+            <aside class="notes">
+              Leer cada caso de izquierda a derecha: dato recibido, decisión dentro de MediaCard y resultado visible. Repetir que no son cuatro componentes distintos. Una URL rota no equivale a posterUrl null y queda fuera del alcance de esta sesión.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-11-final-flow" data-geometry="G10" data-semantic="S28 S30">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading">
+              <p class="slide-label">Checkpoint de datos</p>
+              <h2 class="slide-title">Flujo final de la sesión</h2>
+            </header>
+            <div class="flow" aria-label="Flujo desde el fixture hasta el JSX">
+              <div class="flow-step"><strong>Fixture</strong><span>declara MediaItem[]</span></div>
+              <div class="flow-step"><strong>App</strong><span>elige la colección</span></div>
+              <div class="flow-step"><strong>map</strong><span>recorre cada objeto</span></div>
+              <div class="flow-step"><strong>MediaCard</strong><span>recibe data</span></div>
+              <div class="flow-step"><strong>JSX</strong><span>muestra cada caso</span></div>
+            </div>
+            <p class="flow-question"><strong>Fixture:</strong> colección de datos locales preparada para desarrollar y comprobar casos conocidos.</p>
+            <aside class="notes">
+              Pedir que reconstruyan el flujo sin leer. Después asociar fixture con src/data/media-items.ts, App con App.tsx y MediaCard con su archivo de componente.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-12-next-limit" data-geometry="G05" data-semantic="S10 S31">
+          <div class="slide-frame" data-layout="G05">
+            <div class="responsibility-audit" aria-label="Responsabilidades que conserva cada componente">
+              <div class="responsibility-row"><strong>App</strong><span>Elige el fixture.</span></div>
+              <div class="responsibility-row"><strong>App</strong><span>Conserva wrapper, map y key.</span></div>
+              <div class="responsibility-row"><strong>MediaCard</strong><span>Presenta un medio.</span></div>
+              <div class="responsibility-row"><strong>MediaCard</strong><span>Decide la etiqueta de tipo inline.</span></div>
+            </div>
+            <div class="definition-stack">
+              <p class="slide-label">Siguiente limitación</p>
+              <h2 class="slide-title">App todavía organiza la colección</h2>
+              <p class="slide-lede">El catálogo funciona. La siguiente sesión revisará cómo distribuir esas responsabilidades sin cambiar el resultado.</p>
+            </div>
+            <aside class="notes">
+              Resaltar la concentración sin mostrar MediaGrid, EmptyState ni MediaTypeBadge. La sesión 03 reorganiza un comportamiento que ya funciona; no añade datos ni interacción.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-02-13-close" data-geometry="G18" data-semantic="S10 S53 S59">
+          <div class="slide-frame" data-layout="G18">
+            <div class="checkpoint-limit">
+              <p class="slide-label">Cierre conceptual</p>
+              <h2 class="slide-title">Seis tarjetas, un solo contrato</h2>
+              <p><strong>App</strong> posee la colección y entrega cada medio.</p>
+              <p><strong>MediaCard</strong> presenta el objeto recibido mediante <code>data</code>.</p>
+            </div>
+            <ol class="closing-questions">
+              <li><b>01</b><span>¿Quién posee el fixture y quién presenta cada medio?</span></li>
+              <li><b>02</b><span>¿Qué comprueba MediaItem y qué no comprueba en runtime?</span></li>
+              <li><b>03</b><span>¿Por qué media.id sirve como key y por qué key no es una prop normal?</span></li>
+              <li><b>04</b><span>¿Qué responsabilidad concentra todavía App?</span></li>
+            </ol>
+            <aside class="notes">
+              Usar estas preguntas después de construir el checkpoint. La cuarta respuesta abre la sesión 03: App todavía contiene el wrapper, el recorrido y la key.
+            </aside>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/framework/deck.js"></script>
+  </body>
+</html>

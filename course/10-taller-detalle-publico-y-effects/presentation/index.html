@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sesión 10: taller de detalle público y Effects" />
+    <title>Sesión 10 · Taller de detalle público y Effects</title>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-slide-id="session-10-00-cover" data-geometry="G02" data-semantic="S02" data-chrome="none">
+          <div class="slide-frame" data-layout="G02">
+            <div class="slide-heading"><p class="slide-label">Sesión 10 · React Guide VI</p><h1 class="slide-display">La dirección ahora pide datos</h1><p class="slide-lede">Detalle público, estados remotos y Effects</p></div>
+            <figure class="s10-cover-brands"><img src="/assets/logos/tanstack.png" alt="Logo de TanStack" /><img src="/assets/logos/react-official.png" alt="Logo oficial de React" /><figcaption>TanStack Query + React</figcaption></figure>
+            <aside class="notes">Abrir desde el checkpoint aprobado: Dune ya tiene una URL válida y una página provisional. Hoy esa dirección activará una consulta de detalle y, solo en éxito, sincronizará el título de la pestaña.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-10-01-route" data-geometry="G10" data-semantic="S04 S28">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Ruta de la sesión</p><h2 class="slide-title">Seguiremos la misma identidad hasta el título de la pestaña</h2></header><div class="s10-route"><article><b>01</b><strong>Identificar</strong><span>La URL entrega <code>movie + 123</code>.</span></article><i>habilita</i><article><b>02</b><strong>Consultar</strong><span>Query solicita el detalle.</span></article><i>responde</i><article><b>03</b><strong>Preparar</strong><span>El adapter crea el modelo.</span></article><i>presenta</i><article><b>04</b><strong>Sincronizar</strong><span>React actualiza <code>document.title</code>.</span></article></div><p class="flow-question">En cada paso veremos qué entra, quién decide y qué resultado sale.</p><aside class="notes">Leer el recorrido completo. La identidad permanece estable; cada herramienta aporta una responsabilidad distinta.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-02-checkpoint" data-geometry="G10" data-semantic="S05 S46" data-journey="input">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Checkpoint de la sesión 09</p><h2 class="slide-title">La URL ya produce una identidad válida, pero no datos de detalle</h2></header><div class="s10-checkpoint"><div class="s10-browser-bar"><span>URL actual</span><code>/media/movie/123</code></div><i>toMediaDetailInput()</i><div class="s10-token" data-stage="input"><span>GetMediaDetailInput</span><code>{ mediaType: "movie", externalId: "123" }</code></div><i>renderiza</i><article><strong>Detalle provisional</strong><span>No existe request de detalle.</span></article></div><aside class="notes">Recuperar solo lo construido: Router captura params y el adapter devuelve input o null. No repetir Link, useParams ni el árbol de rutas.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-03-limitation" data-geometry="G07" data-semantic="S15 S45" data-journey="input">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Limitación visible</p><h2 class="slide-title">La página conoce la identidad de Dune, pero todavía no conoce su detalle</h2></header><div class="s10-before-after"><article data-state="before"><strong>Ahora</strong><code>movie + 123</code><span>Solo muestra tipo e identificador.</span></article><article data-state="after"><strong>Meta de la sesión</strong><code>Dune · 2021 · Ciencia ficción</code><span>Presentar datos remotos y actualizar la pestaña.</span></article></div><p class="flow-question">La URL responde “qué medio”. La consulta remota responderá “qué información tiene”.</p><aside class="notes">Hacer visible la necesidad antes del hook. El título y los géneros del ejemplo no provienen todavía de la página provisional.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-04-owners" data-geometry="G10" data-semantic="S31 S32" data-journey="input">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Responsabilidades</p><h2 class="slide-title">Cada paso conserva un propietario</h2></header><div class="s10-owners"><article data-owner="router"><strong>React Router</strong><span>Entrega identidad validada.</span></article><i>habilita</i><article data-owner="query"><img src="/assets/logos/tanstack.png" alt="Logo de TanStack" /><strong>TanStack Query</strong><span>Administra request, estados y caché.</span></article><i>entrega</i><article data-owner="adapter"><strong>Adapter</strong><span>Transforma DTO en modelo visual.</span></article><i>usa</i><article data-owner="react"><img src="/assets/logos/react-official.png" alt="Logo oficial de React" /><strong>Componente + Effect</strong><span>Presenta el modelo y sincroniza la pestaña.</span></article></div><p class="flow-question">El fetching no se mueve a un Effect y el DTO no se copia a estado local.</p><aside class="notes">Pedir al grupo que asigne cada verbo. Query no decide la URL; el adapter no solicita datos; el Effect no crea el modelo.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-05-dependent-query" data-geometry="G06" data-semantic="S11 S45" data-journey="query">
+          <div class="slide-frame" data-layout="G06"><header class="slide-heading"><p class="slide-label">Consulta dependiente</p><h2 class="slide-title">La query solo puede ejecutarse cuando existe una identidad válida</h2></header><div class="s10-dependent"><div class="s10-token" data-stage="input"><span>Entrada</span><code>GetMediaDetailInput | null</code></div><i>decide si puede ejecutar</i><div class="s10-token" data-stage="query"><span>Consulta</span><code>useMediaDetail(input)</code></div></div><p class="flow-question"><strong>Consulta dependiente:</strong> query que espera un dato necesario antes de ejecutar su función.</p><aside class="notes">Relacionar dependencia con el caso concreto. Sin mediaType y externalId válidos, getMediaDetail no tiene una identidad que consultar.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-06-query-keys" data-geometry="G10" data-semantic="S20 S28" data-journey="query">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Identidad de caché</p><h2 class="slide-title">La query key incorpora cada dato que cambia la respuesta</h2></header><div class="s10-key-stack"><article><b>Familia</b><code>["media"]</code></article><i>añade el recurso</i><article><b>Detalles</b><code>["media", "detail"]</code></article><i>añade la identidad</i><article data-active><b>Detalle de Dune</b><code>["media", "detail",<br /> { mediaType: "movie", externalId: "123" }]</code></article></div><p class="flow-question"><strong>Query key:</strong> identidad serializable que TanStack Query usa para separar entradas de caché.</p><aside class="notes">Construir la key por niveles. Tipo e id permanecen juntos porque ambos cambian la respuesta del fetcher.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-07-cache-identity" data-geometry="G07" data-semantic="S15 S45" data-journey="query">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Dos identidades, dos entradas</p><h2 class="slide-title">Cambiar el medio cambia la query key</h2></header><div class="s10-cache-compare"><article><strong>Dune</strong><code>{ mediaType: "movie", externalId: "123" }</code><span>Entrada de caché A</span></article><article><strong>Dark</strong><code>{ mediaType: "series", externalId: "456" }</code><span>Entrada de caché B</span></article></div><p class="flow-question">No usamos una key compartida ni llamamos <code>refetch()</code> para comunicar otra identidad.</p><aside class="notes">Preguntar qué ocurriría si la key omitiera mediaType. Dos catálogos podrían compartir el mismo id externo.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-08-enabled" data-geometry="G07" data-semantic="S15 S45" data-journey="query">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Opción enabled</p><h2 class="slide-title">El input decide si TanStack Query puede ejecutar la función</h2></header><div class="s10-enabled"><article data-state="valid"><span>Entrada</span><code>{ mediaType: "movie", externalId: "123" }</code><strong><code>enabled: true</code></strong><p><code>getMediaDetail()</code> puede ejecutarse.</p></article><article data-state="disabled"><span>Entrada</span><code>null</code><strong><code>enabled: false</code></strong><p><code>getMediaDetail()</code> no se ejecuta.</p></article></div><p class="flow-question"><strong>enabled:</strong> opción de <code>useQuery()</code> que permite o impide la ejecución automática de la query.</p><aside class="notes">No describir enabled como botón o evento. La declaración permanece montada; la identidad determina si puede ejecutarse.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-09-status-fetch-status" data-geometry="G10" data-semantic="S12 S45" data-journey="query">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Dos estados del resultado</p><h2 class="slide-title">status describe los datos y fetchStatus describe la actividad de la query</h2></header><p class="s10-origin-line"><code>const detailQuery = useMediaDetail(detailInput)</code><span><code>detailQuery</code> es el resultado que el hook devuelve desde <code>useQuery()</code>.</span></p><table class="matrix s10-status-table"><thead><tr><th>Caso</th><th>Campos de detailQuery</th><th>Qué significa</th></tr></thead><tbody><tr><td>Input nulo, sin caché</td><td><code>status: "pending"</code><br /><code>fetchStatus: "idle"</code></td><td>No hay datos y tampoco existe una petición activa.</td></tr><tr><td>Primera petición</td><td><code>status: "pending"</code><br /><code>fetchStatus: "fetching"</code></td><td><code>isLoading</code> es verdadero porque el primer fetch está activo.</td></tr><tr><td>Datos con actualización</td><td><code>status: "success"</code><br /><code>fetchStatus: "fetching"</code></td><td>Hay datos visibles mientras ocurre otra petición.</td></tr></tbody></table><aside class="notes">Leer siempre los nombres con el prefijo detailQuery. Pending no responde si existe tráfico; fetchStatus sí describe la actividad de la función.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-10-hook-order" data-geometry="G07" data-semantic="S15 S20" data-journey="query">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Orden estable de hooks</p><h2 class="slide-title">useMediaDetail debe ejecutarse antes del retorno por URL inválida</h2></header><div class="s10-hook-contrast"><figure data-verdict="correct"><figcaption><span>Forma correcta</span><code>src/pages/media-detail-page.tsx</code></figcaption><pre><code class="language-tsx">const params = useParams()
+const detailInput =
+  toMediaDetailInput(params)
+const detailQuery =
+  useMediaDetail(detailInput)
+
+if (detailInput === null) {
+  return &lt;PageState variant="invalid" /&gt;
+}</code></pre></figure><figure data-verdict="wrong"><figcaption><span>Forma incorrecta</span><code>src/pages/media-detail-page.tsx</code></figcaption><pre><code class="language-tsx">if (detailInput === null) {
+  return &lt;PageState variant="invalid" /&gt;
+}
+
+const detailQuery =
+  useMediaDetail(detailInput)</code></pre><p>Algunos renders llamarían menos hooks.</p></figure></div><aside class="notes">Pedir que identifiquen la diferencia antes de revelar el veredicto. Todos los hooks deben ejecutarse en el mismo orden en cada render.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-11-query-origin" data-geometry="G16" data-semantic="S20 S31" data-journey="query">
+          <div class="slide-frame" data-layout="G16"><header class="slide-heading"><p class="slide-label">Origen de detailQuery</p><h2 class="slide-title">useMediaDetail configura useQuery y devuelve su resultado</h2></header><figure class="file-snippet"><figcaption><span>Hook de feature</span><code>src/hooks/features/use-media.ts</code></figcaption><pre><code class="language-tsx">export function useMediaDetail(
+  input: GetMediaDetailInput | null,
+) {
+  return useQuery({
+    queryKey: mediaKeys.detail(input),
+    queryFn: () =&gt; {
+      if (input === null) {
+        throw new Error("Falta la identidad del medio")
+      }
+      return getMediaDetail(input)
+    },
+    enabled: input !== null,
+  })
+}</code></pre></figure><aside class="code-aside"><p><code>input</code> entra directamente en la key y en la función.</p><p><code>enabled: input !== null</code> evita la petición. La validación dentro de <code>queryFn</code> permite que TypeScript descarte <code>null</code> antes de llamar al fetcher.</p></aside><aside class="notes">Responder la duda de forma directa: ya no existe disabledDetailInput ni una identidad inventada. enabled evita ejecutar sin identidad; el if conserva el contrato de TypeScript y documenta el caso imposible.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-12-dto-root" data-geometry="G16" data-semantic="S20 S31" data-journey="dto">
+          <div class="slide-frame" data-layout="G16"><header class="slide-heading"><p class="slide-label">Respuesta remota</p><h2 class="slide-title">detailQuery.data contiene el DTO raíz devuelto por getMediaDetail()</h2></header><figure class="file-snippet" data-role="data"><figcaption><span>Contrato HTTP</span><code>src/types/media-api.ts</code></figcaption><pre><code class="language-ts">type GetMediaDetailResponseDto = {
+  catalog: MediaCatalogDetailDto | null
+  entry: MediaLogEntryDto | null
+  isLogged: boolean
+}</code></pre></figure><aside class="code-aside"><p><strong>DTO:</strong> estructura recibida desde la frontera HTTP.</p><p>Esta sesión usa <code>detailQuery.data.catalog</code>. <code>entry</code> e <code>isLogged</code> permanecen en el contrato para etapas posteriores.</p></aside><aside class="notes">No presentar catalog null como fallo de red. La request puede completar correctamente y declarar que no existe catálogo.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-13-five-branches" data-geometry="G10" data-semantic="S28 S45" data-journey="dto">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Decisión de la página</p><h2 class="slide-title">MediaDetailPage clasifica cinco resultados antes de renderizar</h2></header><div class="s10-branches"><article data-state="invalid"><b>01</b><strong>URL inválida</strong><code>detailInput === null</code><span>No hay request.</span></article><article data-state="loading"><b>02</b><strong>Carga</strong><code>detailQuery.isLoading</code><span>Primer fetch activo.</span></article><article data-state="error"><b>03</b><strong>Error remoto</strong><code>detailQuery.isError</code><span>La petición falló.</span></article><article data-state="empty"><b>04</b><strong>Sin catálogo</strong><code>data.catalog === null</code><span>La petición respondió.</span></article><article data-state="success"><b>05</b><strong>Contenido</strong><code>data.catalog !== null</code><span>Adapter y componente.</span></article></div><p class="flow-question">La página posee el orden y las condiciones. <code>PageState</code> solo presenta el resultado elegido.</p><aside class="notes">Recorrer de izquierda a derecha. Cada condición responde una pregunta diferente y debe producir un mensaje distinto.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-14-two-nulls" data-geometry="G07" data-semantic="S15 S45" data-journey="dto">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Dos valores null</p><h2 class="slide-title">Un input nulo evita la petición; un catálogo nulo llega después de una respuesta</h2></header><div class="s10-null-contrast"><article data-state="invalid"><strong>detailInput === null</strong><span>La URL no contiene una identidad aceptada.</span><code>request: no</code><p>Dirección no válida</p></article><article data-state="unavailable"><strong>detailQuery.data.catalog === null</strong><span>El servidor respondió sin catálogo presentable.</span><code>request: completada</code><p>Contenido no disponible</p></article></div><aside class="notes">Detenerse en la posición temporal de cada null. El primero ocurre antes de Query; el segundo forma parte del DTO recibido.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-15-two-failures" data-geometry="G07" data-semantic="S15 S45" data-journey="dto">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Dos resultados sin contenido</p><h2 class="slide-title">Error remoto y catálogo ausente requieren mensajes diferentes</h2></header><div class="s10-failure-contrast"><article data-state="error"><strong>La petición falló</strong><code>detailQuery.isError</code><span>No obtuvimos una respuesta utilizable.</span><p>“No pudimos cargar el contenido”</p></article><article data-state="unavailable"><strong>La petición respondió</strong><code>detailQuery.data.catalog === null</code><span>El contrato declara que no existe catálogo.</span><p>“Contenido no disponible”</p></article></div><p class="flow-question">Reintentar puede tener sentido en ambos casos, pero la explicación para la persona no es la misma.</p><aside class="notes">Evitar la palabra error para catalog null. El servidor respondió conforme al contrato, aunque no haya un detalle que presentar.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-16-dune-dto" data-geometry="G16" data-semantic="S20 S31" data-journey="dto">
+          <div class="slide-frame" data-layout="G16"><header class="slide-heading"><p class="slide-label">Objeto concreto antes de abstraer</p><h2 class="slide-title">El catálogo de Dune entra al adapter con nombres de transporte</h2></header><figure class="file-snippet" data-role="data"><figcaption><span>Fixture de respuesta</span><code>src/fixtures/media-detail.ts</code></figcaption><pre><code class="language-ts">const duneCatalog: MediaCatalogDetailDto = {
+  mediaType: "movie",
+  title: "Dune",
+  description: "Paul viaja a Arrakis.",
+  coverUrl: "/posters/dune.jpg",
+  releaseYear: 2021,
+  genres: ["Ciencia ficción"],
+  durationMinutes: 155,
+  episodesCount: null,
+  seasonsCount: null,
+  reviewScore: 8.0,
+}
+
+// { ... } más casos</code></pre></figure><aside class="code-aside"><p><strong>Nombres de transporte:</strong> nombres exactos que llegan en el JSON de la API, como <code>coverUrl</code>. Todavía no son los nombres que usará la interfaz, como <code>posterUrl</code>.</p><p><strong>Fixture:</strong> dato local preparado para desarrollar y comprobar un caso conocido.</p></aside><aside class="notes">Definir nombres de transporte antes de leer el fixture. Contrastar coverUrl con posterUrl y después leer los dos nulls.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-17-adapter" data-geometry="G10" data-semantic="S27 S31" data-journey="model">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Frontera de transformación</p><h2 class="slide-title">El adapter prepara nombres y formatos para la interfaz</h2></header><div class="s10-adapter-flow"><article data-stage="dto"><span>MediaCatalogDetailDto</span><code>coverUrl</code><code>releaseYear: 2021</code><code>genres</code></article><i>mediaCatalogDetailToModel()</i><article data-stage="model"><span>MediaDetailModel</span><code>posterUrl</code><code>releaseLabel: "2021"</code><code>genres</code></article></div><p class="flow-question"><strong>Modelo visual:</strong> estructura preparada para lo que el componente necesita renderizar.</p><aside class="notes">Señalar qué cambia y qué se conserva. El adapter no ejecuta request, no usa Effect y no copia el resultado a estado.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-18-content-props" data-geometry="G16" data-semantic="S20 S31" data-journey="ui">
+          <div class="slide-frame" data-layout="G16"><header class="slide-heading"><p class="slide-label">Componente presentacional</p><h2 class="slide-title">MediaDetailContent recibe un modelo completo mediante props</h2></header><figure class="file-snippet" data-role="child"><figcaption><span>Hijo</span><code>src/components/media-detail-content.tsx</code></figcaption><pre><code class="language-tsx">type MediaDetailContentProps = {
+  model: MediaDetailModel
+}
+
+function MediaDetailContent(
+  props: MediaDetailContentProps,
+) {
+  const { model } = props
+
+  return &lt;article&gt;{model.title}&lt;/article&gt;
+}</code></pre></figure><aside class="code-aside" data-role="child"><p><strong>Entrada:</strong> <code>MediaDetailModel</code>.</p><p><strong>Decisión:</strong> cómo presentar título, fecha, géneros y campos opcionales.</p><p>No importa Router, Query, fetchers o DTO.</p></aside><aside class="notes">Mostrar contrato, parámetro props y destructuring como tres pasos. El aislamiento permite renderizar el componente con props fijas.</aside></div>
+        </section>
+
+
+
+        <section data-slide-id="session-10-21-external-system" data-geometry="G10" data-semantic="S11 S27" data-journey="effect">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Sistema externo</p><h2 class="slide-title">document.title vive fuera del árbol de componentes</h2></header><div class="s10-external-system"><article><img src="/assets/logos/react-official.png" alt="Logo oficial de React" /><strong>Render de React</strong><code>model.title = "Dune"</code></article><i>sincroniza</i><article data-stage="effect"><strong>Effect</strong><span>Escribe y luego restaura el valor.</span></article><i>actualiza</i><article><strong>Documento del navegador</strong><code>document.title</code></article></div><p class="flow-question"><strong>Sistema externo:</strong> estado que React no controla mediante el JSX renderizado, como el título del documento.</p><aside class="notes">El Effect aparece porque existe un sistema externo. No se usa para derivar model ni iniciar fetching, responsabilidades ya resueltas.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-22-effect-wrong" data-geometry="G16" data-semantic="S20 S45" data-journey="effect">
+          <div class="slide-frame" data-layout="G16"><header class="slide-heading"><p class="slide-label">Forma incompleta</p><h2 class="slide-title">Cambiar el título sin cleanup deja un valor residual</h2></header><figure class="file-snippet s10-effect-wrong"><figcaption><span>Evitar</span><code>src/components/media-document-title.tsx</code></figcaption><pre><code class="language-tsx">useEffect(() =&gt; {
+  document.title = `${title} | Medialog`
+}, [title])</code></pre><p>Al desmontarse el componente, nada restaura el título anterior.</p></figure><aside class="code-aside"><p><strong>Setup:</strong> parte del Effect que inicia o actualiza la sincronización.</p><p>Este setup escribe el valor, pero todavía no define cómo deshacerlo.</p></aside><aside class="notes">La dependencia title está bien. El problema no es el array; falta una función que restaure el sistema externo.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-23-cleanup" data-geometry="G16" data-semantic="S20 S28" data-journey="effect">
+          <div class="slide-frame" data-layout="G16"><header class="slide-heading"><p class="slide-label">Sincronización reversible</p><h2 class="slide-title">El cleanup restaura el título que existía antes del detalle</h2></header><figure class="file-snippet"><figcaption><span>Componente de sincronización</span><code>src/components/media-document-title.tsx</code></figcaption><pre><code class="language-tsx">type MediaDocumentTitleProps = {
+  title: string
+}
+
+function MediaDocumentTitle(props: MediaDocumentTitleProps) {
+  const { title } = props
+
+  useEffect(() =&gt; {
+    const previousTitle = document.title
+    document.title = `${title} | Medialog`
+
+    return () =&gt; { document.title = previousTitle }
+  }, [title])
+
+  return null
+}</code></pre></figure><aside class="code-aside"><ol class="s10-cleanup-steps"><li><b>1</b><span>Guarda el título anterior.</span></li><li><b>2</b><span>Escribe el título del medio.</span></li><li><b>3</b><span>Devuelve el cleanup.</span></li><li><b>4</b><span>Restaura al cambiar o salir.</span></li></ol></aside><aside class="notes">Leer en cuatro pasos. El componente devuelve null porque su responsabilidad es sincronizar, no renderizar una caja visual.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-24-workshop" data-geometry="G13" data-semantic="S09 S39" data-chrome="none" data-journey="complete">
+          <div class="slide-frame" data-layout="G13"><p class="slide-label">Descanso · después construiremos con lo ya explicado</p><h2 class="slide-display">El taller conecta las piezas</h2><div class="s10-workshop-flow"><span>URL válida</span><i>habilita</i><span>query</span><i>entrega</i><span>DTO</span><i>transforma</i><span>modelo</span><i>presenta</i><span>contenido + título</span></div><div class="s10-workshop-scope"><article><strong>Ya preparado</strong><span>Key, hook con input fijo, adapter, componentes y cleanup.</span></article><article><strong>Trabajo del taller</strong><span>Conectar <code>detailInput</code>, ordenar cinco ramas y retirar datos temporales.</span></article></div><p class="flow-question">No aparece el archivo final resuelto de <code>MediaDetailPage</code>.</p><aside class="notes">Entregar la rúbrica y el checkpoint alternativo antes del descanso. Después no introducir conceptos nuevos; usar esta slide para recordar el mapa y comenzar la integración.</aside></div>
+        </section>
+
+        <section data-slide-id="session-10-25-close" data-geometry="G18" data-semantic="S10 S36 S59">
+          <div class="slide-frame" data-layout="G18"><div class="checkpoint-limit"><p class="slide-label">Cierre y siguiente paso</p><h2 class="slide-title">La URL conserva la identidad y la página presenta el detalle remoto</h2><p><strong>Vitest:</strong> comprueba la transformación para los fixtures cubiertos.</p><p><strong>Build:</strong> comprueba tipos y empaquetado.</p><p><strong>Navegador local:</strong> permite observar estados, historial, contenido y título.</p><p><strong>Límite:</strong> ninguna evidencia demuestra deploy o disponibilidad futura del backend.</p><img class="s10-vitest-logo" src="/assets/logos/vitest.png" alt="Logo de Vitest" /></div><ol class="closing-questions explicit-answers"><li><b>01</b><span><strong>¿Por qué una URL inválida no muestra un spinner?</strong><small><code>detailInput === null</code> deshabilita la query; no existe un primer fetch activo.</small></span></li><li><b>02</b><span><strong>¿Quién transforma coverUrl en posterUrl?</strong><small><code>mediaCatalogDetailToModel()</code> traduce el DTO a <code>MediaDetailModel</code>.</small></span></li><li><b>03</b><span><strong>¿Qué restaura el título al salir?</strong><small>El cleanup de <code>MediaDocumentTitle</code> vuelve a escribir el título anterior.</small></span></li><li><b>04</b><span><strong>¿Qué añade la sesión 11?</strong><small>Una creación global podrá abrirse desde búsqueda y detalle sin mover la query a Zustand.</small></span></li></ol><aside class="notes">Solicitar cada respuesta antes de mostrarla. Cerrar separando prueba, build y observación manual. La siguiente sesión comparte una selección, no los datos remotos.</aside></div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/framework/deck.js"></script>
+  </body>
+</html>

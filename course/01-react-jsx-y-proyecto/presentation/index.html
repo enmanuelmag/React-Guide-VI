@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sesión 01: React, Vite, JSX y primer árbol de componentes" />
+    <title>Sesión 01 · React, Vite y JSX</title>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-slide-id="session-01-00-cover" data-geometry="G02" data-semantic="S02" data-chrome="none">
+          <div class="slide-frame" data-layout="G02">
+            <div class="slide-heading">
+              <p class="slide-label">Sesión 01 · React Guide VI</p>
+              <h1 class="slide-display">React, Vite y JSX</h1>
+              <p class="slide-lede">Del template al primer árbol de componentes</p>
+            </div>
+            <figure class="brand-lockup">
+              <img src="/assets/brand/espol-bootcamp.png" alt="Logo de ESPOL Bootcamp" />
+              <span>Medialog · Fundamentos</span>
+            </figure>
+            <aside class="notes">
+              Presentar la meta sin abrir todavía el editor: hoy transformaremos un template de Vite en una pantalla de Medialog compuesta por piezas con responsabilidades visibles.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-01-01-product" data-geometry="G04" data-semantic="S06 S46">
+          <div class="slide-frame" data-layout="G04">
+            <div class="definition-stack">
+              <p class="slide-label">Punto de llegada</p>
+              <h2 class="slide-title">Medialog empieza con una tarjeta</h2>
+              <p class="slide-lede">Una pantalla pequeña basta para reconocer las primeras piezas.</p>
+            </div>
+            <figure class="product-preview">
+              <div class="product-preview__header">Medialog <span>MI CATÁLOGO</span></div>
+              <div class="media-card-demo">
+                <span class="media-card-demo__poster" aria-hidden="true"></span>
+                <div class="media-card-demo__copy">
+                  <strong>Arrival</strong>
+                  <span>Ciencia ficción · 2016</span>
+                  <span>Una película guardada para después.</span>
+                </div>
+              </div>
+              <figcaption class="evidence-caption"><strong>Ilustración del checkpoint</strong><span>No es una captura ejecutada</span></figcaption>
+            </figure>
+            <aside class="notes">
+              Preguntar qué piezas visuales reconocen. Esperar encabezado y tarjeta. Aclarar que la imagen anticipa el checkpoint, pero no demuestra todavía una aplicación ejecutándose.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-01-02-tools" data-geometry="G08" data-semantic="S17 S24">
+          <div class="slide-frame" data-layout="G08">
+            <header class="slide-heading">
+              <p class="slide-label">Mapa del entorno</p>
+              <h2 class="slide-title">Cuatro herramientas, cuatro tareas</h2>
+            </header>
+            <div class="tool-map" aria-label="Responsabilidad de cada herramienta">
+              <article class="tool-item">
+                <span class="tool-logo-field"><img src="/assets/logos/react-official.png" alt="Logo de React" /></span>
+                <h3>React</h3>
+                <p>Describe y compone la interfaz.</p>
+              </article>
+              <article class="tool-item">
+                <span class="tool-logo-field" data-dark="true"><img src="/assets/logos/vite.png" alt="Logo de Vite" /></span>
+                <h3>Vite</h3>
+                <p>Crea el proyecto y sirve el entorno local.</p>
+              </article>
+              <article class="tool-item">
+                <span class="tool-logo-field"><img src="/assets/logos/pnpm.png" alt="Logo de pnpm" /></span>
+                <h3>pnpm</h3>
+                <p>Instala paquetes y ejecuta scripts.</p>
+              </article>
+              <article class="tool-item">
+                <span class="tool-logo-field"><img src="/assets/logos/typescript.png" alt="Logo de TypeScript" /></span>
+                <h3>TypeScript</h3>
+                <p>Comprueba tipos durante el desarrollo.</p>
+              </article>
+            </div>
+            <aside class="notes">
+              Preguntar: cuando ejecutamos pnpm dev, ¿qué herramienta administra el script y cuál sirve la aplicación? Respuesta esperada: pnpm ejecuta; Vite sirve. Los cuatro logos provienen de recursos oficiales guardados localmente.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-01-03-component" data-geometry="G05" data-semantic="S13 S46">
+          <div class="slide-frame" data-layout="G05">
+            <div class="component-map" aria-label="Pantalla separada en componentes">
+              <div class="component-region">&lt;AppHeader /&gt;</div>
+              <div class="component-region" data-primary="true">&lt;MediaCard /&gt;</div>
+            </div>
+            <div class="definition-stack">
+              <p class="slide-label">Componente</p>
+              <h2 class="slide-title">Un componente representa una pieza</h2>
+              <p class="slide-lede">Tiene una responsabilidad reconocible, se declara como función y puede usarse dentro de otras piezas.</p>
+            </div>
+            <aside class="notes">
+              Pedir que nombren la responsabilidad de cada frontera. Definir componente: una pieza declarativa de interfaz. No hablar todavía de props ni de estado.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-01-04-boundary" data-geometry="G06" data-semantic="S20 S22">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading">
+              <p class="slide-label">Criterio de extracción</p>
+              <h2 class="slide-title">Responsabilidad no significa fragmentar todo</h2>
+            </header>
+            <div class="split-stage">
+              <article class="comparison-column" data-verdict="preferred">
+                <h3><span class="comparison-symbol">✓</span> MediaCard</h3>
+                <pre><code class="language-tsx">function MediaCard() {
+  return &lt;article&gt;...&lt;/article&gt;
+}</code></pre>
+                <p class="comparison-note">Agrupa una pieza completa que la pantalla puede reconocer.</p>
+              </article>
+              <article class="comparison-column" data-verdict="avoid">
+                <h3><span class="comparison-symbol">!</span> SectionTitle</h3>
+                <pre><code class="language-tsx">function SectionTitle() {
+  return &lt;h2&gt;Mi catálogo&lt;/h2&gt;
+}</code></pre>
+                <p class="comparison-note">Aísla una sola etiqueta sin resolver todavía un problema visible.</p>
+              </article>
+            </div>
+            <aside class="notes">
+              Preguntar cuál componente tiene una frontera reconocible en el producto. La comparación enseña criterio, no una prohibición absoluta: extraemos cuando aparece una responsabilidad útil.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-01-05-declare-use" data-geometry="G16" data-semantic="S13 S41">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading">
+              <p class="slide-label">Dos acciones</p>
+              <h2 class="slide-title">Declarar y usar no son lo mismo</h2>
+            </header>
+            <pre><code class="language-tsx">function MediaCard() {
+  return &lt;article&gt;Arrival&lt;/article&gt;
+}
+
+&lt;MediaCard /&gt;</code></pre>
+            <aside class="code-aside">
+              <div class="concept-mark"><strong>Declarar</strong></div>
+              <p>Define qué representa la pieza.</p>
+              <div class="concept-mark"><strong>Usar</strong></div>
+              <p>La coloca dentro del árbol visible.</p>
+            </aside>
+            <aside class="notes">
+              Tapar mentalmente la última línea y preguntar si declarar basta para verla. Respuesta esperada: no; también debemos usar el componente dentro del árbol.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-01-06-jsx" data-geometry="G03" data-semantic="S16 S45">
+          <div class="slide-frame" data-layout="G03">
+            <header class="slide-heading">
+              <p class="slide-label">Sintaxis de interfaz</p>
+              <h2 class="slide-title">JSX tiene tres reglas concretas</h2>
+            </header>
+            <div class="split-stage code-dominant-stage">
+              <pre><code class="language-tsx">return (
+  &lt;article className="media-card"&gt;
+    &lt;h3&gt;Arrival&lt;/h3&gt;
+  &lt;/article&gt;
+)</code></pre>
+              <ol class="annotation-list">
+                <li><b>1</b><span>Devuelve un solo árbol raíz.</span></li>
+                <li><b>2</b><span>Usa <code>className</code> para clases CSS.</span></li>
+                <li><b>3</b><span>Cierra todas las etiquetas.</span></li>
+              </ol>
+            </div>
+            <aside class="notes">
+              Recorrer el snippet de afuera hacia adentro. Pedir que ubiquen la raíz, className y los cierres. Mantener el foco en las reglas que necesitarán hoy.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-01-07-entry-tree" data-geometry="G11" data-semantic="S28 S30">
+          <div class="slide-frame" data-layout="G11">
+            <header class="slide-heading">
+              <p class="slide-label">Punto de entrada</p>
+              <h2 class="slide-title">Del HTML raíz al árbol de React</h2>
+            </header>
+            <div class="entry-tree" aria-label="Recorrido desde index.html hasta App">
+              <article class="entry-node"><code>index.html</code><strong>#root</strong><span>Reserva el lugar de montaje.</span></article>
+              <article class="entry-node"><code>main.tsx</code><strong>createRoot</strong><span>Conecta React con ese lugar.</span></article>
+              <article class="entry-node"><code>main.tsx</code><strong>StrictMode</strong><span>Envuelve el árbol durante desarrollo.</span></article>
+              <article class="entry-node"><code>App.tsx</code><strong>&lt;App /&gt;</strong><span>Compone la pantalla inicial.</span></article>
+            </div>
+            <aside class="notes">
+              Seguir la flecha de izquierda a derecha. Preguntar en qué archivo comienza la pantalla que sí vamos a reemplazar. Respuesta esperada: App.tsx.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-01-08-transformation" data-geometry="G10" data-semantic="S06 S23">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading">
+              <p class="slide-label">Transformación guiada</p>
+              <h2 class="slide-title">La transformación conserva una sola pantalla</h2>
+            </header>
+            <div class="flow" data-steps="3" aria-label="Transformación de App en un árbol de componentes">
+              <div class="flow-step"><strong>Todo en App</strong><span>El template concentra la pantalla.</span></div>
+              <div class="flow-step"><strong>AppHeader</strong><span>Extraemos el encabezado.</span></div>
+              <div class="flow-step"><strong>MediaCard</strong><span>Extraemos la tarjeta.</span></div>
+            </div>
+            <p class="flow-question">¿Qué archivo contiene hoy la pantalla que vamos a reemplazar? <strong class="fragment">src/App.tsx</strong></p>
+            <aside class="notes">
+              Pedir una predicción antes de revelar src/App.tsx. Esta slide conecta los conceptos con la demostración; los comandos y cambios exactos permanecen en la guía docente.
+            </aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-01-09-close" data-geometry="G18" data-semantic="S10 S53 S59">
+          <div class="slide-frame" data-layout="G18">
+            <div class="checkpoint-limit">
+              <p class="slide-label">Checkpoint conceptual</p>
+              <h2 class="slide-title">El primer árbol termina con datos fijos</h2>
+              <p><strong>App</strong> compone <strong>AppHeader</strong> y <strong>MediaCard</strong>.</p>
+              <p>La pantalla ya tiene fronteras; sus datos todavía no cambian.</p>
+            </div>
+            <ol class="closing-questions">
+              <li><b>01</b><span>¿Cuál es la responsabilidad de App?</span></li>
+              <li><b>02</b><span>¿Qué diferencia hay entre declarar y usar un componente?</span></li>
+              <li><b>03</b><span>¿Cómo llega React desde #root hasta App?</span></li>
+              <li><b>04</b><span>¿Qué limita a una tarjeta cuyos datos están escritos directamente?</span></li>
+            </ol>
+            <aside class="notes">
+              Usar las cuatro preguntas como cierre oral. La última abre la necesidad de datos variables en la sesión 02, pero no explicar todavía props ni su sintaxis.
+            </aside>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/framework/deck.js"></script>
+  </body>
+</html>

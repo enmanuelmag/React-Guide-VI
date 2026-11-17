@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sesión 08: TanStack Query y búsqueda remota" />
+    <title>Sesión 08 · TanStack Query y búsqueda remota</title>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-slide-id="session-08-00-cover" data-geometry="G02" data-semantic="S02" data-chrome="none">
+          <div class="slide-frame" data-layout="G02">
+            <div class="slide-heading"><p class="slide-label">Sesión 08 · React Guide VI</p><h1 class="slide-display">Dune llega a la interfaz</h1><p class="slide-lede">TanStack Query, estados remotos y caché</p></div>
+            <figure class="s08-cover-brand"><img src="/assets/logos/tanstack.png" alt="Logo de TanStack" /><figcaption>TanStack Query</figcaption></figure>
+            <aside class="notes">Presentar la meta con el mismo caso de la sesión anterior: ya sabemos pedir Dune al backend; hoy haremos que React represente todo el ciclo de esa búsqueda. Fuente del logo: asset oficial de TanStack rasterizado a PNG.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-08-01-route" data-geometry="G10" data-semantic="S04 S28">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">Ruta de la sesión</p><h2 class="slide-title">Una búsqueda pasa de intención a evidencia visible</h2></header>
+            <div class="session-route"><article><b>01</b><strong>Preparar</strong><span>Separar lo escrito de lo que se enviará.</span></article><i>después</i><article><b>02</b><strong>Consultar</strong><span>Dar identidad y función a la búsqueda.</span></article><i>mientras ocurre</i><article><b>03</b><strong>Representar</strong><span>Mostrar carga, error, vacío y resultados.</span></article><i>al final</i><article><b>04</b><strong>Comprobar</strong><span>Observar caché, Network, Devtools y build.</span></article></div>
+            <p class="flow-question">Seguiremos “Dune” de principio a fin: desde el formulario hasta las tarjetas que aparecen en pantalla.</p>
+            <aside class="notes">Explicar que no son cuatro funciones aisladas. Cada bloque responde qué ocurre con la misma búsqueda de Dune en un momento distinto.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-08-02-checkpoint" data-geometry="G06" data-semantic="S05 S46">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Checkpoint de la sesión 07</p><h2 class="slide-title">El fetcher sabe pedir Dune, pero la interfaz todavía no lo usa</h2></header>
+            <div class="s08-checkpoint"><article><strong>Contrato</strong><span>Define el request y el DTO de respuesta.</span></article><article><strong>Fetcher</strong><span>Ejecuta POST y devuelve una Promise.</span></article><article data-verdict="avoid"><strong>Responsable visual</strong><span>Ningún componente representa aún ese resultado remoto.</span></article></div>
+            <aside class="notes">Recordar la frontera de evidencia: el test del adapter y el build no demostraron que React mostrara resultados remotos. Esa responsabilidad pendiente inicia la sesión.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-08-03-owner-question" data-geometry="G01" data-semantic="S07 S14">
+          <div class="slide-frame" data-layout="G01"><p class="slide-label">Responsabilidad pendiente</p><h2 class="slide-concept">¿Quién recuerda la respuesta mientras la pantalla cambia?</h2><p class="bridge-context">El fetcher entrega datos una vez. La interfaz necesita conocer si la búsqueda está esperando, cargando, falló o terminó.</p><div class="question-answer fragment"><strong>TanStack Query administra el estado remoto.</strong><span>React conserva el estado local de la interacción.</span></div><aside class="notes">Dejar responder antes de revelar. “Estado remoto” significa datos que pertenecen al servidor y llegan de forma asíncrona.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-04-ownership" data-geometry="G08" data-semantic="S31 S32">
+          <div class="slide-frame" data-layout="G08"><header class="slide-heading"><p class="slide-label">Tres responsabilidades</p><h2 class="slide-title">Cada herramienta conserva una decisión diferente</h2></header><div class="s08-owners"><article><strong>React</strong><span>Guarda lo escrito y lo enviado por la persona.</span></article><article><img src="/assets/logos/tanstack.png" alt="Logo de TanStack" /><strong>TanStack Query</strong><span>Administra solicitud, estados, respuesta y caché.</span></article><article><strong>Adapter</strong><span>Convierte el DTO remoto en el modelo que necesita la UI.</span></article></div><aside class="notes">Nombrar el límite de cada herramienta. TanStack Query no decide cómo se ve una tarjeta y el adapter no ejecuta la interfaz.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-05-query-anatomy" data-geometry="G06" data-semantic="S11 S20">
+          <div class="slide-frame" data-layout="G06"><header class="slide-heading"><p class="slide-label">Anatomía de una query</p><h2 class="slide-title">La identidad y el trabajo forman una consulta</h2></header><div class="s08-query-equation"><article><code>queryKey</code><strong>Identidad</strong><span>Distingue qué datos estamos consultando.</span></article><b>+</b><article><code>queryFn</code><strong>Trabajo</strong><span>Indica cómo obtener esos datos.</span></article><b>=</b><article data-result><strong>Query</strong><span>Una consulta remota administrada.</span></article></div><p class="flow-question"><strong>Query:</strong> consulta identificada que TanStack Query puede ejecutar, observar y almacenar temporalmente.</p><aside class="notes">Pronunciar key como “clave” y query function como “función de consulta”. No introducir opciones adicionales todavía.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-06-key-contrast" data-geometry="G07" data-semantic="S15 S45">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">La key describe los datos</p><h2 class="slide-title">Si cambia la búsqueda, también debe cambiar su identidad</h2></header><div class="s08-key-contrast"><article data-verdict="avoid"><strong>Identidad incompleta</strong><pre><code class="language-ts">queryKey: ["media", "search"]</code></pre><p>No distingue Dune de otras búsquedas.</p></article><article data-verdict="preferred"><strong>Identidad completa</strong><pre><code class="language-ts">queryKey: [
+  "media",
+  "search",
+  { query: "Dune", mediaType: "movie" },
+]</code></pre><p>Incluye cada valor usado por la función.</p></article></div><aside class="notes">La documentación de TanStack Query indica que cada variable usada dentro de queryFn debe formar parte de la query key.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-07-two-identities" data-geometry="G06" data-semantic="S12 S27">
+          <div class="slide-frame" data-layout="G06"><header class="slide-heading"><p class="slide-label">Mismo texto, datos diferentes</p><h2 class="slide-title">Dune película y Dune serie necesitan entradas distintas</h2></header><div class="s08-identity-pair"><article><span>Consulta A</span><code>["media", "search", { query: "Dune", mediaType: "movie" }]</code><strong>Dune · película</strong></article><article><span>Consulta B</span><code>["media", "search", { query: "Dune", mediaType: "series" }]</code><strong>Dune · serie</strong></article></div><p class="flow-question">El orden de los elementos del array forma parte de la identidad; las propiedades de un objeto se comparan de forma determinista.</p><aside class="notes">Pedir identificar el único valor que cambia. La caché puede conservar ambas respuestas porque tienen query keys diferentes.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-08-provider" data-geometry="G16" data-semantic="S20 S31">
+          <div class="slide-frame" data-layout="G16"><header class="slide-heading"><p class="slide-label">Una instancia compartida</p><h2 class="slide-title">QueryClientProvider permite que la aplicación use el mismo caché</h2></header><figure class="file-snippet"><figcaption><span>Entrada de React</span><code>src/main.tsx</code></figcaption><pre><code class="language-tsx">const queryClient = new QueryClient()
+
+createRoot(root).render(
+  &lt;QueryClientProvider client={queryClient}&gt;
+    &lt;App /&gt;
+  &lt;/QueryClientProvider&gt;,
+)</code></pre></figure><aside class="code-aside"><p><strong>QueryClient:</strong> objeto que administra consultas y caché.</p><p><strong>Provider:</strong> componente que hace disponible ese cliente dentro del árbol.</p></aside><aside class="notes">Mostrar el logo ya presentado en la portada. La instancia se crea fuera del componente para no reiniciar el caché en cada render.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-09-draft-submitted" data-geometry="G07" data-semantic="S15 S37">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Dos momentos del formulario</p><h2 class="slide-title">Escribir no debe enviar una petición por cada tecla</h2></header><div class="s08-draft-pair"><article><strong>draftSearch</strong><span>Texto que cambia mientras la persona escribe.</span><code>"Dun"</code><p>No activa todavía la búsqueda remota.</p></article><article><strong>submittedSearch</strong><span>Texto confirmado al enviar el formulario.</span><code>"Dune"</code><p>Forma parte de la query key y habilita la consulta.</p></article></div><aside class="notes">Draft significa borrador. Submitted significa enviado o confirmado. Separarlos evita requests por cada tecla sin introducir debounce.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-10-typing-timeline" data-geometry="G10" data-semantic="S24 S33">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Mientras escribe</p><h2 class="slide-title">El borrador cambia; la consulta permanece deshabilitada</h2></header><div class="s08-timeline"><article><b>01</b><code>D</code><span>0 requests</span></article><i>tecla</i><article><b>02</b><code>Du</code><span>0 requests</span></article><i>tecla</i><article><b>03</b><code>Dun</code><span>0 requests</span></article><i>tecla</i><article><b>04</b><code>Dune</code><span>0 requests</span></article></div><p class="flow-question">Todavía no hubo submit: <code>submittedSearch</code> sigue vacío.</p><aside class="notes">Avanzar la lectura como una línea de tiempo. La ausencia de requests es intencional y observable en Network.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-11-submit" data-geometry="G10" data-semantic="S24 S33">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Al enviar el formulario</p><h2 class="slide-title">Submit copia el valor, cambia la key y habilita la query</h2></header><div class="s08-submit-flow"><article><strong>1 · Copiar</strong><code>setSubmittedSearch("Dune")</code></article><i>provoca</i><article><strong>2 · Identificar</strong><code>["media", "search", { query: "Dune", mediaType }]</code></article><i>y entonces</i><article><strong>3 · Consultar</strong><code>enabled: true</code></article></div><p class="flow-question"><strong>enabled:</strong> opción que indica si TanStack Query puede ejecutar automáticamente la consulta.</p><aside class="notes">Aclarar que enabled no ejecuta por sí solo una función manual. Permite que la query observe su identidad y empiece cuando corresponde.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-12-hook" data-geometry="G16" data-semantic="S20 S31">
+          <div class="slide-frame" data-layout="G16"><header class="slide-heading"><p class="slide-label">Hook de la feature</p><h2 class="slide-title">useMediaSearch devuelve el resultado de useQuery</h2></header><figure class="file-snippet"><figcaption><span>Consulta remota</span><code>src/hooks/features/use-media.ts</code></figcaption><pre><code class="language-ts">export function useMediaSearch(input: MediaSearchInput) {
+  const query = useQuery({
+    queryKey: mediaKeys.search(input),
+    queryFn: () =&gt; searchMedia(input),
+    enabled: input.query.trim().length &gt; 0,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  return query
+}</code></pre></figure><aside class="code-aside"><p><strong>query</strong> guarda el objeto devuelto por <code>useQuery</code>.</p><p><strong>input</strong> alimenta la key y el fetcher.</p><p><strong>enabled</strong> y <strong>staleTime</strong> configuran la consulta.</p></aside><aside class="notes">La variable query guarda el objeto devuelto por useQuery. Ese objeto contiene data, error, status, fetchStatus y campos derivados. No llamar refetch con parámetros: la entrada cambia primero y la query reacciona a la nueva identidad.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-13-two-statuses" data-geometry="G08" data-semantic="S12 S45">
+          <div class="slide-frame" data-layout="G08"><header class="slide-heading"><p class="slide-label">Campos devueltos por useQuery</p><h2 class="slide-title">query.status describe los datos; query.fetchStatus describe la petición</h2></header><table class="s08-status-table"><thead><tr><th>Campo del resultado</th><th>Pregunta que responde</th><th>Valores posibles</th></tr></thead><tbody><tr><th><code>query.status</code></th><td>¿La query ya tiene datos o un error?</td><td><code>pending</code>, <code>error</code>, <code>success</code></td></tr><tr><th><code>query.fetchStatus</code></th><td>¿La función de consulta está ejecutándose ahora?</td><td><code>idle</code>, <code>fetching</code>, <code>paused</code></td></tr></tbody></table><p class="flow-question"><code>const query = useMediaSearch(input)</code> · <code>query</code> guarda el objeto que <code>useQuery</code> devuelve.</p><aside class="notes">Señalar primero la asignación visible del pie. useMediaSearch devuelve directamente el resultado de useQuery. Luego leer las dos preguntas, no memorizar las listas: status habla de los datos y fetchStatus de la actividad de la petición.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-14-pending-idle" data-geometry="G01" data-semantic="S11 S45">
+          <div class="slide-frame" data-layout="G01"><p class="slide-label">Campos del resultado antes del primer submit</p><h2 class="slide-concept s08-state-fields"><code>query.status: pending</code><b>+</b><code>query.fetchStatus: idle</code></h2><p class="s08-query-origin"><code>const query = useMediaSearch(input)</code><span><code>query</code> es el objeto devuelto por <code>useQuery</code>.</span></p><div class="s08-state-result"><strong>No hay datos y tampoco hay una petición activa.</strong><span>La query está deshabilitada porque la búsqueda confirmada sigue vacía.</span></div><aside class="notes">Señalar que status y fetchStatus son campos del objeto query. Evitar traducir pending automáticamente como “cargando”: una query deshabilitada sin datos puede estar pending e idle al mismo tiempo.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-15-loading" data-geometry="G01" data-semantic="S11 S45">
+          <div class="slide-frame" data-layout="G01"><p class="slide-label">Campos del resultado después de enviar Dune</p><h2 class="slide-concept s08-state-fields"><code>query.status: pending</code><b>+</b><code>query.fetchStatus: fetching</code></h2><p class="s08-query-origin"><code>const query = useMediaSearch(input)</code><span><code>query.isLoading</code> también viene del resultado de <code>useQuery</code>.</span></p><div class="s08-state-result" data-active><strong>Ahora sí mostramos la carga inicial.</strong><span><code>query.isLoading</code> es verdadero durante esta primera petición.</span></div><aside class="notes">La documentación define isLoading como isPending e isFetching. Los tres son campos derivados del objeto devuelto por useQuery. Aquí todavía no existe una respuesta anterior que pueda mostrarse.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-16-fresh-stale" data-geometry="G10" data-semantic="S24 S34">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Ventana de frescura</p><h2 class="slide-title">staleTime decide cuándo una respuesta deja de considerarse reciente</h2></header><div class="s08-fresh-line"><article data-state="fresh"><b>0:00</b><strong>Respuesta recibida</strong><span>Dune queda fresh.</span></article><i></i><article data-state="fresh"><b>2:30</b><strong>Consulta reutilizada</strong><span>Sigue fresh; no necesita otra petición.</span></article><i></i><article data-state="stale"><b>5:00</b><strong>Tiempo cumplido</strong><span>Pasa a stale; puede actualizarse después.</span></article></div><p class="flow-question"><strong>Fresh:</strong> reciente. <strong>Stale:</strong> desactualizada según la política, no necesariamente incorrecta.</p><aside class="notes">No decir que stale borra la respuesta. Solo cambia si TanStack Query considera necesario actualizarla ante ciertos disparadores.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-17-cache-experiment" data-geometry="G10" data-semantic="S24 S33">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Experimento controlado</p><h2 class="slide-title">Película, serie y película recorren dos identidades</h2></header><div class="s08-experiment"><article><b>01</b><strong>Dune · movie</strong><span>Request A → guarda respuesta A.</span></article><i></i><article><b>02</b><strong>Dune · series</strong><span>Request B → guarda respuesta B.</span></article><i></i><article><b>03</b><strong>Dune · movie</strong><span>Vuelve a la identidad A.</span></article></div><p class="flow-question">La tercera búsqueda no es “la última respuesta”: es el regreso a una query key que ya existe.</p><aside class="notes">Abrir Network y Devtools durante la demostración. Preguntar cuántas entradas de caché esperan ver antes de ejecutar el tercer paso.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-18-cache-hit" data-geometry="G07" data-semantic="S15 S45">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Regreso a una key fresh</p><h2 class="slide-title">La respuesta guardada puede aparecer sin otro request inmediato</h2></header><div class="s08-cache-hit"><article><strong>Caché</strong><code>Dune · movie</code><span>La respuesta A sigue disponible y fresh.</span></article><i>la entrega a</i><article><strong>Interfaz</strong><span>Las tarjetas aparecen desde la entrada existente.</span><code>0 requests nuevos</code></article></div><p class="flow-question">Esto se comprueba con dos evidencias: la entrada visible en Devtools y la ausencia de un request nuevo en Network.</p><aside class="notes">No prometer comportamiento sin observarlo. Si la respuesta ya es stale, puede ocurrir un refetch; por eso el ejemplo se ejecuta dentro de los cinco minutos.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-19-adapter" data-geometry="G10" data-semantic="S27 S38">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">De query.data a la interfaz</p><h2 class="slide-title">El adapter traduce cada DTO devuelto por useQuery</h2></header><div class="s08-adapter-flow"><article><span>Elemento de query.data</span><code>{ externalId, coverUrl, releaseYear }</code></article><i>toMediaItem</i><article><span>Modelo de UI</span><code>{ id, posterUrl, releaseDate }</code></article><i>lo recibe</i><article><span>MediaCard</span><strong>Dune · 2021</strong></article></div><p class="flow-question"><code>query.data</code> es el campo del resultado de <code>useQuery</code> que contiene la respuesta exitosa.</p><aside class="notes">useQuery devuelve query; query.data contiene el array de DTOs cuando la consulta tiene éxito. El adapter visual transforma cada elemento, pero no ejecuta el request ni decide el layout.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-20-derived" data-geometry="G07" data-semantic="S15 S37">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">query.data viene del resultado de useQuery</p><h2 class="slide-title">Las tarjetas se derivan de query.data; no se copian a otro estado</h2></header><div class="s08-derived-contrast"><article data-verdict="preferred"><strong>Derivar durante el render</strong><pre><code class="language-ts">const mediaItems =
+  (query.data ?? []).map(toMediaItem)</code></pre><p>Siempre refleja la respuesta actual.</p></article><article data-verdict="avoid"><strong>Duplicar en useState</strong><pre><code class="language-ts">useEffect(() =&gt; {
+  setMediaItems(query.data)
+}, [query.data])</code></pre><p>Crea dos fuentes que pueden desincronizarse.</p></article></div><aside class="notes">Recordar que query es el resultado de useMediaSearch y, por dentro, de useQuery. query.data contiene la respuesta exitosa. Estado derivado significa un valor calculable desde ese campo disponible; no necesita useEffect ni un segundo useState.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-21-first-states" data-geometry="G08" data-semantic="S13 S45">
+          <div class="slide-frame" data-layout="G08"><header class="slide-heading"><p class="slide-label">Campos del objeto query devuelto por useQuery</p><h2 class="slide-title">Inicial, carga y error necesitan mensajes distintos</h2></header><div class="state-gallery s08-three-states"><article class="state-sample" data-state="initial"><span class="state-index">01</span><h3>Inicial</h3><div class="state-visual"><code>submittedSearch === null</code></div><p>“Escribe un título y presiona Buscar.”</p></article><article class="state-sample" data-state="loading"><span class="state-index">02</span><h3>Cargando</h3><div class="state-visual"><code>query.isLoading</code></div><p>“Buscando Dune…”</p></article><article class="state-sample" data-state="error"><span class="state-index">03</span><h3>Error</h3><div class="state-visual"><code>query.isError</code></div><p>“No pudimos completar la búsqueda.”</p></article></div><aside class="notes">submittedSearch pertenece al estado local de React. query.isLoading y query.isError son campos del objeto que useQuery devuelve. Cada mensaje explica qué puede hacer la persona. Error no significa vacío: la consulta no pudo completarse.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-22-result-states" data-geometry="G08" data-semantic="S13 S45">
+          <div class="slide-frame" data-layout="G08"><header class="slide-heading"><p class="slide-label">query.data y query.isFetching vienen de useQuery</p><h2 class="slide-title">Vacío, éxito y actualización conservan contextos diferentes</h2></header><div class="s08-result-states"><article data-state="empty"><strong>Vacío</strong><code>query.data?.length === 0</code><span>“No encontramos resultados para Dune.”</span></article><article data-state="success"><strong>Éxito</strong><code>query.data.length &gt; 0</code><span>Muestra las tarjetas adaptadas.</span></article><article data-state="updating"><strong>Actualizando</strong><code>query.isFetching</code><span>Conserva las tarjetas y añade una señal secundaria.</span></article></div><p class="flow-question"><code>query</code> es el resultado de <code>useMediaSearch()</code>, que devuelve el objeto producido por <code>useQuery()</code>.</p><aside class="notes">Señalar el origen antes de comparar. query.data contiene la respuesta exitosa y query.isFetching indica si la función consulta ahora. isFetching también puede ser verdadero cuando ya existen datos y se realiza una actualización secundaria.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-23-tools" data-geometry="G08" data-semantic="S31 S32">
+          <div class="slide-frame" data-layout="G08"><header class="slide-heading"><p class="slide-label">Responsabilidades de la interfaz</p><h2 class="slide-title">useQuery devuelve datos; Mantine presenta los estados</h2></header><div class="technology-roles s08-tech-roles"><article><img src="/assets/logos/tanstack.png" alt="Logo de TanStack" /><strong>Resultado de useQuery</strong><p>Expone <code>query.data</code>, <code>query.error</code> y señales como <code>query.isLoading</code>.</p></article><article data-tech="mantine"><img src="/assets/logos/mantine.png" alt="Logo de Mantine" /><p>Presenta Loader, Alert y mensajes accesibles sin decidir cuándo consultar.</p></article></div><p class="flow-question"><strong>MediaSearchResults</strong> recibe ese objeto <code>query</code> y elige una representación explícita para cada estado.</p><aside class="notes">Mantine no administra la query. useQuery devuelve el objeto con datos, error y señales; MediaSearchResults lo recibe y elige qué presentar. El formulario conserva la intención local.</aside></div>
+        </section>
+
+        <section data-slide-id="session-08-24-close" data-geometry="G18" data-semantic="S10 S36 S59">
+          <div class="slide-frame" data-layout="G18"><div class="checkpoint-limit"><p class="slide-label">Cierre y evidencia</p><h2 class="slide-title">Dune completa el recorrido remoto y deja pruebas observables</h2><p><strong>Devtools</strong> muestra dos query keys y sus estados.</p><p><strong>Network</strong> muestra cuándo existe o no un request.</p><p><strong>Build</strong> comprueba los contratos escritos en TypeScript.</p><p><strong>Sesión 09</strong> añadirá Router sin mover la responsabilidad del caché.</p></div><ol class="closing-questions explicit-answers"><li><b>01</b><span><strong>¿Qué debe contener la query key?</strong><small>Cada variable utilizada por la función que obtiene los datos.</small></span></li><li><b>02</b><span><strong>¿Por qué separamos draft y submitted?</strong><small>Para que escribir no envíe una petición por cada tecla.</small></span></li><li><b>03</b><span><strong>¿De dónde vienen isLoading e isFetching?</strong><small>Son campos del objeto que devuelve useQuery; query.isLoading marca la primera carga y query.isFetching cualquier petición activa.</small></span></li><li><b>04</b><span><strong>¿Qué demostramos al volver a Dune película?</strong><small>Que una key fresh puede reutilizar su respuesta sin un request inmediato.</small></span></li></ol><aside class="notes">Solicitar respuestas antes de revelarlas. Reforzar que isLoading e isFetching no son variables creadas por el componente: pertenecen al resultado de useQuery. Ninguna comprobación individual demuestra todo el sistema.</aside></div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/framework/deck.js"></script>
+  </body>
+</html>

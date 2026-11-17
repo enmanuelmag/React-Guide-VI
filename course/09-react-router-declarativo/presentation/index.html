@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sesión 09: React Router declarativo" />
+    <title>Sesión 09 · React Router declarativo</title>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-slide-id="session-09-00-cover" data-geometry="G02" data-semantic="S02" data-chrome="none">
+          <div class="slide-frame" data-layout="G02">
+            <div class="slide-heading"><p class="slide-label">Sesión 09 · React Guide VI</p><h1 class="slide-display">Dune encuentra una dirección</h1><p class="slide-lede">React Router, URLs y parámetros validados</p></div>
+            <figure class="s09-cover-brand"><img src="/assets/logos/react-router.png" alt="Logo de React Router" /><figcaption>React Router</figcaption></figure>
+            <aside class="notes">Abrir con la continuidad exacta de la sesión 08: Dune ya aparece como resultado remoto, pero ninguna persona puede compartir una dirección que abra ese resultado. Fuente del logo: página oficial de marca de React Router.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-09-01-route" data-geometry="G10" data-semantic="S04 S28">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Ruta de la sesión</p><h2 class="slide-title">La misma identidad llegará desde una tarjeta hasta una página</h2></header><div class="s09-session-route"><article><b>01</b><strong>Reconocer</strong><span>La tarjeta ya conoce <code>movie + 123</code>.</span></article><i>crea la URL</i><article><b>02</b><strong>Navegar</strong><span><code>Link</code> declara una URL.</span></article><i>activa la ruta</i><article><b>03</b><strong>Resolver</strong><span><code>Route</code> elige una página.</span></article><i>entrega params</i><article><b>04</b><strong>Validar</strong><span>El adapter acepta o rechaza los params.</span></article></div><p class="flow-question">Seguiremos siempre el mismo ejemplo: <code>movie + 123</code> para la película Dune.</p><aside class="notes">Leer el recorrido completo antes de explicar piezas individuales. La identidad no cambia; cambia su representación y el responsable que la procesa.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-02-checkpoint" data-geometry="G06" data-semantic="S05 S46">
+          <div class="slide-frame" data-layout="G06"><header class="slide-heading"><p class="slide-label">Checkpoint de la sesión 08</p><h2 class="slide-title">La tarjeta ya conserva la identidad pública de Dune</h2></header><div class="s09-checkpoint-card"><article><span class="s09-poster-label">DUNE</span><div><small>Película · 2021</small><strong>Dune</strong><p>Una respuesta remota adaptada para la interfaz.</p></div></article><div class="s09-identity-token" data-state="internal"><span>Identidad dentro de React</span><code>mediaType: "movie"</code><code>externalId: "123"</code></div></div><aside class="notes">Recuperar solo la evidencia necesaria. mediaType y externalId vienen del modelo visual construido en la sesión 08. Todavía no existe Link, URL de detalle ni query de detalle.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-03-no-destination" data-geometry="G07" data-semantic="S15 S45">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Limitación visible</p><h2 class="slide-title">Una identidad guardada no crea por sí sola un destino</h2></header><div class="s09-before-after"><article data-state="before"><strong>Hoy</strong><code>movie + 123</code><span>La tarjeta muestra Dune, pero no ofrece una dirección.</span></article><article data-state="after"><strong>Meta</strong><code>/media/movie/123</code><span>La misma identidad queda representada en una URL.</span></article></div><p class="flow-question"><strong>URL:</strong> dirección que identifica una ubicación que el navegador puede abrir, copiar y conservar en el historial.</p><aside class="notes">No decir todavía cómo se implementa. Primero hacer visible la capacidad que falta: una dirección estable para el resultado.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-04-share-question" data-geometry="G01" data-semantic="S07 S14">
+          <div class="slide-frame" data-layout="G01"><p class="slide-label">Pregunta de apertura</p><h2 class="slide-concept">La tarjeta muestra Dune y conoce <code>movie + 123</code>. ¿Qué URL podría abrir otra persona para llegar al mismo resultado?</h2><p class="bridge-context">En el checkpoint actual no existe ninguna. Primero debemos relacionar esa identidad con una página.</p><div class="question-answer fragment"><strong>Usaremos <code>/media/movie/123</code>.</strong><span>React Router observará esa URL y elegirá qué página mostrar.</span></div><aside class="notes">Dejar responder antes de revelar. Aceptar una propuesta equivalente y luego fijar el contrato acordado. La respuesta debe nombrar URL y página, no solo “usar Router”.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-05-router-definition" data-geometry="G10" data-semantic="S11 S27">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Modelo mental</p><h2 class="slide-title">Router observa la URL y selecciona la página correspondiente</h2></header><div class="s09-router-flow"><article><strong>Acción</strong><span>La persona abre un enlace.</span></article><i>cambia</i><article><strong>URL</strong><code>/media/movie/123</code></article><i>la compara</i><article><strong>Router</strong><span>Busca una ruta coincidente.</span></article><i>muestra</i><article><strong>Página</strong><span><code>MediaDetailPage</code></span></article></div><p class="flow-question"><strong>SPA:</strong> aplicación que cambia la interfaz desde JavaScript sin solicitar otro documento HTML completo para cada pantalla.</p><aside class="notes">Definir Router como el componente que observa la ubicación y resuelve rutas. La SPA conserva el documento actual, pero la URL sí puede cambiar.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-06-ownership" data-geometry="G08" data-semantic="S31 S32">
+          <div class="slide-frame" data-layout="G08"><header class="slide-heading"><p class="slide-label">Responsabilidades separadas</p><h2 class="slide-title">React Router decide la página; TanStack Query administra los datos remotos</h2></header><div class="technology-roles s09-tech-roles"><article data-tech="router"><img src="/assets/logos/react-router.png" alt="Logo de React Router" /><strong>React Router</strong><p>Relaciona URL, historial y página activa.</p></article><article data-tech="query"><img src="/assets/logos/tanstack.png" alt="Logo de TanStack" /><strong>TanStack Query</strong><p>Administra requests, respuestas y caché.</p></article></div><p class="flow-question">Agregar Router no reemplaza <code>useMediaSearch()</code> ni cambia sus query keys.</p><aside class="notes">Pedir que el grupo asigne cada verbo a su propietario. React Router no ejecutará la búsqueda ni guardará DTOs; Query no decide qué página corresponde a una URL.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-07-modes" data-geometry="G08" data-semantic="S12 S45">
+          <div class="slide-frame" data-layout="G08"><header class="slide-heading"><p class="slide-label">Modos de React Router</p><h2 class="slide-title">Declarative Mode añade navegación sin sustituir nuestra capa de datos</h2></header><div class="s09-modes"><article data-selected><strong>Declarative</strong><span><code>BrowserRouter</code>, rutas, enlaces y params.</span><b>Elegido</b></article><article><strong>Data</strong><span>Añade loaders, actions y estados de navegación.</span><b>Fuera de esta sesión</b></article><article><strong>Framework</strong><span>Añade convenciones y herramientas de framework.</span><b>Fuera de este curso base</b></article></div><p class="flow-question">El curso ya usa TanStack Query para sincronizar datos remotos; hoy necesitamos routing del lado del cliente.</p><aside class="notes">Los modos son acumulativos, pero no son una escala de calidad. Elegimos el modo que resuelve la necesidad actual con menos decisiones nuevas.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-08-browser-router" data-geometry="G16" data-semantic="S20 S31">
+          <div class="slide-frame" data-layout="G16"><header class="slide-heading"><p class="slide-label">Provider de navegación</p><h2 class="slide-title">BrowserRouter debe envolver los componentes que leen o cambian la URL</h2></header><figure class="file-snippet"><figcaption><span>Entrada de React</span><code>src/main.tsx</code></figcaption><pre><code class="language-tsx">&lt;QueryClientProvider client={queryClient}&gt;
+  &lt;MantineProvider&gt;
+    &lt;BrowserRouter&gt;
+      &lt;App /&gt;
+    &lt;/BrowserRouter&gt;
+  &lt;/MantineProvider&gt;
+&lt;/QueryClientProvider&gt;</code></pre></figure><aside class="code-aside"><p><strong>BrowserRouter:</strong> componente que sincroniza React Router con el historial del navegador.</p><p>El <code>QueryClient</code> existente no se recrea ni cambia de propietario.</p></aside><aside class="notes">Mostrar la ruta del archivo antes del código. BrowserRouter abarca App porque sus páginas y enlaces necesitan el contexto de navegación.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-09-pattern-vs-url" data-geometry="G07" data-semantic="S15 S45">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Dos formas distintas</p><h2 class="slide-title">El patrón nombra posiciones; la URL real contiene valores</h2></header><div class="s09-pattern-contrast"><article><strong>Patrón declarado</strong><code>/media/:mediaType/:externalId</code><span>Los nombres con <code>:</code> indican segmentos dinámicos.</span></article><article><strong>URL abierta</strong><code>/media/movie/123</code><span><code>movie</code> y <code>123</code> son los valores capturados.</span></article></div><p class="flow-question"><strong>Ruta:</strong> relación entre un patrón de URL y el elemento que React debe renderizar.</p><aside class="notes">Recorrer ambos textos de izquierda a derecha. Evitar llamar params a los nombres del patrón y a los valores concretos como si fueran lo mismo.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-10-url-anatomy" data-geometry="G06" data-semantic="S11 S20">
+          <div class="slide-frame" data-layout="G06"><header class="slide-heading"><p class="slide-label">Anatomía del pathname</p><h2 class="slide-title">Cada barra separa un segmento de la URL</h2></header><div class="s09-url-anatomy"><article data-kind="fixed"><code>media</code><strong>Segmento fijo</strong><span>Debe coincidir literalmente.</span></article><i>/</i><article data-kind="external"><code>movie</code><strong>Valor dinámico</strong><span>Se guarda como <code>mediaType</code>.</span></article><i>/</i><article data-kind="external"><code>123</code><strong>Valor dinámico</strong><span>Se guarda como <code>externalId</code>.</span></article></div><p class="flow-question"><strong>Segmento dinámico:</strong> parte variable de una ruta, nombrada con <code>:</code> dentro del patrón.</p><aside class="notes">La URL real no contiene los dos puntos. Los dos puntos solo aparecen en el patrón que define cómo capturar cada posición.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-11-route-tree" data-geometry="G11" data-semantic="S20 S28">
+          <div class="slide-frame" data-layout="G11"><header class="slide-heading"><p class="slide-label">Árbol público</p><h2 class="slide-title">App declara qué página corresponde a cada patrón</h2></header><div class="s09-route-tree"><article data-level="root"><strong>PublicLayout</strong><span>Ruta padre sin segmento propio</span></article><i>contiene rutas hijas</i><div class="s09-route-children"><article><code>index</code><strong>Navigate → /search</strong></article><article><code>search</code><strong>SearchPage</strong></article><article data-active><code>media/:mediaType/:externalId</code><strong>MediaDetailPage</strong></article><article><code>*</code><strong>NotFoundPage</strong></article></div></div><p class="flow-question"><strong>Wildcard:</strong> patrón <code>*</code> que recibe una URL sin otra coincidencia dentro de este árbol.</p><aside class="notes">Una Route relaciona patrón y elemento. El árbol es declarativo porque describe el resultado esperado para cada ubicación en lugar de cambiar componentes con ifs dispersos.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-12-layout-route" data-geometry="G10" data-semantic="S20 S31">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Estructura compartida</p><h2 class="slide-title">Una layout route comparte interfaz sin añadir otro segmento</h2></header><div class="s09-layout-map"><article data-role="layout"><strong>PublicLayout</strong><span><code>AppHeader</code></span><span><code>&lt;main&gt;</code></span></article><i>recibe una hija</i><div><article><code>/search</code><strong>SearchPage</strong></article><article><code>/media/movie/123</code><strong>MediaDetailPage</strong></article></div></div><p class="flow-question"><strong>Layout route:</strong> ruta padre que comparte estructura con sus hijas sin agregar por sí sola texto al pathname.</p><aside class="notes">La URL no contiene “public-layout”. El layout pertenece al árbol de elementos, no a la forma del pathname.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-13-missing-outlet" data-geometry="G07" data-semantic="S15 S45">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Fallo controlado</p><h2 class="slide-title">La ruta coincide, pero la hija no aparece sin Outlet</h2></header><div class="s09-outlet-state"><article data-state="visible"><strong>Lo que sí vemos</strong><code>AppHeader</code><span><code>PublicLayout</code> coincidió y se renderizó.</span></article><article data-state="missing"><strong>Lo que falta</strong><code>SearchPage</code><span>El layout no indicó dónde colocar la ruta hija.</span></article></div><p class="flow-question">La URL sigue en <code>/search</code>. El problema no es el matching; falta una región dentro del layout.</p><aside class="notes">Preguntar: “La URL coincide con /search y aparece AppHeader, pero SearchPage no se muestra. ¿Qué falta dentro de PublicLayout?”. Respuesta esperada: Outlet.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-14-outlet" data-geometry="G16" data-semantic="S20 S31">
+          <div class="slide-frame" data-layout="G16"><header class="slide-heading"><p class="slide-label">Región para la ruta hija</p><h2 class="slide-title">Outlet marca dónde React Router coloca la página coincidente</h2></header><div class="file-snippet-stack"><figure class="file-snippet" data-role="parent"><figcaption><span>Layout</span><code>src/layouts/public-layout.tsx</code></figcaption><pre><code class="language-tsx">export function PublicLayout() {
+  return (
+    &lt;&gt;
+      &lt;AppHeader /&gt;
+      &lt;main&gt;
+        &lt;Outlet /&gt;
+      &lt;/main&gt;
+    &lt;/&gt;
+  )
+}</code></pre></figure></div><aside class="code-aside"><div class="role-legend" data-role="parent"><strong>Layout</strong><span>Conserva la estructura común.</span></div><div class="role-legend" data-role="child"><strong>Página hija</strong><span>El árbol la entrega a <code>Outlet</code>.</span></div><p><strong>Outlet</strong> no recibe la página como prop y no representa el wildcard.</p></aside><aside class="notes">Outlet es la región de renderizado de las rutas hijas. El elemento concreto viene de la coincidencia actual declarada en App.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-15-link" data-geometry="G16" data-semantic="S20 S27">
+          <div class="slide-frame" data-layout="G16"><header class="slide-heading"><p class="slide-label">La identidad se vuelve navegable</p><h2 class="slide-title">Link declara el destino de la tarjeta de Dune</h2></header><figure class="file-snippet"><figcaption><span>Resultado de búsqueda</span><code>src/components/media-search-results.tsx</code></figcaption><pre><code class="language-tsx">&lt;Button
+  component={Link}
+  to={`/media/${item.mediaType}/${item.externalId}`}
+  variant="light"
+&gt;
+  Ver detalle
+&lt;/Button&gt;</code></pre></figure><aside class="code-aside"><div class="s09-identity-token" data-state="internal"><span>Valores disponibles en item</span><code>item.mediaType = "movie"</code><code>item.externalId = "123"</code></div><div class="s09-destination"><span>Destino producido</span><code>/media/movie/123</code></div><p><strong>Link:</strong> componente que declara un destino navegable dentro de la aplicación.</p></aside><aside class="notes">Mostrar primero de dónde salen item.mediaType e item.externalId. Link preserva la semántica de enlace y permite copiar el destino o abrirlo en otra pestaña.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-16-link-navigate" data-geometry="G07" data-semantic="S15 S27">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Dos recorridos declarativos</p><h2 class="slide-title">Link responde a una acción; Navigate redirige desde el árbol</h2></header><div class="s09-navigation-pair"><article><strong>Link</strong><span>La persona activa “Ver detalle”.</span><code>/search → /media/movie/123</code><p>Existe un destino visible y navegable.</p></article><article><strong>Navigate replace</strong><span>La ruta inicial renderiza una redirección.</span><code>/ → /search</code><p><code>replace</code> evita conservar una raíz redundante en el historial.</p></article></div><aside class="notes">No introducir useNavigate. Link modela una navegación iniciada por la persona. Navigate modela una redirección declarada por el árbol.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-17-route-match" data-geometry="G10" data-semantic="S20 S28">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Coincidencia de ruta</p><h2 class="slide-title">La URL de Dune activa MediaDetailPage dentro del árbol</h2></header><div class="s09-match-flow"><div class="s09-browser-url"><span>URL actual</span><code>/media/movie/123</code></div><i>coincide con</i><div class="s09-match-route"><span>Route declarada en src/App.tsx</span><code>media/:mediaType/:externalId</code><strong>MediaDetailPage</strong></div></div><p class="flow-question"><strong>Matching:</strong> comparación entre la URL actual y los patrones declarados para elegir una ruta.</p><aside class="notes">La coincidencia solo demuestra que la forma del pathname encaja. Todavía no demuestra que movie sea un MediaType válido.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-18-use-params" data-geometry="G16" data-semantic="S20 S31">
+          <div class="slide-frame" data-layout="G16"><header class="slide-heading"><p class="slide-label">Resultado devuelto por useParams</p><h2 class="slide-title">params contiene los strings capturados desde la URL</h2></header><figure class="file-snippet" data-role="data"><figcaption><span>Página de detalle</span><code>src/pages/media-detail-page.tsx</code></figcaption><pre><code class="language-tsx">const params = useParams()
+
+params.mediaType
+// tipo: string | undefined
+// valor actual: "movie"
+
+params.externalId
+// tipo: string | undefined
+// valor actual: "123"</code></pre></figure><aside class="code-aside"><div class="s09-identity-token" data-state="external"><span>Objeto devuelto por useParams()</span><code>{ mediaType: "movie",</code><code>  externalId: "123" }</code></div><p><strong>Route params:</strong> objeto de strings posiblemente ausentes que React Router captura desde segmentos dinámicos.</p></aside><aside class="notes">Señalar primero la invocación completa. params no es un objeto inventado por el componente: useParams lo construye desde la URL coincidente. Distinguir el tipo estático, string o undefined, del valor concreto observado en este ejemplo.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-19-external-values" data-geometry="G07" data-semantic="S15 S45">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">La URL es una entrada externa</p><h2 class="slide-title">Coincidir con el patrón no convierte un string en MediaType</h2></header><div class="s09-external-contrast"><article data-state="candidate"><strong>La ruta sí coincide</strong><code>/media/anime/123</code><span>El patrón acepta texto en <code>:mediaType</code>.</span></article><article data-state="rejected"><strong>El dominio lo rechaza</strong><code>mediaType: "anime"</code><span>Medialog solo acepta <code>movie</code> o <code>series</code>.</span></article></div><p class="flow-question">El Router valida la forma de la URL. El adapter valida si sus valores pertenecen al dominio.</p><aside class="notes">“Externo” significa que la persona puede escribir o modificar la URL. La coincidencia sintáctica y la validez del dominio son preguntas distintas.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-20-adapter-matrix" data-geometry="G08" data-semantic="S12 S45">
+          <div class="slide-frame" data-layout="G08"><header class="slide-heading"><p class="slide-label">Contrato del adapter</p><h2 class="slide-title">La matriz define cuándo construir GetMediaDetailInput</h2></header><table class="matrix s09-param-matrix"><thead><tr><th>params.mediaType</th><th>params.externalId</th><th>Resultado</th></tr></thead><tbody><tr><td><code>"movie"</code></td><td><code>"123"</code></td><td data-result="valid"><code>{ mediaType: "movie", externalId: "123" }</code></td></tr><tr><td><code>"series"</code></td><td><code>"456"</code></td><td data-result="valid">Input válido</td></tr><tr><td><code>"anime"</code></td><td><code>"123"</code></td><td data-result="invalid"><code>null</code> · tipo desconocido</td></tr><tr><td><code>"movie"</code></td><td><code>undefined</code></td><td data-result="invalid"><code>null</code> · falta identidad</td></tr></tbody></table><p class="flow-question"><strong>Adapter:</strong> función pura que traduce una forma de datos a otra y rechaza entradas incompatibles.</p><aside class="notes">Entregar esta matriz antes de implementar. Cada fila debe convertirse después en un test. La slide define comportamiento, pero no muestra la función completa.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-21-assertion" data-geometry="G07" data-semantic="S15 S45">
+          <div class="slide-frame" data-layout="G07"><header class="slide-heading"><p class="slide-label">Validación durante la ejecución</p><h2 class="slide-title">Una assertion cambia lo que TypeScript cree; no revisa la URL</h2></header><div class="s09-assertion-contrast"><article data-verdict="avoid"><strong>Forma incorrecta</strong><pre><code class="language-ts">const mediaType =
+  params.mediaType as MediaType</code></pre><p><code>"anime"</code> atraviesa la línea sin ninguna comprobación.</p></article><article data-verdict="preferred"><strong>Validación explícita</strong><pre><code class="language-ts">if (
+  params.mediaType !== "movie" &amp;&amp;
+  params.mediaType !== "series"
+) return null</code></pre><p>Solo los dos valores conocidos entran al dominio.</p></article></div><aside class="notes">Recordar compile time y runtime. as solo afecta la revisión del código; no inspecciona el string recibido mientras la aplicación funciona.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-22-provisional-page" data-geometry="G10" data-semantic="S13 S33">
+          <div class="slide-frame" data-layout="G10"><header class="slide-heading"><p class="slide-label">Checkpoint visible</p><h2 class="slide-title">La página provisional muestra la identidad validada sin pedir el detalle</h2></header><div class="s09-provisional"><div class="s09-browser-bar"><span>Dirección</span><code>localhost:5173/media/movie/123</code></div><article><small>PÁGINA DE DETALLE</small><strong>Detalle provisional</strong><p>Tipo: <code>movie</code></p><p>Identificador: <code>123</code></p><a>Volver a la búsqueda</a></article><div class="s09-identity-token" data-state="valid"><span>GetMediaDetailInput</span><code>{ mediaType: "movie",</code><code>  externalId: "123" }</code></div></div><p class="flow-question">Todavía no existe un request de detalle. La pantalla hace observable el resultado del Router y del adapter.</p><aside class="notes">El nombre Dune ya no aparece porque esta página todavía no consultó el detalle. El checkpoint demostrado es URL válida a input válido y página provisional.</aside></div>
+        </section>
+
+        <section data-slide-id="session-09-23-close" data-geometry="G18" data-semantic="S10 S36 S59">
+          <div class="slide-frame" data-layout="G18"><div class="checkpoint-limit"><p class="slide-label">Cierre y siguiente paso</p><h2 class="slide-title">La URL conserva la identidad; la sesión 10 solicitará el detalle</h2><p><strong>Deep link:</strong> URL que abre directamente una pantalla interna. Click, Atrás, Adelante y pestaña nueva conservan el pathname observado.</p><p><strong>Vitest:</strong> comprueba la traducción pura de params.</p><p><strong>Build:</strong> comprueba tipos y empaquetado.</p><p><strong>Límite:</strong> ninguna evidencia demuestra todavía fetching de detalle o fallback del hosting.</p></div><ol class="closing-questions explicit-answers"><li><b>01</b><span><strong>¿Qué transforma Link en una URL?</strong><small><code>item.mediaType + item.externalId</code> forman el destino <code>/media/movie/123</code>.</small></span></li><li><b>02</b><span><strong>¿Dónde aparece una ruta hija?</strong><small>React Router coloca su elemento dentro del <code>Outlet</code> del layout coincidente.</small></span></li><li><b>03</b><span><strong>¿De dónde vienen params.mediaType y params.externalId?</strong><small>Son campos del objeto devuelto por <code>useParams()</code> desde la URL.</small></span></li><li><b>04</b><span><strong>¿Qué queda para la sesión 10?</strong><small>Usar el input válido para consultar, adaptar y presentar el detalle remoto.</small></span></li></ol><aside class="notes">Solicitar las respuestas antes de mostrarlas. El comportamiento local de un deep link no demuestra que el hosting de producción entregue la SPA para ese pathname.</aside></div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/framework/deck.js"></script>
+  </body>
+</html>

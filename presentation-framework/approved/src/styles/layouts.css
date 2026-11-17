@@ -1,0 +1,108 @@
+.slide-frame[data-layout="G01"] {
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-xl);
+  text-align: center;
+}
+
+.slide-frame[data-layout="G02"] {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: center;
+  gap: var(--space-3xl);
+}
+
+.slide-frame[data-layout="G03"] {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--space-2xl);
+}
+
+.slide-frame[data-layout="G04"] {
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: center;
+  gap: var(--space-3xl);
+}
+
+.slide-frame[data-layout="G05"] {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: center;
+  gap: var(--space-3xl);
+}
+
+.slide-frame[data-layout="G06"] {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--space-2xl);
+}
+
+.slide-frame[data-layout="G08"] {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--space-xl);
+}
+
+.slide-frame[data-layout="G09"] {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--space-xl);
+}
+
+.slide-frame[data-layout="G10"] {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--space-xl);
+}
+
+.slide-frame[data-layout="G11"] {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--space-2xl);
+}
+
+.slide-frame[data-layout="G13"] {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--space-2xl);
+}
+
+.slide-frame[data-layout="G15"] {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--space-xl);
+}
+
+.slide-frame[data-layout="G16"] {
+  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--space-xl) var(--space-2xl);
+}
+
+.slide-frame[data-layout="G16"] > .slide-heading {
+  grid-column: 1 / -1;
+}
+
+.slide-frame[data-layout="G17"] {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--space-lg);
+}
+
+.slide-frame[data-layout="G18"] {
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: start;
+  gap: var(--space-3xl);
+}
+
+.slide-heading {
+  display: grid;
+  align-content: start;
+  gap: var(--space-sm);
+}
+
+.split-stage {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3xl);
+  min-height: 0;
+}
+
+.code-dominant-stage {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-2xl);
+}
+
+.visual-stage {
+  min-width: 0;
+  min-height: 0;
+}

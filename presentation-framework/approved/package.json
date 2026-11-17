@@ -1,0 +1,63 @@
+{
+  "name": "@react-guide/presentation-framework",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "scripts": {
+    "gallery:dev": "node scripts/serve-deck.mjs --deck gallery",
+    "gallery:build": "node scripts/build-deck.mjs --deck gallery",
+    "gallery:audit": "node scripts/audit-deck.mjs --deck gallery",
+    "gallery:capture": "node scripts/capture-deck.mjs --deck gallery",
+    "gallery:pdf": "node scripts/export-pdf.mjs --deck gallery",
+    "gallery:verify": "node scripts/verify-deck.mjs --deck gallery",
+    "deck:dev": "node scripts/serve-deck.mjs",
+    "deck:build": "node scripts/build-deck.mjs",
+    "deck:audit": "node scripts/audit-deck.mjs",
+    "deck:capture": "node scripts/capture-deck.mjs",
+    "deck:pdf": "node scripts/export-pdf.mjs",
+    "deck:verify": "node scripts/verify-deck.mjs",
+    "deck:generate": "node scripts/verify-deck.mjs",
+    "readings:generate": "node scripts/build-readings.mjs",
+    "session-01:dev": "node scripts/serve-deck.mjs --deck ../../course/01-react-jsx-y-proyecto/presentation",
+    "session-01:generate": "node scripts/verify-deck.mjs --deck ../../course/01-react-jsx-y-proyecto/presentation",
+    "session-02:dev": "node scripts/serve-deck.mjs --deck ../../course/02-props-listas-y-typescript/presentation",
+    "session-02:generate": "node scripts/verify-deck.mjs --deck ../../course/02-props-listas-y-typescript/presentation",
+    "session-03:dev": "node scripts/serve-deck.mjs --deck ../../course/03-taller-catalogo-estatico/presentation",
+    "session-03:generate": "node scripts/verify-deck.mjs --deck ../../course/03-taller-catalogo-estatico/presentation",
+    "session-04:dev": "node scripts/serve-deck.mjs --deck ../../course/04-eventos-y-estado-local/presentation",
+    "session-04:generate": "node scripts/verify-deck.mjs --deck ../../course/04-eventos-y-estado-local/presentation",
+    "session-05:dev": "node scripts/serve-deck.mjs --deck ../../course/05-estado-derivado-y-filtros-locales/presentation",
+    "session-05:generate": "node scripts/verify-deck.mjs --deck ../../course/05-estado-derivado-y-filtros-locales/presentation",
+    "session-06:dev": "node scripts/serve-deck.mjs --deck ../../course/06-taller-seleccion-y-modal-local/presentation",
+    "session-06:generate": "node scripts/verify-deck.mjs --deck ../../course/06-taller-seleccion-y-modal-local/presentation",
+    "session-07:dev": "node scripts/serve-deck.mjs --deck ../../course/07-http-dtos-agentes-y-primer-test/presentation",
+    "session-07:generate": "node scripts/verify-deck.mjs --deck ../../course/07-http-dtos-agentes-y-primer-test/presentation",
+    "session-08:dev": "node scripts/serve-deck.mjs --deck ../../course/08-tanstack-query-y-busqueda-remota/presentation",
+    "session-08:generate": "node scripts/verify-deck.mjs --deck ../../course/08-tanstack-query-y-busqueda-remota/presentation",
+    "session-09:dev": "node scripts/serve-deck.mjs --deck ../../course/09-react-router-declarativo/presentation",
+    "session-09:generate": "node scripts/verify-deck.mjs --deck ../../course/09-react-router-declarativo/presentation",
+    "session-10:dev": "node scripts/serve-deck.mjs --deck ../../course/10-taller-detalle-publico-y-effects/presentation",
+    "session-10:generate": "node scripts/verify-deck.mjs --deck ../../course/10-taller-detalle-publico-y-effects/presentation",
+    "session-11:dev": "node scripts/serve-deck.mjs --deck ../../course/11-formularios-zod-y-modal-global/presentation",
+    "session-11:generate": "node scripts/verify-deck.mjs --deck ../../course/11-formularios-zod-y-modal-global/presentation",
+    "session-12:dev": "node scripts/serve-deck.mjs --deck ../../course/12-firebase-auth-y-rutas-privadas/presentation",
+    "session-12:generate": "node scripts/verify-deck.mjs --deck ../../course/12-firebase-auth-y-rutas-privadas/presentation",
+    "session-18:dev": "node scripts/serve-deck.mjs --deck ../../course/18-despliegue-en-cloudflare-pages/presentation-conceptual --port 5200",
+    "session-18:generate": "python3 ../../course/18-despliegue-en-cloudflare-pages/presentation-conceptual/generate.py && node scripts/verify-deck.mjs --deck ../../course/18-despliegue-en-cloudflare-pages/presentation-conceptual"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-sans": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@fontsource/sora": "5.3.0",
+    "reveal.js": "6.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "playwright": "1.63.0",
+    "tailwindcss": "4.3.3",
+    "vite": "8.2.2"
+  }
+}

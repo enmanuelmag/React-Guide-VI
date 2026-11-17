@@ -1,0 +1,20 @@
+@media print {
+  .reveal .controls,
+  .reveal .progress,
+  .reveal .slide-number,
+  aside.notes {
+    display: none !important;
+  }
+
+  html.reveal-print .reveal .slides section {
+    padding: var(--safe-block) var(--safe-inline) !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+html.capture-mode .reveal .controls,
+html.capture-mode .reveal .progress,
+html.capture-mode .reveal .slide-number {
+  display: none !important;
+}

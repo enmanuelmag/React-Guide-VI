@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sesión 11: formularios, Zod y modal global en MediaLog">
+  <title>Sesión 11 · Formularios, Zod y modal global</title>
+  <link rel="stylesheet" href="./session.css">
+</head>
+<body class="s11">
+  <div class="reveal"><div class="slides">
+    <section data-slide-id="session-11-01-cover" data-geometry="G02" data-semantic="S02" data-chrome="none">
+      <div class="slide-frame s11-no-journey" data-layout="G02">
+        
+        <header class="slide-heading"><p class="slide-label">Sesión 11 · React Guide VI</p><h1 class="slide-title">Una selección.<br>Un formulario compartido.</h1></header>
+        <div class="s11-stage"><div class="s11-cover"><div><p class="s11-intro">Formularios, Zod y modal global</p><p>Sesión 11 · MediaLog</p><p class="s11-subtle">De elegir Dune a preparar sus datos.</p></div><div class="s11-brands"><figure><img src="./assets/zustand-bear.png" alt="Ilustración oficial de Zustand"><figcaption>Zustand</figcaption></figure><figure><img src="/assets/logos/mantine.png" alt="Logo de Mantine"><figcaption>Mantine Form</figcaption></figure><figure><img src="./assets/zod.png" alt="Logo de Zod"><figcaption>Zod</figcaption></figure></div></div></div>
+        <p class="s11-foot"></p>
+        <aside class="notes">Presentar el objetivo con Dune como ejemplo. No abrir el editor hasta terminar el recorrido conceptual. Assets oficiales: repositorios pmndrs/zustand, zod.dev y framework local; procedencia en assets/sources.md.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-map-libraries" data-geometry="G10" data-semantic="S04" data-chrome="none">
+      <div class="slide-frame s11-no-journey" data-layout="G10">
+        <header class="slide-heading"><p class="slide-label">Mapa de la sesión · elegir → abrir → completar → validar → preparar</p><h2 class="slide-title">Tres herramientas, un mismo recorrido</h2></header>
+        <div class="s11-stage">
+          <div class="s11-library-map">
+            <svg viewBox="0 0 1680 560" aria-hidden="true">
+              <defs><marker id="s11-map-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#223b8f"/></marker></defs>
+              <g fill="none" stroke="#223b8f" stroke-width="3" marker-end="url(#s11-map-arrow)">
+                <path d="M 400 145 H 600"/>
+                <path d="M 1050 125 H 1280"/>
+                <path d="M 1280 245 H 1050"/>
+                <path d="M 825 310 V 415"/>
+                <path d="M 200 310 V 485 H 600"/>
+              </g>
+              <g fill="#223b8f" font-family="IBM Plex Sans" font-size="23" text-anchor="middle">
+                <text x="500" y="110">entrega</text><text x="500" y="137">datos</text>
+                <text x="1165" y="87">valida campos</text><text x="1165" y="114">con el resolver</text>
+                <text x="1165" y="207">devuelve</text><text x="1165" y="234">el resultado</text>
+                <text x="938" y="368">campos válidos</text>
+                <text x="390" y="470">datos del medio</text>
+              </g>
+            </svg>
+            <article class="s11-map-node s11-map-store"><h3>1 · Zustand</h3><p>Conserva el medio elegido.</p><div class="s11-token">movie · 123</div><p>El modal lee esa selección para abrirse.</p></article>
+            <article class="s11-map-node s11-map-form"><h3>2 · Mantine Form</h3><p>Gestiona los campos:</p><div class="s11-token">estado · prioridad · notas</div><p>Muestra los errores y revisa al confirmar.</p></article>
+            <article class="s11-map-node s11-map-zod"><h3>3 · Zod</h3><p>Ejecuta las reglas.</p><div class="s11-token">¿Los valores cumplen?</div><p>El resolver comunica los errores a Form.</p></article>
+            <article class="s11-map-node s11-map-body"><h3>Preparar el objeto final</h3><p>Une datos del medio + campos válidos.</p></article>
+          </div>
+        </div>
+        <p class="s11-foot">Resolver = puente entre Form y Zod. Si hay errores, corregimos los campos. El objeto final todavía no se envía.</p>
+        <aside class="notes">Leer primero la fila superior y después la convergencia inferior. Zustand no llama directamente a Mantine Form: React lee la selección, muestra el modal y entrega identity al formulario. Form recibe la edición; el resolver ejecuta Zod y convierte sus problemas en errores por campo. Ante un submit válido, el callback llama al adapter con identity y values y muestra el body. Preguntar qué dato viaja por la flecha inferior: la identidad del medio, no una copia del DTO ni los campos editables. Este mapa anticipa responsabilidades; las siguientes slides explican cada pieza. No se modifica el alcance de la sesión ni se recuperan las tres slides retiradas.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-02-checkpoint" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span class="is-active" aria-current="step">Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Elegir</p><h2 class="slide-title">Ya consultamos. Ahora queremos completar.</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><article class="s11-box "><h3>Al terminar la 10</h3><p>Búsqueda y detalle consultan el catálogo.</p><div class="s11-token">movie · 123</div><p>La URL indica qué medio mostrar.</p></article><article class="s11-box s11-good"><h3>El nuevo gesto</h3><p>«Quiero agregar este medio a mi biblioteca».</p><div class="s11-button">Agregar a mi biblioteca</div><p>Necesitamos estado, prioridad y notas.</p></article></div></div>
+        <p class="s11-foot">Hoy prepararemos el body: el objeto que después enviaremos al servidor.</p>
+        <aside class="notes">Recuperar el cierre 10 sin volver a enseñar Query o Router. La identidad 123 es ilustrativa; no se promete que corresponda a Dune en el servidor real.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-03-problem" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Abrir</p><h2 class="slide-title">Dos entradas, un mismo formulario</h2></header>
+        <div class="s11-stage"><div class="s11-flow"><article class="s11-box "><h3>Búsqueda</h3><p>Elijo una tarjeta.</p></article><div class="s11-arrow"><span>abre</span><b aria-hidden="true">→</b></div><article class="s11-box s11-good"><h3>Modal compartido</h3><p>Completo los datos del medio elegido.</p></article><div class="s11-arrow"><span>abre</span><b aria-hidden="true">→</b></div><article class="s11-box "><h3>Detalle</h3><p>Elijo el medio de esta página.</p></article></div></div>
+        <p class="s11-foot">Modal: una ventana sobre la página actual.</p>
+        <aside class="notes">Explicar que ambas acciones abren el mismo modal. La flecha derecha se invierte por CSS en esta slide para que ambas apunten al modal. Preguntar qué se duplicaría si cada página mantuviera su propia implementación.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-04-analogy" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Abrir</p><h2 class="slide-title">Una ficha sobre el mostrador</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><article class="s11-box "><h3>La ficha</h3><div class="s11-token">movie · 123</div><p>Indica qué medio vamos a completar.</p></article><article class="s11-box "><h3>El formulario</h3><p>Recoge lo que la persona escribe o elige.</p></article><article class="s11-box "><h3>La revisión</h3><p>Comprueba que esos datos cumplan las reglas.</p></article></div></div>
+        <p class="s11-foot">Zustand comparte la selección · Mantine Form gestiona los campos · Zod valida.</p>
+        <aside class="notes">Analogía propia: en una biblioteca, un mostrador compartido recibe la ficha del libro y una solicitud. La ficha no contiene toda la biblioteca. Precisar que es una comparación didáctica, no una descripción de implementación.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-05-owners" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Abrir</p><h2 class="slide-title">Cada dato conserva su responsable</h2></header>
+        <div class="s11-stage"><table class="s11-table"><thead><tr><th>Dato</th><th>Responsable</th><th>Ejemplo</th></tr></thead><tbody>
+<tr><td>Dirección de la página</td><td>React Router</td><td><code>/media?mediaType=movie…</code></td></tr>
+<tr><td>Respuesta del catálogo</td><td>TanStack Query</td><td>Datos recibidos del servidor</td></tr>
+<tr><td>Medio elegido para el modal</td><td>Zustand</td><td><code>selection</code></td></tr>
+<tr><td>Campos y errores</td><td>Mantine Form</td><td><code>status, priority, notes</code></td></tr>
+<tr><td>Reglas de esos campos</td><td>Zod</td><td>Notas: máximo 256 caracteres</td></tr></tbody></table></div>
+        <p class="s11-foot"></p>
+        <aside class="notes">Preguntar si Zustand reemplaza a Query. Respuesta: no; coordina una decisión de interfaz. Los DTO continúan en Query. El body preparado será estado local de la vista previa. La dirección mostrada es un extracto, no un enlace para navegar.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-06-store" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Abrir</p><h2 class="slide-title">El store guarda una decisión pequeña</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/stores/create-media-log-modal-store.ts · contrato</figcaption><pre><code class="language-tsx">type CreateMediaLogModalStore = {
+  selection: GetMediaDetailInput | null
+
+  openCreate: (
+    selection: GetMediaDetailInput
+  ) =&gt; void
+
+  closeCreate: () =&gt; void
+}</code></pre></figure><article class="s11-box "><h3>Store = estado compartido</h3><p>Selección más acciones para cambiarla.</p><div class="s11-token">null → cerrado</div><div class="s11-token">medio elegido → abierto</div><p>En memoria: recargar no conserva esta selección.</p></article></div></div>
+        <p class="s11-foot">No guarda notas, respuestas del servidor ni datos de sesión.</p>
+        <aside class="notes">GetMediaDetailInput viene de src/types/media-api.ts y contiene mediaType y externalId, ya conocidos desde 07/09. Void indica que no necesitamos un valor devuelto por la acción. Zustand es una elección de arquitectura para este caso, no la única forma de compartir estado.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-07-derived" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Abrir</p><h2 class="slide-title">Si hay selección, el modal está abierto</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><article class="s11-box s11-bad"><h3>Evitar dos decisiones independientes</h3><figure class="s11-code "><figcaption>Estado que puede contradecirse</figcaption><pre><code class="language-tsx">opened: true
+selection: null</code></pre></figure><p>Abierto… ¿para qué medio?</p></article><article class="s11-box s11-good"><h3>Calcular desde la selección</h3><figure class="s11-code "><figcaption>Dentro de CreateMediaLogModal</figcaption><pre><code class="language-tsx">const opened = selection !== null</code></pre></figure><p>Un solo dato decide ambas cosas.</p></article></div></div>
+        <p class="s11-foot"></p>
+        <aside class="notes">Recuperar estado derivado de la sesión 05. El bloque izquierdo es un estado ilustrativo incorrecto, no código para copiar. Preguntar qué ocurre al asignar null: opened pasa a false.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-08-create" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Abrir</p><h2 class="slide-title">create crea el hook; set cambia el estado</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/stores/create-media-log-modal-store.ts · implementación</figcaption><pre><code class="language-tsx">import { create } from 'zustand'
+
+export const useCreateMediaLogModalStore =
+  create&lt;CreateMediaLogModalStore&gt;()((set) =&gt; ({
+    selection: null,
+
+    openCreate: (selection) =&gt; set({ selection }),
+
+    closeCreate: () =&gt; set({ selection: null }),
+  }))</code></pre></figure><article class="s11-box "><h3>Dos operaciones</h3><p><code>openCreate</code> recibe los datos del medio elegido.</p><p><code>closeCreate</code> retira la selección.</p><p><code>set</code> actualiza esos campos y conserva las acciones.</p></article></div></div>
+        <p class="s11-foot">No se hace una petición HTTP al abrir el modal.</p>
+        <aside class="notes">El contrato aparece en la slide anterior. Explicar create&lt;T&gt;() como la forma tipada del hook del curso, sin internals. Zustand set hace una mezcla superficial por defecto. Fuente: https://github.com/pmndrs/zustand y su guía updating-state.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-09-selectors" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Abrir</p><h2 class="slide-title">Un selector elige qué leer del store</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/components/create-media-log-modal.tsx · dentro del componente</figcaption><pre><code class="language-tsx">const selection = useCreateMediaLogModalStore(
+  (state) =&gt; state.selection
+)
+
+const closeCreate = useCreateMediaLogModalStore(
+  (state) =&gt; state.closeCreate
+)</code></pre></figure><article class="s11-box "><h3>Leer una parte</h3><p><code>state</code> es el objeto del store.</p><p>La función devuelve la parte que este componente necesita.</p><p>Si cambia la selección leída, React puede actualizar el modal.</p></article></div></div>
+        <p class="s11-foot"></p>
+        <aside class="notes">Origen visible de selection y closeCreate. Cada selector devuelve una referencia o valor individual; no introducir useShallow, middleware ni slices. La página obtiene openCreate con el mismo patrón.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-10-callback" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span class="is-active" aria-current="step">Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Elegir</p><h2 class="slide-title">La página comunica qué medio se eligió</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/pages/media-detail-page.tsx · acción disponible en éxito</figcaption><pre><code class="language-tsx">const openCreate = useCreateMediaLogModalStore(
+  (state) =&gt; state.openCreate
+)
+
+&lt;Button
+  onClick={() =&gt; openCreate(detailInput)}
+&gt;
+  Agregar a mi biblioteca
+&lt;/Button&gt;</code></pre></figure><article class="s11-box "><h3>Clic → medio elegido</h3><p>El clic ejecuta la función.</p><p><code>detailInput</code> contiene el medio validado de la ruta.</p><p>No enviamos el evento del mouse al store.</p></article></div></div>
+        <p class="s11-foot"></p>
+        <aside class="notes">Snippet de dos zonas del mismo componente: hook antes de retornos tempranos y botón dentro del JSX de éxito, donde detailInput ya es válido. En búsqueda se entrega un callback a MediaSearchResults; el componente de resultados no importa Zustand. No presentar este extracto como archivo completo.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-11-layout" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Abrir</p><h2 class="slide-title">El modal se monta una vez en PublicLayout</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/layouts/public-layout.tsx · posición dentro del layout</figcaption><pre><code class="language-tsx">&lt;&gt;
+  &lt;AppHeader /&gt;
+
+  &lt;main&gt;
+    &lt;Outlet /&gt;
+  &lt;/main&gt;
+
+  &lt;CreateMediaLogModal /&gt;
+&lt;/&gt;</code></pre></figure><article class="s11-box "><h3>Una estructura compartida</h3><p><code>Outlet</code> muestra búsqueda o detalle.</p><p>El modal queda fuera de la página hija.</p><p>Ambas páginas escriben en la misma selección.</p></article></div></div>
+        <p class="s11-foot"></p>
+        <aside class="notes">Fragmento estructural conceptual: el código completo conservará Container y demás soporte vigente al implementar. No inventar dos instancias del modal. Explicar global como disponible desde esas páginas, no como un objeto con toda la aplicación.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-12-form-target" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Completar</p><h2 class="slide-title">El medio ya está elegido; completamos sus datos</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><article class="s11-box "><h3>Selección recibida</h3><div class="s11-token">mediaType: movie</div><div class="s11-token">externalId: 123</div><p>El usuario no vuelve a escribir estos datos.</p></article><article class="s11-form-sample"><span class="s11-caption">Ejemplo visual · formulario de creación</span><h3>Agregar a mi biblioteca</h3><label>Estado</label><div class="s11-field">Por ver <span>⌄</span></div><label>Prioridad</label><div class="s11-field">Media <span>⌄</span></div><label>Notas</label><div class="s11-field">Ver el fin de semana</div><div class="s11-button">Preparar body</div></article></div></div>
+        <p class="s11-foot"></p>
+        <aside class="notes">Mostrar la forma deseada sin fingir una captura de la implementación. La identidad viene de selección; status, priority y notes pertenecen al formulario. El botón tiene el nombre literal Preparar body para no prometer persistencia.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-13-zod" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Validar</p><h2 class="slide-title">Un schema es una regla que podemos ejecutar</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/schemas/media-log.ts · reglas de los campos</figcaption><pre><code class="language-tsx">import { z } from 'zod/v4'
+
+export const mediaLogFormSchema = z.object({
+  status: z.enum(MEDIA_STATUS_VALUES),
+
+  priority: z.enum(MEDIA_PRIORITY_VALUES),
+
+  notes: z.string().max(256),
+})</code></pre></figure><article class="s11-box "><h3>Zod comprueba</h3><img class="s11-logo" src="./assets/zod.png" alt="Logo de Zod"><p><code>enum</code>: acepta un valor de una lista cerrada.</p><p><code>max(256)</code>: limita la longitud de las notas.</p></article></div></div>
+        <p class="s11-foot">Definir el schema no basta: alguna operación debe ejecutarlo.</p>
+        <aside class="notes">Los dos arreglos se importan de src/types/media-api.ts; no inventar una segunda lista. Este extracto omite mensajes personalizados para concentrar la explicación en reglas; la guía posterior mostrará los imports y mensajes completos. 256 es una regla de interfaz del curso, no una afirmación sobre el contrato remoto. Fuente https://zod.dev/api .</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-15-validation-cases" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Validar</p><h2 class="slide-title">La misma regla, tres entradas distintas</h2></header>
+        <div class="s11-stage"><table class="s11-table"><thead><tr><th>Entrada a safeParse</th><th>Resultado</th><th>Qué comprobamos</th></tr></thead><tbody>
+<tr><td>pending · medium · «Ver después»</td><td class="s11-success">success: true</td><td>Datos disponibles en <code>result.data</code></td></tr>
+<tr><td>inventado · medium · «Ver después»</td><td class="s11-error">success: false</td><td>Estado fuera de la lista</td></tr>
+<tr><td>pending · medium · 257 caracteres</td><td class="s11-error">success: false</td><td>Notas demasiado largas</td></tr></tbody></table></div>
+        <p class="s11-foot">Primero predecimos; después comprobamos.</p>
+        <aside class="notes">Preguntar por cada fila antes de explicar su resultado. En los fallos result.error describe los problemas. En el formulario no llamaremos safeParse manualmente: el resolver hará la comprobación. Un string vacío sí es válido para notes; el adapter decidirá convertirlo a null.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-16-form-origin" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Completar</p><h2 class="slide-title">useForm devuelve las herramientas del formulario</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/components/create-media-log-form.tsx · configuración inicial</figcaption><pre><code class="language-tsx">import { useForm } from '@mantine/form'
+
+const form = useForm&lt;MediaLogFormValues&gt;({
+  mode: 'uncontrolled',
+
+  initialValues: {
+    status: 'pending',
+    priority: 'medium',
+    notes: '',
+  },
+})</code></pre></figure><article class="s11-box "><h3>Entrada y salida</h3><img class="s11-logo" src="/assets/logos/mantine.png" alt="Logo de Mantine"><p><code>initialValues</code> configura el inicio.</p><p><code>form</code> es el objeto devuelto.</p><p>Desde él usaremos <code>getInputProps</code> y <code>onSubmit</code>.</p></article></div></div>
+        <p class="s11-foot"></p>
+        <aside class="notes">Snippet inicial, no formulario final: las siguientes slides agregan validación y conexión. MediaLogFormValues procede del schema anterior; useForm se llama dentro de CreateMediaLogForm. No confundir opciones de entrada con campos del resultado.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-17-uncontrolled" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Completar</p><h2 class="slide-title">Escribir no obliga a renderizar todo el formulario</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><article class="s11-box "><h3>Controlado · lo que ya vimos</h3><p>Un cambio actualiza estado React.</p><p>El render entrega un nuevo <code>value</code> al input.</p></article><article class="s11-box s11-good"><h3>Uncontrolled · Mantine Form</h3><p>El input muestra lo que escribimos.</p><p>Form conserva los valores actuales en una referencia interna.</p></article></div></div>
+        <p class="s11-foot">Uncontrolled no significa «sin validación» ni «React nunca vuelve a renderizar».</p>
+        <aside class="notes">Definir referencia como una caja que puede conservar un valor sin pedir un render por cada escritura. No introducir implementación de useRef ahora. Errores y preparedBody sí pueden causar renders. form.values no es la fuente reactiva actualizada por cada tecla en este modo; usaremos los values del submit. Fuente https://mantine.dev/form/uncontrolled/ .</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-18-resolver" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Validar</p><h2 class="slide-title">El resolver conecta Zod con Mantine Form</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/components/create-media-log-form.tsx · opciones de useForm</figcaption><pre><code class="language-tsx">import { schemaResolver } from '@mantine/form'
+
+// Dentro de las opciones de useForm:
+validate: schemaResolver(
+  mediaLogFormSchema,
+  { sync: true }
+),
+
+validateInputOnBlur: true,</code></pre></figure><article class="s11-box "><h3>Resolver = puente</h3><p>Ejecuta las reglas y entrega errores a Form.</p><p><code>sync: true</code>: las reglas terminan sin esperar una promesa.</p><p><code>blur</code>: salir de un campo.</p></article></div></div>
+        <p class="s11-foot">Se valida al salir del campo y al intentar preparar el body.</p>
+        <aside class="notes">Fragmento de configuración, no bloque independiente para pegar. Se usa schemaResolver de Mantine9; no mantine-form-zod-resolver. sync:true corresponde a schemas síncronos y no sincroniza con servidor. Si se añadieran validaciones asíncronas, revisar esa opción. Fuentes https://mantine.dev/form/schema-validation/ y changelog9.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-19-field" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Completar</p><h2 class="slide-title">getInputProps conecta un campo con Form</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/components/create-media-log-form.tsx · JSX del campo</figcaption><pre><code class="language-tsx">&lt;Textarea
+  label="Notas"
+  key={form.key('notes')}
+  {...form.getInputProps('notes')}
+/&gt;</code></pre></figure><article class="s11-box "><h3>Una conexión completa</h3><p>Aporta valor inicial, eventos y error.</p><p><code>...</code> distribuye esas propiedades en el componente.</p><p>No añadimos otro <code>value</code> u <code>onChange</code> que compita con Form.</p></article></div></div>
+        <p class="s11-foot"></p>
+        <aside class="notes">form se creó visiblemente en la slide useForm. Textarea viene de @mantine/core. El spread no son líneas omitidas: es sintaxis real de JSX. form.key permite que un reinicio programático de Form llegue al input en modo uncontrolled; la key del formulario identifica la instancia completa.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-20-labels" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Completar</p><h2 class="slide-title">La etiqueta se lee; el value viaja</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/components/create-media-log-form.tsx · opción de Select</figcaption><pre><code class="language-tsx">&lt;Select
+  label="Estado"
+  data={[
+    { value: 'pending', label: 'Por ver' },
+    { value: 'watching', label: 'Viendo' },
+  ]}
+  allowDeselect={false}
+  key={form.key('status')}
+  {...form.getInputProps('status')}
+/&gt;</code></pre></figure><article class="s11-box "><h3>Dos lenguajes</h3><div class="s11-token">Persona: Por ver</div><div class="s11-token">Contrato: pending</div><p>La etiqueta puede traducirse; el valor acordado se conserva.</p></article></div></div>
+        <p class="s11-foot">Las listas de valores permitidos se reutilizan desde el contrato.</p>
+        <aside class="notes">Se muestran dos opciones como extracto conceptual, no la lista final. La implementación incluirá los seis estados canónicos (pending, acquired, watching, seen, dropped, paused) y tres prioridades. allowDeselect=false evita deseleccionar en el control; no sustituye Zod.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-21-submit" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Validar</p><h2 class="slide-title">onSubmit valida antes de ejecutar la preparación</h2></header>
+        <div class="s11-stage"><div class="s11-flow"><article class="s11-box "><h3>Preparar body</h3><p>La persona envía el formulario.</p></article><div class="s11-arrow"><span>valida</span><b aria-hidden="true">→</b></div><article class="s11-box "><h3>Reglas de Zod</h3><p>Comprueba los tres campos.</p></article><div class="s11-arrow"><span>si cumple</span><b aria-hidden="true">→</b></div><article class="s11-box s11-good"><h3>Función de preparación</h3><p>Recibe los valores válidos.</p></article></div></div>
+        <p class="s11-foot">Si hay errores, se muestran en los campos y no se prepara un body nuevo.</p>
+        <aside class="notes">El submit de HTML no significa automáticamente POST remoto. form.onSubmit interviene: ante errores actualiza la presentación de errores y no ejecuta el callback de éxito. En el JSX se usará form noValidate para que la validación pedagógica de Form sea la única fuente de mensajes.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-22-prepare" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Preparar</p><h2 class="slide-title">Form entrega los campos cuando son válidos</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/components/create-media-log-form.tsx · dentro del componente</figcaption><pre><code class="language-tsx">const [preparedBody, setPreparedBody] =
+  useState&lt;CreateCatalogMediaLogBody | null&gt;(null)
+
+const handleSubmit = form.onSubmit((values) =&gt; {
+  const body = toCreateMediaLogBody(
+    identity,
+    values
+  )
+
+  setPreparedBody(body)
+})</code></pre></figure><article class="s11-box "><h3>Dos entradas conocidas</h3><p><code>identity</code>: tipo e ID del medio elegido.</p><p><code>values</code>: campos entregados por Form.</p><p><code>preparedBody</code>: estado local para mostrar el resultado.</p></article></div></div>
+        <p class="s11-foot">El botón para confirmar dice «Preparar body». No guarda en el servidor.</p>
+        <aside class="notes">useState se importa de React. Explicar que setPreparedBody proviene del estado local, no de Zustand. handleSubmit se conecta a &lt;form onSubmit={handleSubmit}&gt;; no existe un fetch en este callback. El adapter se explicará a continuación.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-23-adapter" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Preparar</p><h2 class="slide-title">El adapter reúne los datos del medio y del formulario</h2></header>
+        <div class="s11-stage"><div class="s11-flow"><article class="s11-box "><h3>Medio elegido</h3><div class="s11-token">movie · 123</div><p>Viene de la selección.</p></article><div class="s11-arrow"><span>se une a</span><b aria-hidden="true">→</b></div><article class="s11-box "><h3>Formulario</h3><p>pending · medium</p><p>« Ver después »</p></article><div class="s11-arrow"><span>transforma</span><b aria-hidden="true">→</b></div><article class="s11-box s11-good"><h3>Body</h3><p>source: catalog</p><p>Datos del medio + campos</p><p>Notas limpias</p></article></div></div>
+        <p class="s11-foot">Adapter = función que prepara datos para otro uso. Aquí construye el body, sin title, posterUrl ni userId.</p>
+        <aside class="notes">toCreateMediaLogBody es una función pura en src/adapters/media-log-form-to-create-body.ts. No lee Router, Zustand, Firebase ni Query. La identidad y valores son argumentos; un mismo input produce el mismo resultado. El contrato CreateCatalogMediaLogBody ya existe en src/types/media-api.ts.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-24-notes" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Preparar</p><h2 class="slide-title">Vacío y espacios significan «sin notas»</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/adapters/media-log-form-to-create-body.ts · transformación</figcaption><pre><code class="language-tsx">const notes = values.notes.trim()
+
+// Propiedad del body:
+notes: notes === '' ? null : notes</code></pre></figure><table class="s11-table"><thead><tr><th>Campo</th><th>Body</th></tr></thead><tbody><tr><td><code>''</code></td><td><code>null</code></td></tr><tr><td><code>'   '</code></td><td><code>null</code></td></tr><tr><td><code>' Ver después '</code></td><td><code>'Ver después'</code></td></tr></tbody></table></div></div>
+        <p class="s11-foot"></p>
+        <aside class="notes">Definir trim: quita espacios al principio y final, sin borrar espacios entre palabras. El ternario es simple; tiene solo dos salidas. El schema acepta string y revisa longitud antes de esta transformación; no afirmar que trim evita el límite. Preguntar qué sucede con espacios solamente.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-25-preview" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Preparar</p><h2 class="slide-title">La vista previa corresponde a lo último preparado</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/components/create-media-log-form.tsx · opción de useForm</figcaption><pre><code class="language-tsx">onValuesChange: () =&gt; {
+  setPreparedBody(null)
+},</code></pre></figure><article class="s11-box "><h3>Al volver a editar</h3><p>Ocultamos el body anterior.</p><p>La persona debe prepararlo otra vez.</p><p>Así no mostramos un resultado antiguo junto a campos nuevos.</p></article></div></div>
+        <p class="s11-foot">El evento de cambio ya nos dice cuándo limpiar la vista previa.</p>
+        <aside class="notes">Conectar a la fuente explícita: setPreparedBody es el setter del useState local explicado en submit. Esta opción observa cambios de campos; no hace falta useEffect. La vista previa usa JSON.stringify con Code de Mantine cuando preparedBody no es null.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-26-reset" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span>Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Abrir</p><h2 class="slide-title">Cerrar desmonta el formulario</h2></header>
+        <div class="s11-stage"><div class="s11-columns"><figure class="s11-code "><figcaption>src/components/create-media-log-modal.tsx · contenido del Modal</figcaption><pre><code class="language-tsx">{selection !== null ? (
+  &lt;CreateMediaLogForm
+    key={
+      selection.mediaType + ':' +
+      selection.externalId
+    }
+    identity={selection}
+    onCancel={closeCreate}
+  /&gt;
+) : null}</code></pre></figure><article class="s11-box "><h3>Un nuevo comienzo</h3><p>Cerrar asigna <code>selection: null</code>.</p><p>El formulario deja de renderizarse.</p><p>Reabrir crea una instancia con sus valores iniciales.</p></article></div></div>
+        <p class="s11-foot"></p>
+        <aside class="notes">Explicar desmontar como retirar esa instancia del árbol React. Se usa condicional explícito; no depender de la animación interna de Mantine Modal ni de keepMounted. El Modal conecta opened={selection!==null} y onClose={closeCreate}. No se necesita reset por useEffect.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-29-agent" data-geometry="G06" data-semantic="S04">
+      <div class="slide-frame" data-layout="G06">
+        <nav class="s11-journey" aria-label="Recorrido de la sesión"><span>Elegir</span><i aria-hidden="true">→</i><span>Abrir</span><i aria-hidden="true">→</i><span>Completar</span><i aria-hidden="true">→</i><span>Validar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Preparar</span></nav>
+        <header class="slide-heading"><p class="slide-label">MediaLog · Preparar</p><h2 class="slide-title">Trabajo con agente</h2></header>
+        <div class="s11-stage"><div class="s11-agent"><article><span>Objetivo</span><p>Redactar tests del adapter que ya escribimos.</p></article><article><span>Límites</span><p>Solo su archivo de test y fixtures dentro de <code>__tests__/</code>.</p></article><article><span>Lectura obligatoria</span><p>Revisar cada caso y el diff: entrada, resultado y razón.</p></article><article><span>Evidencia</span><p>Ejecutar los tests y explicar qué comprobaron.</p></article></div></div>
+        <p class="s11-foot">La persona define el comportamiento antes de delegar.</p>
+        <aside class="notes">No delegar decisiones de arquitectura ni la creación del store, schema o formulario. Ruta del test: src/adapters/__tests__/media-log-form-to-create-body.test.ts. Reutilizar el harness y flujo aprobados desde 07, no repetir onboarding. Conservar control humano de los cinco casos y no confundir código generado con evidencia.</aside>
+      </div>
+    </section>
+
+    <section data-slide-id="session-11-30-coding" data-geometry="G18" data-semantic="S04" data-chrome="none">
+      <div class="slide-frame s11-no-journey" data-layout="G18">
+        
+        <header class="slide-heading"><p class="slide-label">Fin de la presentación · sigue el coding</p><h2 class="slide-title">Ahora construimos el recorrido completo</h2></header>
+        <div class="s11-stage"><div class="s11-checkpoints"><article><b>01</b><h3>Abrir</h3><p>Dos páginas, una selección y un modal.</p></article><article><b>02</b><h3>Validar</h3><p>Estado, prioridad y notas con reglas visibles.</p></article><article><b>03</b><h3>Preparar</h3><p>Body local y reinicio comprobable.</p></article></div></div>
+        <p class="s11-foot">Checkpoint esperado: datos válidos preparados; todavía sin creación remota.</p>
+        <aside class="notes">Última slide del bloque continuo. Pasar al editor y continuar allí con la guía; el cierre posterior será oral sin volver a slides. Preguntas de salida: ¿qué guarda Zustand? selección y acciones. ¿z.infer valida? no. ¿Preparar body guarda? no. La siguiente sesión aplica formularios a Login/Registro con Firebase, todavía sin adelantar su implementación.</aside>
+      </div>
+    </section>
+  </div></div>
+  <script type="module" src="/src/framework/deck.js"></script>
+</body>
+</html>

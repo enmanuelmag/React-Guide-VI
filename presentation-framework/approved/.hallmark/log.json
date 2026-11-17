@@ -1,0 +1,29 @@
+[
+  {
+    "date": "2026-09-07",
+    "macrostructure": "Sequence Deck",
+    "theme": "custom",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "laboratorio claro, técnico, didáctico, juvenil",
+    "enrichment": "official logos, editable ownership diagrams and data-flow evidence",
+    "brief": "Presentación de la sesión 02: props, listas y TypeScript"
+  },
+  {
+    "date": "2026-09-07",
+    "macrostructure": "Long Document",
+    "theme": "custom",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "laboratorio claro, técnico, didáctico, juvenil",
+    "enrichment": "official technology logos, conceptual product mockup and editable flow diagrams",
+    "brief": "Presentación piloto de la sesión 01: React, Vite y JSX"
+  },
+  {
+    "date": "2026-09-07",
+    "macrostructure": "Workbench",
+    "theme": "custom",
+    "theme_axes": "light / geometric-sans / cool",
+    "vibe": "laboratorio claro, técnico, didáctico, juvenil",
+    "enrichment": "functional diagrams and official local logos",
+    "brief": "Galería mínima del framework de presentaciones React Guide VI"
+  }
+]

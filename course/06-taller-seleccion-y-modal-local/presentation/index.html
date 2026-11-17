@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sesión 06: selección local, callbacks y modal controlado" />
+    <title>Sesión 06 · Selección y modal local</title>
+  </head>
+  <body>
+    <svg class="s06-defs" aria-hidden="true">
+      <defs>
+        <marker id="s06-arrow-blue" markerWidth="5" markerHeight="5" refX="4.5" refY="2.5" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L5,2.5 L0,5 Z" fill="#223b8f"></path>
+        </marker>
+        <marker id="s06-arrow-green" markerWidth="5" markerHeight="5" refX="4.5" refY="2.5" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L5,2.5 L0,5 Z" fill="#2f6f5e"></path>
+        </marker>
+        <marker id="s06-arrow-amber" markerWidth="5" markerHeight="5" refX="4.5" refY="2.5" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L5,2.5 L0,5 Z" fill="#8a6100"></path>
+        </marker>
+      </defs>
+    </svg>
+    <div class="reveal">
+      <div class="slides">
+        <section data-slide-id="session-06-00-cover" data-geometry="G02" data-semantic="S02" data-chrome="none">
+          <div class="slide-frame" data-layout="G02">
+            <div class="slide-heading">
+              <p class="slide-label">Sesión 06 · React Guide VI</p>
+              <h1 class="slide-display">Una tarjeta abre su propio detalle</h1>
+              <p class="slide-lede">Selección local, callbacks y modal controlado</p>
+            </div>
+            <figure class="brand-lockup">
+              <img src="/assets/brand/espol-bootcamp.png" alt="Logo de ESPOL Bootcamp" />
+              <span>Medialog · Taller presencial</span>
+            </figure>
+            <aside class="notes">Presentar el resultado observable: cada tarjeta podrá abrir el detalle del medio correcto. Aclarar que React conservará la selección y Mantine presentará el diálogo.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-01-route" data-geometry="G10" data-semantic="S03 S04">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">Ruta de la jornada</p><h2 class="slide-title">De una selección local al taller</h2></header>
+            <div class="session-route" aria-label="Secuencia de la sesión">
+              <article><b>01</b><strong>Recordar</strong><span>filtros y lista visible</span></article><i>prepara</i>
+              <article><b>02</b><strong>Seleccionar</strong><span>id, objeto y modal</span></article><i>explica</i>
+              <article><b>03</b><strong>Seguir</strong><span>la referencia y el valor</span></article><i>habilita</i>
+              <article><b>04</b><strong>Construir</strong><span>la conexión en el taller</span></article>
+            </div>
+            <p class="flow-question">Antes del descanso quedará explicado todo el recorrido. Después construiremos esa conexión en el editor.</p>
+            <aside class="notes">Mostrar la secuencia completa. El taller no introduce teoría nueva: aplica identidad mínima, ancestro común y callback ya explicados.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-02-checkpoint" data-geometry="G10" data-semantic="S05 S28">
+          <div class="slide-frame" data-layout="G10">
+            <header class="slide-heading"><p class="slide-label">Checkpoint de la sesión 05</p><h2 class="slide-title">Dos controles ya deciden qué tarjetas aparecen</h2></header>
+            <div class="flow" data-steps="5" aria-label="Flujo de filtros del checkpoint anterior">
+              <div class="flow-step"><strong>query</strong><span>texto recordado</span></div>
+              <div class="flow-step"><strong>mediaTypeFilter</strong><span>tipo recordado</span></div>
+              <div class="flow-step"><strong>visibleMedia</strong><span>lista calculada</span></div>
+              <div class="flow-step"><strong>resultCount</strong><span>cantidad calculada</span></div>
+              <div class="flow-step"><strong>MediaGrid</strong><span>tarjetas visibles</span></div>
+            </div>
+            <p class="flow-question">El catálogo sabe <strong>qué tarjetas mostrar</strong>. Todavía no recuerda <strong>qué tarjeta eligió la persona</strong>.</p>
+            <aside class="notes">Pedir buscar bear, cambiar a Películas y limpiar. Recuperar por qué visibleMedia y resultCount no son estado antes de abrir la necesidad nueva.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-03-open-question" data-geometry="G06" data-semantic="S06 S20 S23">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Nueva necesidad visible</p><h2 class="slide-title">Abrir un modal exige saber qué medio mostrar</h2></header>
+            <div class="selection-question">
+              <article><span>Acción</span><strong>La persona pulsa “Ver detalle”</strong><div class="media-card-mini"><b>Arrival</b><small>Película · 2016</small><button type="button">Ver detalle</button></div></article>
+              <div class="selection-arrow"><span>comunica</span><b>⟶</b></div>
+              <article data-result="true"><span>Pregunta de App</span><strong>¿Qué medio debo entregar al modal?</strong><div class="modal-mini"><small>Detalle</small><b>Arrival</b><p>Una película guardada para después.</p></div></article>
+            </div>
+            <aside class="notes">Señalar que “abrir” describe una parte del resultado. El contenido correcto depende de identificar la tarjeta que originó la acción.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-04-boolean-identity" data-geometry="G06" data-semantic="S20 S22 S45">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Abierto frente a seleccionado</p><h2 class="slide-title">Un booleano responde si está abierto, pero no cuál medio está abierto</h2></header>
+            <div class="identity-comparison">
+              <article data-verdict="insufficient"><span>Solo apertura</span><code>isOpen = true</code><strong>Sabemos que el modal debe verse.</strong><p>Falta la identidad del contenido.</p></article>
+              <article data-verdict="preferred"><span>Selección</span><code>selectedMediaId = 1</code><strong>Sabemos que Arrival fue elegida.</strong><p>La misma selección permite calcular la apertura.</p></article>
+            </div>
+            <p class="flow-question"><strong>Identidad:</strong> dato estable que permite distinguir un medio de los demás.</p>
+            <aside class="notes">Pedir dos ejemplos con isOpen=true y contenidos distintos. La conclusión debe nombrar la limitación concreta del booleano.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-05-id-object" data-geometry="G06" data-semantic="S20 S22 S31">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Estado mínimo</p><h2 class="slide-title">Guardar el id evita copiar un objeto que ya existe</h2></header>
+            <div class="identity-comparison">
+              <article data-verdict="preferred"><span>Dato esencial</span><code>selectedMediaId = 1</code><strong>Una referencia pequeña y estable.</strong><p>Localiza el objeto dentro de <code>mediaItems</code>.</p></article>
+              <article data-verdict="duplicate"><span>Copia evitable</span><code>selectedMedia = { id: 1, ... }</code><strong>Repite datos de la colección.</strong><p>La copia puede quedar desactualizada si cambia la fuente.</p></article>
+            </div>
+            <aside class="notes">No presentar guardar el objeto como error universal. Para este proyecto, el objeto ya vive en una fuente local y el id basta para recuperarlo.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-06-find-selected" data-geometry="G16" data-semantic="S24 S27 S37">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Objeto calculado</p><h2 class="slide-title"><code>find</code> recupera el medio seleccionado durante cada render</h2><p class="slide-lede"><strong>find:</strong> recorre una colección y devuelve el primer elemento que cumple la condición.</p></header>
+            <figure class="file-snippet" data-role="parent"><figcaption><span>Padre</span><code>src/App.tsx</code></figcaption><pre><code class="language-tsx">const selectedMedia =
+  mediaItems.find(
+    (media) =&gt; media.id === selectedMediaId,
+  ) ?? null</code></pre></figure>
+            <aside class="find-example">
+              <div><code>selectedMediaId</code><strong>1</strong></div>
+              <b>busca por id</b>
+              <div data-found="true"><code>selectedMedia</code><strong>Arrival</strong></div>
+              <p><code>?? null</code> cubre el caso sin coincidencia.</p>
+            </aside>
+            <aside class="notes">Recorrer un caso concreto antes de leer el snippet. selectedMedia es un cálculo, no otro estado ni una actualización dentro de Effect.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-07-selection-cases" data-geometry="G09" data-semantic="S25 S47 S52">
+          <div class="slide-frame" data-layout="G09">
+            <header class="slide-heading"><p class="slide-label">Tres estados observables</p><h2 class="slide-title">La identidad decide el objeto y la apertura</h2></header>
+            <table class="matrix selection-matrix">
+              <thead><tr><th>Valor recordado</th><th>Resultado de find</th><th>Modal</th><th>Qué verá la persona</th></tr></thead>
+              <tbody>
+                <tr><td><code>null</code></td><td><code>null</code></td><td>Cerrado</td><td>No aparece ningún detalle.</td></tr>
+                <tr><td><code>1</code> existente</td><td>Objeto Arrival</td><td>Abierto</td><td>Aparece el detalle de Arrival.</td></tr>
+                <tr><td><code>99</code> inexistente</td><td><code>null</code></td><td>Cerrado</td><td>No aparece contenido incorrecto.</td></tr>
+              </tbody>
+            </table>
+            <aside class="notes">Pedir predecir las columnas dos y tres. El caso inexistente demuestra que opened depende de una selección real, no solo de un número distinto de null.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-08-common-ancestor" data-geometry="G12" data-semantic="S16 S29 S31">
+          <div class="slide-frame" data-layout="G12">
+            <header class="slide-heading"><p class="slide-label">Propiedad del estado</p><h2 class="slide-title">App conecta la tarjeta que elige con el modal que muestra</h2><p class="slide-lede"><strong>Ancestro común:</strong> componente que contiene las ramas que producen y consumen el mismo dato.</p></header>
+            <div class="ancestor-tree" aria-label="Árbol de componentes con App como ancestro común">
+              <article class="tree-app"><strong>App</strong><span>guarda <code>selectedMediaId</code></span></article>
+              <div class="tree-branch"><span>entrega callback</span><b>⟶</b></div>
+              <article class="tree-grid"><strong>MediaGrid</strong><span>reenvía <code>onSelect</code></span></article>
+              <div class="tree-branch"><span>entrega callback</span><b>⟶</b></div>
+              <article class="tree-card"><strong>MediaCard</strong><span>origina la selección</span></article>
+              <div class="tree-modal-link"><span>entrega objeto y apertura</span><b>⟶</b></div>
+              <article class="tree-modal"><strong>Modal</strong><span>consume la selección</span></article>
+            </div>
+            <p class="flow-question">El estado permanece cerca de sus dos consumidores. Todavía no necesitamos un store global.</p>
+            <aside class="notes">Recorrer primero la rama de la tarjeta y luego la del modal. Zustand aparecerá cuando ramas distantes compartan estado; aquí App ya conecta ambas.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-09-react-mantine" data-geometry="G06" data-semantic="S13 S20 S45">
+          <div class="slide-frame" data-layout="G06">
+            <header class="slide-heading"><p class="slide-label">Responsabilidades de las herramientas</p><h2 class="slide-title">React decide el contenido y Mantine presenta el diálogo</h2></header>
+            <div class="technology-roles">
+              <article data-tech="react"><img src="/assets/logos/react-official.png" alt="Logo de React" /><strong>React</strong><p>Conserva <code>selectedMediaId</code>, calcula el objeto y decide <code>opened</code>.</p></article>
+              <article data-tech="mantine"><img src="/assets/logos/mantine.png" alt="Logo de Mantine" /><strong class="visually-hidden">Mantine</strong><p>Presenta <code>Modal</code>, administra el foco y comunica solicitudes de cierre.</p></article>
+            </div>
+            <p class="flow-question">Añadir una librería no reemplaza la arquitectura del catálogo. Cada herramienta conserva una responsabilidad concreta.</p>
+            <aside class="notes">Después de esta slide se puede abrir el editor para instalar Mantine y configurar MantineProvider. El logo se conserva localmente como PNG para que la presentación no dependa de la red.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-10-controlled-modal" data-geometry="G16" data-semantic="S13 S26 S43">
+          <div class="slide-frame" data-layout="G16">
+            <header class="slide-heading"><div class="logo-row"><img class="tech-logo" src="/assets/logos/mantine.png" alt="Logo de Mantine" /></div><h2 class="slide-title">El modal recibe su apertura y comunica cuándo debe cerrar</h2><p class="slide-lede"><strong>Modal controlado:</strong> diálogo cuyo estado abierto o cerrado viene de React.</p></header>
+            <figure class="file-snippet" data-role="parent"><figcaption><span>Padre</span><code>src/App.tsx</code></figcaption><pre><code class="language-tsx">&lt;Modal
+  opened={isDetailOpened}
+  onClose={handleCloseDetail}
+  title={selectedMedia?.title ?? 'Detalle'}
+  closeButtonProps={{
+    'aria-label': 'Cerrar detalle',
+  }}
+&gt;
+  {/* contenido cuando existe selección */}
+&lt;/Modal&gt;</code></pre></figure>
+            <aside class="modal-contract">
+              <article><code>opened</code><strong>React entrega la decisión.</strong></article>
+              <article><code>onClose</code><strong>Mantine comunica una solicitud.</strong></article>
+              <article><code>title</code><strong>El objeto seleccionado aporta el título.</strong></article>
+            </aside>
+            <aside class="notes">Aclarar que Mantine no cambia selectedMediaId por su cuenta. Al pulsar cierre, Escape u overlay, llama onClose; el handler de App vuelve el id a null.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-11-close-paths" data-geometry="G08" data-semantic="S25 S34 S46">
+          <div class="slide-frame" data-layout="G08">
+            <header class="slide-heading"><p class="slide-label">Cierre accesible</p><h2 class="slide-title">Tres acciones solicitan el mismo cierre</h2></header>
+            <div class="close-paths">
+              <article><span>Control superior</span><strong>Pulsar “Cerrar detalle”</strong><p>El botón tiene un nombre accesible en español.</p></article>
+              <article><span>Teclado</span><strong>Pulsar Escape</strong><p>Mantine solicita el cierre y devuelve el foco.</p></article>
+              <article><span>Fuera del diálogo</span><strong>Pulsar la capa exterior</strong><p>Mantine llama <code>overlay</code> a esta zona.</p></article>
+            </div>
+            <div class="shared-close"><code>handleCloseDetail()</code><span>establece</span><code>selectedMediaId = null</code></div>
+            <aside class="notes">Definir nombre accesible como el texto que una tecnología de asistencia usa para identificar un control. Probar las tres rutas durante la demostración.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-12-journey-1" data-geometry="G16" data-semantic="S28 S34">
+          <div class="slide-frame journey-layout" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Recorrido 1 · Preparación</p><h2 class="slide-title">App crea la función que recibirá un id</h2></header>
+            <div class="callback-journey" data-step="1">
+              <div class="journey-map">
+                <svg viewBox="0 0 1100 600" aria-hidden="true"><path class="journey-base" d="M395 150 V168 H440 V185 M440 285 V303 H485 V320 M485 420 V438 H530 V455"></path></svg>
+                <article class="journey-node node-app is-active"><b>A</b><span><strong>App</strong><code>define handleSelectMedia</code></span><em>ƒ handleSelectMedia</em></article>
+                <article class="journey-node node-grid"><b>G</b><span><strong>MediaGrid</strong><code>recibirá onSelect</code></span></article>
+                <article class="journey-node node-card"><b>C</b><span><strong>MediaCard</strong><code>recibirá onSelect</code></span></article>
+                <article class="journey-node node-button"><b>↗</b><span><strong>Ver detalle</strong><code>espera el click</code></span></article>
+              </div>
+              <aside class="journey-copy"><span>Paso 1 de 7</span><strong>La función nace en App</strong><p>Su parámetro se llama <code>mediaId</code>. Todavía nadie la ejecuta.</p><code>function handleSelectMedia(mediaId: number)</code><small>Definir una función no significa llamarla.</small></aside>
+            </div>
+            <aside class="notes">Mantener fija la composición durante los siete pasos. Presentar handleSelectMedia como una función disponible en App, sin hablar todavía de movimiento.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-13-journey-2" data-geometry="G16" data-semantic="S28 S34">
+          <div class="slide-frame journey-layout" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Recorrido 1 · La referencia baja</p><h2 class="slide-title">App entrega la referencia a MediaGrid</h2></header>
+            <div class="callback-journey" data-step="2">
+              <div class="journey-map">
+                <svg viewBox="0 0 1100 600" aria-hidden="true"><path class="journey-base" d="M395 150 V168 H440 V185 M440 285 V303 H485 V320 M485 420 V438 H530 V455"></path><path class="journey-blue" d="M395 150 V168 H440 V185" marker-end="url(#s06-arrow-blue)"></path></svg>
+                <article class="journey-node node-app"><b>A</b><span><strong>App</strong><code>define handleSelectMedia</code></span></article>
+                <article class="journey-node node-grid is-active"><b>G</b><span><strong>MediaGrid</strong><code>recibe onSelect</code></span><em>ƒ handleSelectMedia</em></article>
+                <article class="journey-node node-card"><b>C</b><span><strong>MediaCard</strong><code>recibirá onSelect</code></span></article>
+                <article class="journey-node node-button"><b>↗</b><span><strong>Ver detalle</strong><code>espera el click</code></span></article>
+              </div>
+              <aside class="journey-copy"><span>Paso 2 de 7</span><strong>MediaGrid recibe la misma función</strong><p>La prop se llama <code>onSelect</code>. Recibirla no la ejecuta.</p><code>&lt;MediaGrid onSelect={handleSelectMedia} /&gt;</code><small>La flecha azul significa que la referencia baja mediante props.</small></aside>
+            </div>
+            <aside class="notes">Leer el JSX desde el padre. App entrega una referencia; no añade paréntesis y no llama la función durante el render.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-14-journey-3" data-geometry="G16" data-semantic="S28 S34">
+          <div class="slide-frame journey-layout" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Recorrido 1 · La referencia baja</p><h2 class="slide-title">MediaGrid reenvía la referencia a MediaCard</h2></header>
+            <div class="callback-journey" data-step="3">
+              <div class="journey-map">
+                <svg viewBox="0 0 1100 600" aria-hidden="true"><path class="journey-base" d="M395 150 V168 H440 V185 M440 285 V303 H485 V320 M485 420 V438 H530 V455"></path><path class="journey-blue" d="M395 150 V168 H440 V185 M440 285 V303 H485 V320" marker-end="url(#s06-arrow-blue)"></path></svg>
+                <article class="journey-node node-app"><b>A</b><span><strong>App</strong><code>define handleSelectMedia</code></span></article>
+                <article class="journey-node node-grid"><b>G</b><span><strong>MediaGrid</strong><code>recibe y reenvía onSelect</code></span></article>
+                <article class="journey-node node-card is-active"><b>C</b><span><strong>MediaCard</strong><code>recibe onSelect y conoce data.id</code></span><em>ƒ handleSelectMedia</em></article>
+                <article class="journey-node node-button"><b>↗</b><span><strong>Ver detalle</strong><code>espera el click</code></span></article>
+              </div>
+              <aside class="journey-copy"><span>Paso 3 de 7</span><strong>La referencia llega a la tarjeta</strong><p>MediaGrid no sabe qué tarjeta recibirá el click. Solo conserva el mismo contrato.</p><code>&lt;MediaCard onSelect={onSelect} /&gt;</code><small>Reenviar conserva la función sin ejecutarla.</small></aside>
+            </div>
+            <aside class="notes">Señalar que cada MediaCard recibe la misma referencia, pero cada tarjeta tiene un data.id diferente dentro de sus propias props.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-15-journey-4" data-geometry="G16" data-semantic="S28 S34">
+          <div class="slide-frame journey-layout" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Recorrido 2 · Interacción</p><h2 class="slide-title">El click ocurre dentro de una MediaCard concreta</h2></header>
+            <div class="callback-journey" data-step="4">
+              <div class="journey-map">
+                <svg viewBox="0 0 1100 600" aria-hidden="true"><path class="journey-base" d="M395 150 V168 H440 V185 M440 285 V303 H485 V320 M485 420 V438 H530 V455"></path><path class="journey-blue is-muted" d="M395 150 V168 H440 V185 M440 285 V303 H485 V320 M485 420 V438 H530 V455"></path></svg>
+                <article class="journey-node node-app"><b>A</b><span><strong>App</strong><code>define handleSelectMedia</code></span></article>
+                <article class="journey-node node-grid"><b>G</b><span><strong>MediaGrid</strong><code>reenvía onSelect</code></span></article>
+                <article class="journey-node node-card"><b>C</b><span><strong>MediaCard</strong><code>conoce data.id = 1</code></span></article>
+                <article class="journey-node node-button is-active-green"><b>↗</b><span><strong>Ver detalle</strong><code>recibe el click</code></span><em>click</em></article>
+              </div>
+              <aside class="journey-copy"><span>Paso 4 de 7</span><strong>La persona activa el botón de Arrival</strong><p>El evento pertenece al botón de esta tarjeta. No necesita atravesar MediaGrid.</p><code>data.id === 1</code><small>El click inicia la llamada; todavía no cambia el estado por sí solo.</small></aside>
+            </div>
+            <aside class="notes">Contrastar evento con valor. MediaCard conoce el id mediante data; por eso puede traducir el click en una llamada con el número correcto.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-16-journey-5" data-geometry="G16" data-semantic="S28 S34">
+          <div class="slide-frame journey-layout" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Recorrido 2 · La llamada lleva un valor</p><h2 class="slide-title">La tarjeta ejecuta la referencia con <code>data.id</code></h2></header>
+            <div class="callback-journey" data-step="5">
+              <div class="journey-map">
+                <svg viewBox="0 0 1100 600" aria-hidden="true"><path class="journey-base" d="M395 150 V168 H440 V185 M440 285 V303 H485 V320 M485 420 V438 H530 V455"></path><path class="journey-green" d="M720 505 H800 V100 H720" marker-end="url(#s06-arrow-green)"></path></svg>
+                <article class="journey-node node-app is-active-green"><b>A</b><span><strong>App</strong><code>recibe mediaId = 1</code></span></article>
+                <article class="journey-node node-grid"><b>G</b><span><strong>MediaGrid</strong><code>ya no interviene</code></span></article>
+                <article class="journey-node node-card"><b>C</b><span><strong>MediaCard</strong><code>ejecuta onSelect</code></span></article>
+                <article class="journey-node node-button"><b>↗</b><span><strong>Ver detalle</strong><code>originó el click</code></span></article>
+                <em class="journey-token token-id">mediaId = 1</em>
+              </div>
+              <aside class="journey-copy"><span>Paso 5 de 7</span><strong>La llamada llega al handler de App</strong><p>La closure ejecuta <code>onSelect</code> con el id que pertenece a la tarjeta.</p><code>() =&gt; onSelect(data.id)</code><small><strong>Closure:</strong> función que conserva acceso a <code>data.id</code> hasta que ocurre el click.</small></aside>
+            </div>
+            <aside class="notes">Definir closure como función que conserva acceso a valores del lugar donde se creó. Aquí conserva data.id hasta que ocurre el click.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-17-journey-6" data-geometry="G16" data-semantic="S24 S28 S34">
+          <div class="slide-frame journey-layout" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Recorrido 2 · React recuerda</p><h2 class="slide-title">El handler guarda la identidad seleccionada</h2></header>
+            <div class="callback-journey" data-step="6">
+              <div class="journey-map">
+                <svg viewBox="0 0 1100 600" aria-hidden="true"><path class="journey-base" d="M395 150 V168 H440 V185 M440 285 V303 H485 V320 M485 420 V438 H530 V455"></path></svg>
+                <article class="journey-node node-app is-active-green"><b>A</b><span><strong>App</strong><code>selectedMediaId = 1</code></span><em>nuevo estado</em></article>
+                <article class="journey-node node-grid"><b>G</b><span><strong>MediaGrid</strong><code>espera el próximo render</code></span></article>
+                <article class="journey-node node-card"><b>C</b><span><strong>MediaCard</strong><code>espera el próximo render</code></span></article>
+                <article class="journey-node node-button"><b>↗</b><span><strong>Ver detalle</strong><code>acción completada</code></span></article>
+              </div>
+              <aside class="journey-copy"><span>Paso 6 de 7</span><strong>El setter solicita otro render</strong><p>React conservará el número <code>1</code> para la siguiente ejecución de App.</p><code>setSelectedMediaId(1)</code><small>El setter solicita la actualización; el nuevo valor se usa en el siguiente render.</small></aside>
+            </div>
+            <aside class="notes">Evitar decir que la variable cambia inmediatamente dentro del mismo handler. Conectar con el modelo mental de snapshot presentado en la sesión 04.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-18-journey-7" data-geometry="G16" data-semantic="S24 S28 S31">
+          <div class="slide-frame journey-layout" data-layout="G16">
+            <header class="slide-heading"><p class="slide-label">Nuevo render</p><h2 class="slide-title">App calcula el objeto y abre el modal</h2></header>
+            <div class="callback-journey" data-step="7">
+              <div class="journey-map">
+                <svg viewBox="0 0 1100 600" aria-hidden="true"><path class="journey-base" d="M395 150 V168 H440 V185 M440 285 V303 H485 V320 M485 420 V438 H530 V455"></path><path class="journey-amber" d="M720 100 H825 V205" marker-end="url(#s06-arrow-amber)"></path></svg>
+                <article class="journey-node node-app is-active-amber"><b>A</b><span><strong>App</strong><code>selectedMediaId = 1</code></span></article>
+                <article class="journey-node node-grid"><b>G</b><span><strong>MediaGrid</strong><code>presenta la lista</code></span></article>
+                <article class="journey-node node-card"><b>C</b><span><strong>MediaCard</strong><code>presenta cada medio</code></span></article>
+                <article class="journey-node node-button"><b>↗</b><span><strong>Ver detalle</strong><code>queda disponible</code></span></article>
+                <article class="journey-result"><span><code>find</code> devuelve</span><strong>Arrival</strong><span><code>opened</code> recibe</span><strong>true</strong></article>
+              </div>
+              <aside class="journey-copy"><span>Paso 7 de 7</span><strong>La selección produce una interfaz nueva</strong><p><code>find</code> obtiene Arrival y el modal recibe <code>opened={true}</code>.</p><code>selectedMedia !== null</code><small>El resultado sale del estado recordado y de la colección disponible.</small></aside>
+            </div>
+            <aside class="notes">Cerrar el doble recorrido narrándolo completo: referencia azul baja, click verde ejecuta con un valor y render ámbar calcula el resultado visible.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-19-common-contract" data-geometry="G09" data-semantic="S26 S39 S52">
+          <div class="slide-frame" data-layout="G09">
+            <header class="slide-heading"><p class="slide-label">Un contrato entre tres archivos</p><h2 class="slide-title">Cada capa recibe la misma clase de función</h2><p class="slide-lede"><strong>Firma:</strong> descripción de los parámetros que recibe una función y del valor que devuelve.</p></header>
+            <table class="matrix contract-matrix">
+              <thead><tr><th>Archivo</th><th>Nombre visible</th><th>Firma</th><th>Responsabilidad</th></tr></thead>
+              <tbody>
+                <tr><td><code>src/App.tsx</code></td><td><code>handleSelectMedia</code></td><td><code>(mediaId: number) =&gt; void</code></td><td>Guarda el id recibido.</td></tr>
+                <tr><td><code>media-grid.tsx</code></td><td><code>onSelect</code></td><td><code>(mediaId: number) =&gt; void</code></td><td>Reenvía la referencia.</td></tr>
+                <tr><td><code>media-card.tsx</code></td><td><code>onSelect</code></td><td><code>(mediaId: number) =&gt; void</code></td><td>La ejecuta con su <code>data.id</code>.</td></tr>
+              </tbody>
+            </table>
+            <aside class="notes">Pedir leer la firma en voz alta: recibe un número y no devuelve un valor útil. La tabla da el contrato sin revelar los componentes completos del taller.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-20-pass-execute" data-geometry="G07" data-semantic="S37 S38 S45">
+          <div class="slide-frame" data-layout="G07">
+            <header class="slide-heading"><p class="slide-label">Referencia, closure y ejecución</p><h2 class="slide-title">Los paréntesis cambian cuándo ocurre la llamada</h2></header>
+            <div class="callback-comparison">
+              <figure class="verdict-surface" data-verdict="pass"><figcaption><span>Reenvía la referencia</span><code>media-grid.tsx</code></figcaption><pre><code class="language-tsx">onSelect={onSelect}</code></pre><p>La función queda disponible para después.</p></figure>
+              <figure class="verdict-surface" data-verdict="closure"><figcaption><span>Crea una closure</span><code>media-card.tsx</code></figcaption><pre><code class="language-tsx">onClick={() =&gt;
+  onSelect(data.id)
+}</code></pre><p>El click futuro ejecutará la función con el id.</p></figure>
+              <figure class="verdict-surface" data-verdict="avoid"><figcaption><span>Ejecuta durante el render</span><code>media-card.tsx</code></figcaption><pre><code class="language-tsx">onClick={
+  onSelect(data.id)
+}</code></pre><p>La llamada ocurre antes del click. Esta forma no sirve.</p></figure>
+            </div>
+            <aside class="notes">Comparar una columna a la vez. Pedir identificar dónde aparecen paréntesis y quién controla el momento de ejecución en cada caso.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-21-workshop-bridge" data-geometry="G01" data-semantic="S07 S14">
+          <div class="slide-frame" data-layout="G01">
+            <p class="slide-label">Puente hacia el taller</p>
+            <h2 class="slide-concept">Con el estado actual del proyecto, ¿qué falta para que cada tarjeta abra su propio detalle?</h2>
+            <p class="bridge-context"><code>App</code> ya controla la selección y el modal abre desde un botón temporal. Ahora el click debe comenzar en cada <code>MediaCard</code> y comunicar su propio <code>data.id</code>.</p>
+            <div class="question-answer fragment"><strong>Falta llevar <code>onSelect</code> desde App hasta MediaCard.</strong><span>MediaGrid reenvía la referencia; la tarjeta la ejecuta cuando ocurre el click.</span></div>
+            <aside class="notes">Dar tiempo para que el grupo nombre las tres capas antes de revelar la respuesta. No escribir los contratos completos desde esta slide.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-22-workshop" data-geometry="G18" data-semantic="S56 S57">
+          <div class="slide-frame" data-layout="G18">
+            <div class="workshop-brief"><p class="slide-label">Taller · 60 minutos</p><h2 class="slide-title">Conectar cada tarjeta con el modal</h2><p>El punto de partida ya contiene selección, modal y un disparador temporal en <code>App</code>.</p><div class="workshop-contracts"><code>onSelect(mediaId)</code><code>selectedMediaId</code></div></div>
+            <div class="workshop-checklist">
+              <article><b>01</b><span><strong>Conectar</strong> la misma firma en App, MediaGrid y MediaCard.</span></article>
+              <article><b>02</b><span><strong>Ejecutar</strong> el callback con el id de la tarjeta pulsada.</span></article>
+              <article><b>03</b><span><strong>Retirar</strong> el disparador temporal sin romper filtros ni vacíos.</span></article>
+              <article><b>04</b><span><strong>Comprobar</strong> dos medios, contenido nulo y tres formas de cierre.</span></article>
+              <article><b>05</b><span><strong>Entregar</strong> evidencia del navegador y de <code>pnpm build</code>.</span></article>
+            </div>
+            <aside class="notes">Distribuir la rúbrica completa. Recordar el checkpoint alternativo para quien no alcanzó la base. El reto opcional añade un nombre accesible específico a cada botón.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-23-break" data-geometry="G01" data-semantic="S09" data-tone="dark" data-chrome="none">
+          <div class="slide-frame" data-layout="G01">
+            <p class="slide-label">Descanso · 30 minutos</p><h2 class="slide-display">Volvemos para conectar las tarjetas</h2><p class="slide-lede">Punto de retorno: el modal abre desde App y las tarjetas todavía no reciben <code>onSelect</code>.</p>
+            <aside class="notes">Indicar la hora exacta de retorno. Durante el descanso no mostrar la solución ni introducir otro concepto.</aside>
+          </div>
+        </section>
+
+        <section data-slide-id="session-06-24-close" data-geometry="G18" data-semantic="S10 S53 S59">
+          <div class="slide-frame" data-layout="G18">
+            <div class="checkpoint-limit"><p class="slide-label">Cierre conceptual</p><h2 class="slide-title">Una identidad conecta el click con el detalle correcto</h2><p><strong>React recuerda</strong> <code>selectedMediaId</code>.</p><p><strong>La referencia baja</strong> desde App hasta MediaCard.</p><p><strong>El click ejecuta</strong> esa referencia con <code>data.id</code>.</p><p><strong>App calcula</strong> el objeto y controla el modal.</p></div>
+            <ol class="closing-questions explicit-answers">
+              <li><b>01</b><span><strong>¿Por qué guardamos el id y no otra copia del objeto?</strong><small>El id basta para localizar el objeto que ya existe en mediaItems.</small></span></li>
+              <li><b>02</b><span><strong>¿Qué baja desde App hasta MediaCard?</strong><small>La referencia de handleSelectMedia bajo el nombre onSelect.</small></span></li>
+              <li><b>03</b><span><strong>¿Qué ocurre después del click?</strong><small>MediaCard ejecuta onSelect con data.id; App guarda el id y React renderiza otra vez.</small></span></li>
+              <li><b>04</b><span><strong>¿Qué límite encontraremos en la próxima sesión?</strong><small>Los datos todavía viven en un fixture local; aprenderemos a obtenerlos mediante HTTP.</small></span></li>
+            </ol>
+            <aside class="notes">Pedir primero las respuestas al grupo y revelar después. La cuarta respuesta abre la sesión 07: la selección funciona, pero la colección aún no viene de un servidor.</aside>
+          </div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/src/framework/deck.js"></script>
+  </body>
+</html>

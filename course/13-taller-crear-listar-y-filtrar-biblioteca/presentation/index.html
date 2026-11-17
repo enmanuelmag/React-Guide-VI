@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Sesión 13 · Crear, listar y filtrar biblioteca</title><meta name="description" content="MediaLog: del formulario local a una biblioteca personal guardada, actualizada y filtrada."><link rel="stylesheet" href="./session.css"></head>
+<body class="s13"><div class="reveal"><div class="slides">
+<section data-slide-id="session-13-01-cover" data-geometry="G01" data-semantic="S01" data-chrome="none"><div class="slide-frame no-journey" data-layout="G01">
+
+<header class="slide-heading"><p class="slide-label">Sesión 13 · React Guide VI</p><h1 class="slide-title">De elegir Dune<br>a guardarlo en mi biblioteca.</h1></header>
+<div class="stage"><div class="cover"><p class="lead">Crear, listar y filtrar biblioteca</p><p>Sesión 13 · MediaLog · Taller presencial</p></div></div>
+<p class="foot"></p>
+<aside class="notes">Presentar el deck de forma continua antes del editor. Partimos del cierre de la sesión 12: sesión recuperable, petición autenticada y biblioteca provisional. El formulario de la sesión 11 todavía muestra un preview local. El objetivo es guardar de verdad y consultar después los registros personales.</aside>
+</div></section>
+<section data-slide-id="session-13-03-before" data-geometry="G06" data-semantic="S05"><div class="slide-frame" data-layout="G06">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-active" aria-current="step">Elegir</span><i aria-hidden="true">→</i><span>Guardar</span><i aria-hidden="true">→</i><span>Actualizar</span><i aria-hidden="true">→</i><span>Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">Sesión 13 · MediaLog · Elegir</p><h2 class="slide-title">Del formulario local a la biblioteca guardada</h2></header>
+<div class="stage"><div class="columns"><article class="box "><h3>Punto de partida</h3><p>Login y formulario ya funcionan.</p><p>El preview solo muestra el body: los datos que queremos enviar.</p></article><article class="box good"><h3>Lo que conectamos hoy</h3><p>Guardar Dune en el servidor.</p><p>Consultar mi biblioteca y pedir películas o series.</p></article></div></div>
+<p class="foot">Elegir → Guardar → Actualizar consultas → Ver biblioteca → Filtrar</p>
+<aside class="notes">Sesión 13 presencial. Recuperar el cierre 12 y el formulario 11. Un preview no demuestra un POST. Todo el deck se presenta de forma continua antes del editor; las notas orientan preguntas y pausas sin slides de tránsito. La sesión 14 abrirá cada registro por logId.</aside>
+</div></section>
+<section data-slide-id="session-13-04-read-write" data-geometry="G06" data-semantic="S20"><div class="slide-frame" data-layout="G06">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-active" aria-current="step">Elegir</span><i aria-hidden="true">→</i><span>Guardar</span><i aria-hidden="true">→</i><span>Actualizar</span><i aria-hidden="true">→</i><span>Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Elegir</p><h2 class="slide-title">Query consulta; mutación guarda.</h2></header>
+<div class="stage"><div class="columns"><article class="box "><h3>Query · leer</h3><p>Busca Dune o consulta su detalle.</p><p>TanStack Query conserva la respuesta.</p></article><article class="box "><h3>Mutación · escribir</h3><p>Agrega Dune a mi biblioteca.</p><p>Empieza cuando envío el formulario.</p></article></div></div>
+<p class="foot">Mutación: petición que crea, cambia o elimina datos en el servidor.</p>
+<aside class="notes">Query y mutación se distinguen por el propósito de la operación. La lista privada usará POST para consultar; sigue siendo una query porque no escribe. Fuente: https://tanstack.com/query/latest/docs/framework/react/guides/mutations. Pedir al grupo que clasifique buscar, guardar y cambiar un campo local.</aside>
+</div></section>
+<section data-slide-id="session-13-05-public-user" data-geometry="G09" data-semantic="S23"><div class="slide-frame" data-layout="G09">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-active" aria-current="step">Elegir</span><i aria-hidden="true">→</i><span>Guardar</span><i aria-hidden="true">→</i><span>Actualizar</span><i aria-hidden="true">→</i><span>Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Elegir</p><h2 class="slide-title">Búsqueda pública; guardado privado.</h2></header>
+<div class="stage"><table><thead><tr><th>Operación</th><th>Sin sesión</th><th>Con sesión</th></tr></thead><tbody><tr><td>Búsqueda y detalle</td><td>Permitido, sin token</td><td>Permitido; puede indicar «Ya guardado»</td></tr><tr><td>Crear y listar biblioteca</td><td>Rechazado</td><td>Requiere un token aceptado</td></tr></tbody></table></div>
+<p class="foot">isLogged indica si guardé ese medio: anónimo → false; con sesión → según mi biblioteca.</p>
+<aside class="notes">Combina el caso isLogged con la decisión de autenticación. requestJsonWithOptionalAuth añade la sesión a búsqueda y detalle cuando existe; crear y listar exigen autenticación. El servidor verifica el token. isLogged no representa el estado de Login y un token cualquiera no garantiza acceso. Al implementar se conserva el fallback auth null de la 12.</aside>
+</div></section>
+<section data-slide-id="session-13-07-scope" data-geometry="G16" data-semantic="S20"><div class="slide-frame" data-layout="G16">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-active" aria-current="step">Elegir</span><i aria-hidden="true">→</i><span>Guardar</span><i aria-hidden="true">→</i><span>Actualizar</span><i aria-hidden="true">→</i><span>Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Elegir</p><h2 class="slide-title">El token autoriza; la key separa respuestas.</h2></header>
+<div class="stage"><div class="columns"><figure class="code"><figcaption>Ejemplo de keys · misma búsqueda, personas distintas</figcaption><pre><code class="language-tsx">// input contiene título y tipo
+['media', 'search', input, 'anonymous']
+
+['media', 'search', input, 'uid-ana']
+
+['media', 'search', input, 'uid-luis']</code></pre></figure><article class="box "><h3>Dos responsabilidades</h3><p><strong>Bearer:</strong> el token viaja en la petición; el servidor lo verifica.</p><p><strong>authScope:</strong> etiqueta la caché con anónimo o el <code>uid</code> del usuario.</p></article></div></div>
+<p class="foot">authScope no es una credencial. El token nunca se guarda en la query key.</p>
+<aside class="notes">El ejemplo hace visible la explicación sin una segunda diapositiva. Ana y Luis son etiquetas ilustrativas. uid es el identificador de Firebase. Preguntar si alguien puede autenticarse con el uid que ve en Devtools: no. Los valores que cambian la respuesta deben estar en la key. Fuente: https://tanstack.com/query/latest/docs/framework/react/guides/query-keys.</aside>
+</div></section>
+<section data-slide-id="session-13-09-checking" data-geometry="G10" data-semantic="S29"><div class="slide-frame" data-layout="G10">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-active" aria-current="step">Elegir</span><i aria-hidden="true">→</i><span>Guardar</span><i aria-hidden="true">→</i><span>Actualizar</span><i aria-hidden="true">→</i><span>Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Elegir</p><h2 class="slide-title">Durante checking, la consulta espera.</h2></header>
+<div class="stage"><div class="flow"><article class="box "><h3>checking</h3><p>Firebase aún comprueba.</p></article><div class="arrow"><span>esperar</span><b aria-hidden="true">⟶</b></div><article class="box "><h3>Sesión conocida</h3><p>anonymous o authenticated.</p></article><div class="arrow"><span>habilitar</span><b aria-hidden="true">⟶</b></div><article class="box "><h3>Consulta</h3><p>Key y petición coherentes.</p></article></div></div>
+<p class="foot">Mientras checking, la query permanece deshabilitada con enabled.</p>
+<aside class="notes">Combinar authReady con las validaciones de entrada ya existentes. No retirarlas al añadir la sesión. Una query deshabilitada puede tener status pending y fetchStatus idle: pending por sí solo no demuestra una petición en curso. Evitar una consulta anónima transitoria mientras Firebase restaura la sesión.</aside>
+</div></section>
+<section data-slide-id="session-13-10-mutation" data-geometry="G16" data-semantic="S34"><div class="slide-frame" data-layout="G16">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Guardar</span><i aria-hidden="true">→</i><span>Actualizar</span><i aria-hidden="true">→</i><span>Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Guardar</p><h2 class="slide-title">Guardar: del formulario al POST.</h2></header>
+<div class="stage"><div class="columns"><figure class="code"><figcaption>src/components/create-media-log-form.tsx · dentro del componente</figcaption><pre><code class="language-tsx">const createMutation = useCreateMediaLog()
+
+function handleSubmit(values: MediaLogFormValues) {
+  const body = toCreateMediaLogBody(identity, values)
+
+  createMutation.mutate(body, {
+    onSuccess: onCreated,
+  })
+}</code></pre></figure><article class="box "><h3>Petición autenticada</h3><p><code>mutate(body)</code> inicia la mutación.</p><p><code>createMediaLog</code> envía Bearer y JSON.</p><p><code>POST /api/v2/media/create</code></p></article></div></div>
+<p class="foot">useCreateMediaLog() devuelve el resultado de useMutation(). identity contiene tipo e ID; onCreated avisa al modal.</p>
+<aside class="notes">Se conserva el handler visible y se reúne su destino en la misma vista. values viene del formulario validado; identity y onCreated son props. mutationFn es createMediaLog. http.ts ya añade API_URL: el fetcher utiliza el path para no duplicar la base. El servidor verifica sesión y guarda; el 201 es una expectativa contractual, no una comprobación live.</aside>
+</div></section>
+<section data-slide-id="session-13-12-mutation-states" data-geometry="G16" data-semantic="S30"><div class="slide-frame" data-layout="G16">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Guardar</span><i aria-hidden="true">→</i><span>Actualizar</span><i aria-hidden="true">→</i><span>Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Guardar</p><h2 class="slide-title">El estado de la mutación controla el formulario.</h2></header>
+<div class="stage"><div class="columns"><figure class="code"><figcaption>src/components/create-media-log-form.tsx · JSX del botón</figcaption><pre><code class="language-tsx">&lt;Button
+  type="submit"
+  loading={createMutation.isPending}
+  disabled={createMutation.isPending}
+&gt;
+  Guardar
+&lt;/Button&gt;</code></pre></figure><div class="mutation-states"><div><b>idle</b><p>Sin enviar.</p></div><div><b>pending</b><p>Guardando; bloquear otro envío y Cancelar.</p></div><div><b>error</b><p>Mostrar el error y conservar lo escrito.</p></div><div><b>success</b><p>Terminó el guardado y su actualización.</p></div></div></div></div>
+<p class="foot">const createMutation = useCreateMediaLog() · Un solo estado de operación, sin otro booleano de carga.</p>
+<aside class="notes">Los cuatro estados pertenecen al objeto devuelto por useMutation. isPending cubre la petición y el onSuccess esperado. El JSX del botón y sus consecuencias se explican juntos. El estado de éxito incluye la espera del callback del hook, pero no garantiza que todas las consultas remotas hayan podido renovarse si falla la red.</aside>
+</div></section>
+<section data-slide-id="session-13-14-errors" data-geometry="G09" data-semantic="S41"><div class="slide-frame" data-layout="G09">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Guardar</span><i aria-hidden="true">→</i><span>Actualizar</span><i aria-hidden="true">→</i><span>Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Guardar</p><h2 class="slide-title">Si falla, conservamos lo que escribió la persona.</h2></header>
+<div class="stage"><table><thead><tr><th>Respuesta</th><th>Mensaje para el formulario</th></tr></thead><tbody><tr><td>401</td><td>La sesión no pudo autorizar el guardado.</td></tr><tr><td>404</td><td>El medio ya no está disponible.</td></tr><tr><td>409</td><td>El medio ya está en tu biblioteca.</td></tr><tr><td>Otro error</td><td>No pudimos guardar. Intenta nuevamente.</td></tr></tbody></table></div>
+<p class="foot">El modal permanece abierto. Un error no debe mostrarse como éxito.</p>
+<aside class="notes">ApiError.status viene de la sesión 12. El traductor de errores será local y se define antes del componente. Un fallo de red puede no tener status HTTP. Mantener los valores del formulario y el modal abierto; no iniciar un logout global por cualquier 401. Los códigos son expectativas del contrato.</aside>
+</div></section>
+<section data-slide-id="session-13-15-why-refresh" data-geometry="G11" data-semantic="S28"><div class="slide-frame" data-layout="G11">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-done">Guardar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Actualizar</span><i aria-hidden="true">→</i><span>Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Actualizar</p><h2 class="slide-title">Al crear, invalidamos búsqueda, detalle y biblioteca.</h2></header>
+<div class="stage"><div class="tree"><div class="root">POST aceptado · Dune ya está guardado</div><div class="tree-arrow">↓ &nbsp; ¿qué información puede haber cambiado?</div><div class="columns"><article class="box "><h3>Búsquedas</h3><p>«Ya guardado» en sus resultados.</p></article><article class="box "><h3>Detalles</h3><p><code>isLogged</code> del medio.</p></article><article class="box "><h3>Biblioteca</h3><p>La lista tiene un registro nuevo.</p></article></div></div></div>
+<p class="foot">Invalidar = marcar una respuesta como desactualizada. No la borra ni inventa el dato nuevo.</p>
+<aside class="notes">Pregunta qué información pudo quedar anterior después de guardar Dune. isLogged cambia en búsquedas y detalles; la biblioteca recibe un registro. Analogía oral opcional: una lista impresa antes de agregar Dune conserva la versión anterior y debe revisarse. La analogía queda aquí, sin una slide independiente. Un refetch anónimo no calcula el estado personal: primero optional auth y authScope.</aside>
+</div></section>
+<section data-slide-id="session-13-17-active" data-geometry="G06" data-semantic="S20"><div class="slide-frame" data-layout="G06">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-done">Guardar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Actualizar</span><i aria-hidden="true">→</i><span>Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Actualizar</p><h2 class="slide-title">Invalidar: volver a consultar lo que está en uso.</h2></header>
+<div class="stage"><div class="columns"><article class="box "><h3>Query activa</h3><p>Una pantalla montada la está usando.</p><p>Se marca desactualizada y vuelve a consultar.</p></article><article class="box "><h3>Query inactiva</h3><p>Está en caché, sin una pantalla que la use.</p><p>Se marca desactualizada; espera su próximo uso.</p></article></div></div>
+<p class="foot">Comportamiento habitual al invalidar: refetch de queries activas y habilitadas.</p>
+<aside class="notes">Al invalidar, las queries activas y habilitadas vuelven a consultar normalmente; las inactivas permanecen marcadas como desactualizadas. Una query con enabled false no participa en ese refetch automático. Un fallo de red puede impedir renovar la respuesta y no revierte una creación que el servidor ya aceptó.</aside>
+</div></section>
+<section data-slide-id="session-13-18-await" data-geometry="G16" data-semantic="S34"><div class="slide-frame" data-layout="G16">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-done">Guardar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Actualizar</span><i aria-hidden="true">→</i><span>Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Actualizar</p><h2 class="slide-title">Después del POST, actualizamos y cerramos.</h2></header>
+<div class="stage"><div class="columns"><figure class="code"><figcaption>src/hooks/features/use-media.ts · onSuccess del hook</figcaption><pre><code class="language-tsx">onSuccess: async () =&gt; {
+  await Promise.all(
+    CREATE_MEDIA_LOG_INVALIDATION_KEYS().map(
+      (queryKey) =&gt;
+        queryClient.invalidateQueries({ queryKey }),
+    ),
+  )
+}</code></pre></figure><ol class="sequence"><li><b>1 · 201</b><p>El servidor aceptó el registro.</p></li><li><b>2 · Invalidar</b><p>searches, details y lists.</p></li><li><b>3 · Esperar</b><p>Los refetch de consultas activas.</p></li><li><b>4 · Cerrar</b><p>onCreated avisa al modal.</p></li></ol></div></div>
+<p class="foot">queryClient viene de useQueryClient(). Await mantiene isPending mientras termina onSuccess.</p>
+<aside class="notes">Código y secuencia en una misma vista. CREATE_MEDIA_LOG_INVALIDATION_KEYS devuelve mediaKeys.searches(), details() y lists(); se define antes del hook en media-keys.ts. Promise.all espera el grupo. No crear un Effect para observar isSuccess ni un helper genérico. Un refetch fallido no revierte la creación aceptada. Fuente: https://tanstack.com/query/latest/docs/framework/react/guides/invalidations-from-mutations.</aside>
+</div></section>
+<section data-slide-id="session-13-21-library-key" data-geometry="G16" data-semantic="S28"><div class="slide-frame" data-layout="G16">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-done">Guardar</span><i aria-hidden="true">→</i><span class="is-done">Actualizar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Ver biblioteca</p><h2 class="slide-title">Biblioteca: consulta privada con body y usuario.</h2></header>
+<div class="stage"><div class="columns"><figure class="code"><figcaption>LibraryPage · consulta y esquema de su key</figcaption><pre><code class="language-tsx">const libraryQuery = useMediaLibrary(body)
+
+// La key incluye el filtro y la persona:
+['media', 'list', body, authScope]</code></pre></figure><article class="box "><h3>Qué consulta</h3><p><code>POST /api/v2/media/list</code> con Bearer.</p><p>El fetcher y la key usan el mismo body.</p><p>Otro filtro o usuario → otra respuesta.</p></article></div></div>
+<p class="foot">useMediaLibrary() devuelve el resultado de useQuery(). Usar POST para leer no convierte esto en una mutación.</p>
+<aside class="notes">Se combinan la lectura privada y los datos que identifican su respuesta. LibraryPage entrega el body al hook; el fetcher exige autenticación y el hook espera authenticated. authScope es uid para esa sesión. La key es un esquema conceptual, no el factory completo. La respuesta permanece en Query.</aside>
+</div></section>
+<section data-slide-id="session-13-22-dto" data-geometry="G06" data-semantic="S27"><div class="slide-frame" data-layout="G06">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-done">Guardar</span><i aria-hidden="true">→</i><span class="is-done">Actualizar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Ver biblioteca</p><h2 class="slide-title">Del DTO a una fila legible.</h2></header>
+<div class="stage"><div class="columns"><article class="box "><h3>DTO · respuesta de API</h3><div class="sample"><code>id: 'log-dune-01'<br>title: 'Dune'<br>status: 'pending'<br>priority: 'medium'</code></div></article><article class="box good"><h3>Modelo para la fila</h3><div class="sample"><code>logId: 'log-dune-01'</code><p>Dune</p><p>Pendiente · Prioridad media</p></div></article></div></div>
+<p class="foot">Adapter: función que prepara los datos para mostrarlos. Conserva el orden recibido.</p>
+<aside class="notes">Ejemplo parcial de los campos que se preparan para la fila; el DTO también contiene tipo y fecha. id identifica el registro personal y se renombra a logId en el modelo visual. No es externalId del catálogo. El taller implementa el adapter sin mutar ni reordenar. La ruta por logId pertenece a la sesión 14.</aside>
+</div></section>
+<section data-slide-id="session-13-23-page-states" data-geometry="G08" data-semantic="S30"><div class="slide-frame" data-layout="G08">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-done">Guardar</span><i aria-hidden="true">→</i><span class="is-done">Actualizar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Ver biblioteca</span><i aria-hidden="true">→</i><span>Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Ver biblioteca</p><h2 class="slide-title">La pantalla distingue cuatro resultados.</h2></header>
+<div class="stage"><div class="grid-four"><article class="box "><h3>Carga</h3><p>Esperar la primera respuesta.</p><p><code>PageState</code></p></article><article class="box bad"><h3>Error</h3><p>Explicar y permitir reintentar.</p><p><code>PageState</code></p></article><article class="box "><h3>Vacío</h3><p>Consulta correcta, cero registros.</p><p><code>EmptyState</code></p></article><article class="box good"><h3>Con datos</h3><p>Mostrar las filas de la biblioteca.</p></article></div></div>
+<p class="foot">libraryQuery viene de useMediaLibrary(body); la página decide qué mostrar.</p>
+<aside class="notes">LibraryPage posee libraryQuery y decide entre carga, error, vacío y datos. PageState y EmptyState solo presentan props. Reutilizar los componentes de las sesiones 10 y 03. No revelar el JSX final del taller. El retry entrega libraryQuery.refetch desde la página.</aside>
+</div></section>
+<section data-slide-id="session-13-24-filter" data-geometry="G06" data-semantic="S25"><div class="slide-frame" data-layout="G06">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-done">Guardar</span><i aria-hidden="true">→</i><span class="is-done">Actualizar</span><i aria-hidden="true">→</i><span class="is-done">Ver biblioteca</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Filtrar</span><i aria-hidden="true">→</i><span>Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Filtrar</p><h2 class="slide-title">El filtro cambia el body que recibe el servidor.</h2></header>
+<div class="stage"><div class="filter-layout"><table><thead><tr><th>Selección</th><th>filters.mediaType.values</th></tr></thead><tbody><tr><td>Todos</td><td><code>['movie', 'series']</code></td></tr><tr><td>Películas</td><td><code>['movie']</code></td></tr><tr><td>Series</td><td><code>['series']</code></td></tr></tbody></table><article class="box"><h3>Una sola selección local</h3><p>Selección → <code>toLibraryListBody</code> → body y key → servidor.</p><p>El servidor filtra y conserva el orden por fecha.</p></article></div></div>
+<p class="foot">Todos limita el dominio a movie y series. No enviamos [] ni aplicamos .filter() o .sort() a la respuesta.</p>
+<aside class="notes">Definir all como selección de interfaz, no tipo del backend. El control entrega string o null: el handler valida mediante safeParse del schema antes de actualizar el único estado local. El adapter deriva el body y tanto la key como el fetcher usan ese mismo objeto. viewLogType list determina la vista y su orden; mediaType restringe los resultados. El taller implementará el control sin que el deck revele su solución.</aside>
+</div></section>
+<section data-slide-id="session-13-26-logout" data-geometry="G06" data-semantic="S20"><div class="slide-frame" data-layout="G06">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-done">Guardar</span><i aria-hidden="true">→</i><span class="is-done">Actualizar</span><i aria-hidden="true">→</i><span class="is-done">Ver biblioteca</span><i aria-hidden="true">→</i><span class="is-done">Filtrar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Salir</p><h2 class="slide-title">Crear invalida. Cerrar sesión retira la caché.</h2></header>
+<div class="stage"><div class="columns"><article class="box "><h3>Después de crear</h3><p><code>invalidateQueries</code></p><p>La sesión continúa; renovamos datos.</p></article><article class="box "><h3>Después de salir</h3><figure class="code"><figcaption>src/components/private-header.tsx · dentro del handler</figcaption><pre><code class="language-tsx">await signOut(auth)
+
+queryClient.removeQueries({
+  queryKey: mediaKeys.all,
+})
+
+navigate('/login', { replace: true })</code></pre></figure></article></div></div>
+<p class="foot">Primero termina signOut. Si falla, conservamos sesión y caché para reintentar.</p>
+<aside class="notes">Fragmento dentro del try del handler de logout de la 12, conservando catch y finally. queryClient viene de useQueryClient. Retirar solo mediaKeys.all, sin clear global, después de signOut exitoso. Si Firebase rechaza el cierre, mostrar error y conservar sesión y caché para reintentar.</aside>
+</div></section>
+<section data-slide-id="session-13-27-agent" data-geometry="G06" data-semantic="S47"><div class="slide-frame" data-layout="G06">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-done">Guardar</span><i aria-hidden="true">→</i><span class="is-done">Actualizar</span><i aria-hidden="true">→</i><span class="is-done">Ver biblioteca</span><i aria-hidden="true">→</i><span class="is-done">Filtrar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Salir</p><h2 class="slide-title">La persona decide los casos; el agente redacta el test.</h2></header>
+<div class="stage"><div class="columns"><article class="box "><h3>Grupo</h3><p>Define qué body debe producir cada filtro.</p><p>Escribe la función de producción.</p></article><article class="box "><h3>Agente</h3><p>Genera solo la suite en <code>__tests__/</code>.</p><p>Después leemos el diff y ejecutamos el test.</p></article></div></div>
+<p class="foot">Test del adapter ≠ prueba de Firebase, navegador o backend.</p>
+<aside class="notes">El prompt de ahk-test limita el agente al archivo de pruebas del adapter y su soporte exclusivo en __tests__. La persona escribe producción y acuerda la matriz: all, movie, series, ausencia de anime y estructuras independientes. Revisar el diff y volver a ejecutar. El test puro no demuestra Network ni autorización.</aside>
+</div></section>
+<section data-slide-id="session-13-28-workshop" data-geometry="G18" data-semantic="S49"><div class="slide-frame" data-layout="G18">
+<nav class="journey" aria-label="Recorrido de la sesión"><span class="is-done">Elegir</span><i aria-hidden="true">→</i><span class="is-done">Guardar</span><i aria-hidden="true">→</i><span class="is-done">Actualizar</span><i aria-hidden="true">→</i><span class="is-done">Ver biblioteca</span><i aria-hidden="true">→</i><span class="is-done">Filtrar</span><i aria-hidden="true">→</i><span class="is-active" aria-current="step">Salir</span></nav>
+<header class="slide-heading"><p class="slide-label">MediaLog · Salir</p><h2 class="slide-title">Taller: filas, estados y filtro de la biblioteca.</h2></header>
+<div class="stage"><div class="checkpoints"><article class="box "><h3>Filas</h3><p>Adapter y modelo visual con logId.</p></article><article class="box "><h3>Pantalla</h3><p>Carga, error, vacío y lista.</p></article><article class="box "><h3>Filtro</h3><p>Selección válida y petición coherente.</p></article></div></div>
+<p class="foot">60 minutos · 100 puntos base + hasta 10 extra. Entrega: tests, build y recorrido observado.</p>
+<aside class="notes">Esta diapositiva contiene el encargo concreto y termina la presentación sin una slide adicional de tránsito. Seguir en el editor para construir optional auth, mutación, query privada, invalidación y logout; el taller integra fila, estados y filtro. Todo concepto nuevo se explica antes del descanso. La suite cubre el adapter puro, no el backend. Extras conocidos: contador derivado e indicador isFetching. Cierre oral: por qué uid no autentica, qué lecturas cambia crear, por qué Todos lleva dos tipos y qué demuestra un test puro. Estimación conceptual vigente 18 minutos, sin afirmar ritmo de aula.</aside>
+</div></section>
+</div></div><script type="module" src="/src/framework/deck.js"></script></body></html>
+
